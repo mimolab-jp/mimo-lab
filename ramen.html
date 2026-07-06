@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ラーメン帳 | みもLAB</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main class="app">
+    <a class="back-button" href="index.html">← ホームへ戻る</a>
+    <h1>🍜 ラーメン帳</h1>
+    <button class="add-button" onclick="showAddForm()">
+      ➕ ラーメン追加
+    </button>
+    <div class="search-box">
+
+      <input type="text" id="searchInput" placeholder="🔍 店名・地域・コメントで検索..." oninput="renderRamenList()">
+      <p id="resultCount" class="result-count"></p>
+    </div>
+
+    <div class="sort-box">
+
+      <select id="sortSelect" onchange="renderRamenList()">
+
+        <option value="default">並び替えなし</option>
+        <option value="name">店名順</option>
+        <option value="niboshi">煮干し評価順</option>
+
+      </select>
+
+    </div>
+
+    <div class="ramen-list" id="ramenList">
+    </div>
+    <div id="ramenDetail" class="ramen-detail hidden">
+    </div>
+  </main>
+  <script src="app.js"></script>
+  <div id="imageModal" class="image-modal hidden" onclick="closeImage()">
+
+    <img id="modalImage" class="modal-image">
+
+  </div>
+</body>
+
+</html>
