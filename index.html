@@ -1,61 +1,58 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>みもLAB</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+  <main class="app">
+    <header class="app-header">
+      <h1>みもLAB</h1>
+    </header>
 
-  <main class="home-container">
-    <h1>🌸 みもLAB</h1>
-    <p class="home-subtitle">今日をちょっと楽しくする、自分専用ホーム</p>
+    <section class="weather-card">
+      <div class="weather-current">🌤 24℃</div>
+      <div class="weather-detail">
+        <span>⬆ 30℃</span>
+        <span>⬇ 18℃</span>
+      </div>
+    </section>
 
-    <div class="home-menu">
 
-      <a class="home-card" href="routine.html">
-        <span>🚗</span>
-        <div>
-          <h2>Life Launcher</h2>
-          <p>通勤・朝・夜のルーティン</p>
-        </div>
+    <div class="divider"></div>
+
+    <nav class="menu-list">
+      <a href="routine.html" class="menu-item">
+        <span>🚗 通勤ルーティン</span>
+        <span>›</span>
       </a>
 
-      <a class="home-card" href="ramen.html">
-        <span>🍜</span>
-        <div>
-          <h2>ラーメン帳</h2>
-          <p>食べたラーメンの記録</p>
-        </div>
+      <a href="ramen.html" class="menu-item">
+        <span>🍜 ラーメン帳</span>
+        <span>›</span>
       </a>
 
-      <a class="home-card" href="reward.html">
-        <span>🎁</span>
-        <div>
-          <h2>ご褒美ストック</h2>
-          <p>今だ、買おう！リスト</p>
-        </div>
+      <a href="#" class="menu-item">
+        <span>🎮 FF14</span>
+        <span>›</span>
       </a>
 
-      <a class="home-card" href="ff14.html">
-        <span>🎮</span>
-        <div>
-          <h2>FF14メモ</h2>
-          <p>やること・攻略・練習メモ</p>
-        </div>
+      <a href="sandbox.html" class="menu-item">
+        <span>📝 開発ノート</span>
+        <span>›</span>
+
       </a>
 
-      <a class="home-card" href="notes.html">
-        <span>📖</span>
-        <div>
-          <h2>開発ノート</h2>
-          <p>用語辞典・文法ノート・履歴</p>
-        </div>
+      <a href="colorbook.html" class="menu-item">
+        <span>🎨 色見本帳</span>
+        <span>›</span>
       </a>
-
-    </div>
+    </nav>
   </main>
-
 </body>
+
 </html>

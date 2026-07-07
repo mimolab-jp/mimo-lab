@@ -1,483 +1,286 @@
+/* =====================================
+   🌸 みもLAB カラーパレット
+===================================== */
+
+:root{
+
+  --bg:#fff7fa;
+
+  --card:#ffffff;
+
+  --text:#4d4543;
+
+  --subtext:#746b68;
+
+  --accent:#b86b86;
+
+  --border:#ead3dc;
+
+  --shadow:rgba(180,110,135,.12);
+
+}
+
+/* ===== 基本設定 ===== */
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: sans-serif;
-  background: #fff3f7;
-  color: #333;
+  min-height: 100vh;
+  background:var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  color: #3a3035;
 }
+
+/* ===== アプリ全体 ===== */
 
 .app {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 24px 18px 40px;
+}
+
+/* ===== ヘッダー ===== */
+
+.app-header {
   text-align: center;
+  margin-bottom: 18px;
 }
 
-h1 {
-  font-size: 36px;
+.app-header h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #b86b86;
 }
 
-.menu {
-  display: grid;
-  gap: 14px;
-  margin-top: 24px;
+/* ===== 天気カード ===== */
+
+.weather-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 22px 24px;
+  box-shadow: 0 8px 24px rgba(180, 110, 135, 0.12);
+  margin-bottom: 16px;
 }
 
-.menu-button {
-  display: block;
-  font-size: 20px;
-  padding: 18px;
-  border-radius: 18px;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-  cursor: pointer;
-  text-decoration: none;
-  color: #222;
+.weather-current {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 12px;
 }
 
-.menu-button:hover {
-  transform: translateY(-2px);
-}
-
-.back-button {
-    display: inline-block;
-    background: white;
-    color: #222;
-    text-decoration: none;
-
-    padding: 12px 20px;
-
-    border-radius: 16px;
-
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-
-    margin-bottom: 30px;
-}
-.ramen-list {
-  margin-top: 28px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-}
-
-.ramen-card {
-  background: white;
-  border-radius: 22px;
-  padding: 24px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  text-align: left;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.ramen-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
-}
-
-.ramen-card-header {
+.weather-detail {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  gap: 20px;
+  font-size: 20px;
+  color: #6d5b63;
 }
-.ramen-icon {
-  font-size: 42px;
+
+
+/* ===== 区切り線 ===== */
+
+.divider {
+  height: 1px;
+  background: #ead3dc;
+  margin: 26px 0 18px;
+}
+
+/* ===== メニュー ===== */
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  text-decoration: none;
+  color: #3a3035;
+  background: #ffffff;
+
+  border-radius: 20px;
+  padding: 18px 20px;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  box-shadow: 0 6px 18px rgba(180, 110, 135, 0.1);
+}
+
+.menu-item span:last-child {
+  color: #c58aa0;
+  font-size: 28px;
   line-height: 1;
 }
-.ramen-card h2 {
-  margin: 0;
-  font-size: 24px;
-}
-.ramen-area {
-  margin: 6px 0 0;
-  color: #666;
-  font-size: 15px;
-}
-.ramen-info {
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid #f1dfe6;
-}
-.ramen-info p {
-  margin: 10px 0;
-  line-height: 1.6;
-}
-.ramen-detail {
-  margin-top: 28px;
-}
-.detail-card {
-  background: white;
-  border-radius: 22px;
-  padding: 24px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  text-align: left;
-}
-.detail-card h2 {
-  margin-top: 0;
-}
-.hidden {
-  display: none;
-}
-.detail-back-button {
-  display: inline-block;
-  margin-bottom: 18px;
-  padding: 10px 16px;
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-  color: #222;
-  text-decoration: none;
-  cursor: pointer;
-}
-.detail-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
-.detail-actions button,
-.edit-form button {
-  border: none;
-  border-radius: 999px;
-  padding: 10px 16px;
-  background: #ff7aa8;
-  color: white;
-  cursor: pointer;
-}
-.edit-form {
-  background: white;
-  border-radius: 22px;
-  padding: 24px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  text-align: left;
-}
-.edit-form label {
-  display: block;
-  margin-top: 14px;
-  font-weight: bold;
-}
-.edit-form input,
-.edit-form textarea {
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 6px;
-  padding: 10px;
-  border: 1px solid #f1c8d5;
-  border-radius: 12px;
-  font-size: 16px;
-}
-.edit-form textarea {
-  min-height: 90px;
-}
-.delete-button {
-  background: #999 !important;
-}
-.delete-button:hover {
-  background: #777 !important;
-}
-.add-button {
-  border: none;
-  border-radius: 999px;
-  padding: 12px 20px;
-  background: #ff7aa8;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  margin-bottom: 24px;
-}
-.edit-form {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 32px;
-}
-.edit-form h2 {
-  margin-top: 0;
-  margin-bottom: 24px;
-  font-size: 26px;
-}
-.edit-form label {
-  margin-top: 18px;
-  margin-bottom: 6px;
-}
-.edit-form input,
-.edit-form textarea,
-.edit-form select {
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid #f3b6c9;
-  border-radius: 14px;
-  padding: 13px 16px;
-  font-size: 16px;
-  background: white;
-}
-.edit-form select {
-  height: 50px;
-  appearance: auto;
-}
-.edit-form textarea {
-  min-height: 110px;
-  resize: vertical;
-}
-.edit-form input:focus,
-.edit-form textarea:focus,
-.edit-form select:focus {
-  outline: none;
-  border-color: #ff7aa8;
-  box-shadow: 0 0 0 3px rgba(255, 122, 168, 0.18);
-}
-.detail-actions {
-  margin-top: 24px;
-}
-.detail-actions button,
-.edit-form button,
-.add-button {
-  border: none;
-  border-radius: 999px;
-  padding: 12px 20px;
-  background: #ff6fa3;
-  color: white;
-  font-size: 15px;
-  cursor: pointer;
-  box-shadow: 0 5px 14px rgba(255, 111, 163, 0.28);
-}
-.detail-actions button:hover,
-.edit-form button:hover,
-.add-button:hover {
-  background: #ff5a96;
-  transform: translateY(-1px);
-}
-.detail-actions button:nth-child(2),
-.edit-form .detail-actions button:nth-child(2) {
-  background: white;
-  color: #ff6fa3;
-  border: 1px solid #ffb6cf;
-  box-shadow: none;
-}
-.ramen-photo {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 16px;
-  margin-bottom: 16px;
-}
-.detail-card .ramen-photo {
-  height: 260px;
-}
-.image-modal{
 
-    position:fixed;
-    inset:0;
-
-    background:rgba(0,0,0,.8);
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    z-index:999;
-
-}
-
-.modal-image{
-
-    max-width:90%;
-    max-height:90%;
-    border-radius:20px;
-
-}
-
-.hidden{
-
-    display:none;
-
-}
-.search-box{
-
-    width:320px;
-
-    margin:20px auto;
-
-}
-
-.search-box input{
-
-    width:100%;
-
-    padding:12px 16px;
-
-    border-radius:30px;
-
-    border:1px solid #ffd4e2; 
-
-    font-size:16px;
-
-    box-sizing:border-box;
-
-     outline:none;
-
-    transition:.2s;
-
-}
-
-.search-box input:focus{
-
-    border-color:#ff78ad;
-
-    box-shadow:0 0 12px rgba(255,120,173,.25);
-
-}
-.result-count{
-
-    text-align:center;
-
-    color:#777;
-
-    font-size:14px;
-
-    margin-top:10px;
-    margin-bottom:20px;
-
-}
-.sort-box{
-
-    width:320px;
-
-    margin:0 auto 20px;
-
-}
-
-.sort-box select{
-
-    width:100%;
-
-    padding:12px 16px;
-
-    border-radius:30px;
-
-    border:1px solid #ffd4e2;
-
-    font-size:16px;
-
-    box-sizing:border-box;
-
-}
-.home-container {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 32px 18px;
-  text-align: center;
-}
-
-.home-subtitle {
-  color: #777;
-  margin-bottom: 28px;
-}
-
-.home-menu {
-  display: grid;
-  gap: 16px;
-}
-
-.home-card {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 18px 20px;
-  background: #fff7fb;
-  border: 1px solid #ffd4e2;
-  border-radius: 24px;
-  text-decoration: none;
-  color: #333;
-  box-shadow: 0 6px 16px rgba(255, 160, 190, 0.18);
-  transition: 0.2s;
-  text-align: left;
-}
-
-.home-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(255, 160, 190, 0.28);
-}
-
-.home-card span {
-  font-size: 34px;
-  width: 44px;
-  text-align: center;
-}
-
-.home-card h2 {
-  margin: 0 0 4px;
-  font-size: 20px;
-}
-
-.home-card p {
-  margin: 0;
-  color: #777;
-  font-size: 14px;
-}
-.routine-container {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 32px 18px;
-  text-align: center;
-}
+/* ===== 色見本帳 ===== */
 
 .back-link {
-  display: inline-block;
-  margin-bottom: 24px;
-  padding: 10px 18px;
-  background: white;
-  color: #333;
+  display: block;
+  margin-bottom: 12px;
+  color: var(--accent);
   text-decoration: none;
-  border-radius: 999px;
-  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  font-size: 14px;
 }
 
-.routine-subtitle {
-  color: #777;
-  margin-bottom: 28px;
+.page-lead {
+  margin: 10px 0 0;
+  color: var(--subtext);
+  font-size: 14px;
 }
+
+.sample-section {
+  margin-top: 28px;
+}
+
+.sample-section h2 {
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+
+.sample-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.sample-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 18px;
+  box-shadow: 0 6px 18px var(--shadow);
+  border: 1px solid transparent;
+}
+
+.sample-card.selected {
+  border-color: var(--accent);
+}
+
+.sample-card h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.sample-card p {
+  margin: 6px 0 0;
+  color: var(--subtext);
+  font-size: 14px;
+}
+
+.color-swatch {
+  height: 72px;
+  border-radius: 18px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+}
+
+.color-code {
+  color: var(--text) !important;
+  font-weight: 700;
+}
+
+/* 背景色サンプル */
+.bg-1 { background: #fff7fa; }
+.bg-2 { background: #fff9fb; }
+.bg-3 { background: #fffafc; }
+
+/* 文字色サンプル */
+.text-1 { background: #4d4543; }
+.text-2 { background: #564c49; }
+.text-3 { background: #746b68; }
+
+/* 角丸サンプル */
+.radius-20 { border-radius: 20px; }
+.radius-24 { border-radius: 24px; }
+.radius-28 { border-radius: 28px; }
+
+/* ボタンサンプル */
+.sample-button {
+  width: 100%;
+  border: none;
+  padding: 14px 18px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sample-button.pill {
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+}
+
+.sample-button.square {
+  border-radius: 16px;
+  background: var(--accent);
+  color: white;
+}
+
+.sample-button.outline {
+  border-radius: 16px;
+  background: white;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+/* ===== 通勤ルーティン ===== */
 
 .routine-card {
-  display: flex;
-  gap: 18px;
-  align-items: flex-start;
-  text-align: left;
-  background: #fff7fb;
-  border: 1px solid #ffd4e2;
+  background: var(--card);
   border-radius: 24px;
   padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: 0 6px 16px rgba(255, 160, 190, 0.18);
-}
-
-.routine-icon {
-  font-size: 34px;
-  width: 44px;
-  text-align: center;
+  margin-top: 16px;
+  box-shadow: 0 6px 18px var(--shadow);
 }
 
 .routine-card h2 {
-  margin: 0 0 6px;
+  margin: 0 0 10px;
+  color: var(--text);
+  font-size: 18px;
 }
 
 .routine-card p {
-  margin: 0 0 8px;
-  color: #666;
+  margin: 0 0 14px;
+  color: var(--subtext);
+  font-size: 14px;
+  line-height: 1.7;
 }
 
-.routine-cheer {
-  color: #e85f93 !important;
-  font-weight: bold;
+.link-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.routine-button {
+.small-link-button {
   display: inline-block;
-  margin-top: 8px;
-  padding: 10px 18px;
-  background: #ff7aaa;
-  color: white;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: #fff7fa;
+  border: 1px solid var(--border);
+  color: var(--accent);
   text-decoration: none;
-  border-radius: 999px;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 600;
 }
-.routine-button {
-  display: inline-block;
-  margin: 8px 10px 0 0;
+
+.small-link-button:active {
+  transform: scale(0.97);
+}
+
+.message-box {
+  background: #fff7fa;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.7;
 }
