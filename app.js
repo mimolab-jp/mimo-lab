@@ -24,6 +24,9 @@ function saveRamens() {
 }
 
 function renderRamenList() {
+  if (!ramenList) {
+  return;
+}
   ramenList.innerHTML = "";
   const keyword = document.getElementById("searchInput").value.toLowerCase();
   const filteredRamens = ramens.filter(ramen => {
@@ -290,4 +293,30 @@ function openMap() {
   window.open(url, "_blank");
 }
 
+// 山形市の天気
+const latitude = 38.255;
+const longitude = 140.339;
 
+// API取得
+fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo`)
+
+.then(response => response.json())
+
+.then(data => {
+
+    document.getElementById("currentTemp").textContent =
+        Math.round(data.current.temperature_2m);
+
+    document.getElementById("maxTemp").textContent =
+        Math.round(data.daily.temperature_2m_max[0]);
+
+    document.getElementById("minTemp").textContent =
+        Math.round(data.daily.temperature_2m_min[0]);
+
+})
+
+.catch(error => {
+
+    console.error("天気取得失敗", error);
+
+});

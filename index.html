@@ -14,13 +14,16 @@
       <h1>みもLAB</h1>
     </header>
 
-    <section class="weather-card">
-      <div class="weather-current">🌤 24℃</div>
-      <div class="weather-detail">
-        <span>⬆ 30℃</span>
-        <span>⬇ 18℃</span>
-      </div>
-    </section>
+   <section class="weather-card">
+    <div class="weather-current">
+        🌤 <span id="currentTemp">--</span>℃
+    </div>
+
+    <div class="weather-detail">
+        <span>⬆ <span id="maxTemp">--</span>℃</span>
+        <span>⬇ <span id="minTemp">--</span>℃</span>
+    </div>
+</section>
 
 
     <div class="divider"></div>
@@ -53,6 +56,7 @@
       </a>
     </nav>
   </main>
+  <script src="app.js"></script>
 </body>
 
 </html>
