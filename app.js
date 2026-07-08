@@ -320,3 +320,41 @@ fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${l
     console.error("天気取得失敗", error);
 
 });
+
+// FF14チェックリスト
+const ff14Tasks = document.querySelectorAll("[data-task]");
+
+if (ff14Tasks.length > 0) {
+  ff14Tasks.forEach((task) => {
+    const savedValue = localStorage.getItem(task.dataset.task);
+
+    if (savedValue === "true") {
+      task.checked = true;
+    }
+
+    task.addEventListener("change", () => {
+      localStorage.setItem(task.dataset.task, task.checked);
+    });
+  });
+
+  const resetDailyButton = document.getElementById("resetDaily");
+  const resetWeeklyButton = document.getElementById("resetWeekly");
+
+  resetDailyButton.addEventListener("click", () => {
+    ff14Tasks.forEach((task) => {
+      if (task.dataset.task.startsWith("daily-")) {
+        task.checked = false;
+        localStorage.setItem(task.dataset.task, false);
+      }
+    });
+  });
+
+  resetWeeklyButton.addEventListener("click", () => {
+    ff14Tasks.forEach((task) => {
+      if (task.dataset.task.startsWith("weekly-")) {
+        task.checked = false;
+        localStorage.setItem(task.dataset.task, false);
+      }
+    });
+  });
+}

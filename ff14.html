@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FF14 | みもLAB</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main class="app">
+    <header class="app-header">
+      <a href="index.html" class="back-link">← ホームへ戻る</a>
+      <h1>🎮 FF14</h1>
+      <p class="page-lead">今日の冒険メモ。</p>
+    </header>
+
+    <section class="ff-card">
+      <div class="section-title-row">
+        <h2>🌞 日課</h2>
+        <button class="reset-button" id="resetDaily">リセット</button>
+      </div>
+
+      <div class="quest-list">
+        <label class="quest-item">
+          <input type="checkbox" data-task="daily-beast-tribe">
+          <span>レベル上げの蛮族デイリー（70・80・90）</span>
+        </label>
+
+        <label class="quest-item">
+          <input type="checkbox" data-task="daily-frontline">
+          <span>フロントライン</span>
+        </label>
+
+        <label class="quest-item">
+          <input type="checkbox" data-task="daily-expert">
+          <span>エキルレ</span>
+        </label>
+
+        <label class="quest-item">
+          <input type="checkbox" data-task="daily-mob">
+          <span>モブハント</span>
+        </label>
+
+        <label class="quest-item">
+          <input type="checkbox" data-task="daily-map">
+          <span>地図掘り</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="ff-card">
+      <div class="section-title-row">
+        <h2>📅 週課</h2>
+        <button class="reset-button" id="resetWeekly">リセット</button>
+      </div>
+
+      <div class="quest-list">
+        <label class="quest-item">
+          <input type="checkbox" data-task="weekly-wondrous-tails">
+          <span>空想帳交換</span>
+        </label>
+
+        <label class="quest-item">
+          <input type="checkbox" data-task="weekly-hw-mob">
+          <span>蒼天リスキーモブ（テレポ券）</span>
+        </label>
+
+        <label class="quest-item">
+          <input type="checkbox" data-task="weekly-custom-deliveries">
+          <span>お得意様取引</span>
+        </label>
+
+        <label class="quest-item">
+          <input type="checkbox" data-task="weekly-leve">
+          <span>ギルドリーブ4種類</span>
+        </label>
+
+        <label class="quest-item">
+          <input type="checkbox" data-task="weekly-carrot-rape">
+          <span>キャロットラペ16回</span>
+        </label>
+
+        <label class="quest-item">
+          <input type="checkbox" data-task="weekly-risky-mob">
+          <span>リスキーモブ【紅蓮】【漆黒】【暁月】</span>
+        </label>
+
+        <label class="quest-item">
+          <input type="checkbox" data-task="weekly-windurst">
+          <span>ウィンダス</span>
+        </label>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

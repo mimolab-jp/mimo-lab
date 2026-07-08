@@ -284,3 +284,69 @@ body {
   font-size: 14px;
   line-height: 1.7;
 }
+
+/* ===== FF14 ===== */
+
+.ff-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 6px 18px var(--shadow);
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.section-title-row h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 18px;
+}
+
+.reset-button {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #fff7fa;
+  color: var(--accent);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quest-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff7fa;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 13px 14px;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.quest-item input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.quest-item input:checked + span {
+  color: var(--subtext);
+  text-decoration: line-through;
+}
