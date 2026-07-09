@@ -524,6 +524,6 @@ body {
 
 @media (max-width: 600px) {
   body {
-    font-family: "Hiragino Maru Gothic ProN", Verdana, Tahoma, "Hiragino Sans", sans-serif;
+    font-family: Verdana, Tahoma, "Hiragino Maru Gothic ProN", "Hiragino Sans", sans-serif;
   }
 }
