@@ -15,83 +15,153 @@
       <p class="page-lead">今日の冒険メモ。</p>
     </header>
 
-    <section class="ff-card">
-      <div class="section-title-row">
-        <h2>🌞 日課</h2>
-        <button class="reset-button" id="resetDaily">リセット</button>
-      </div>
+<section class="ff-card">
+  <h2>🎯 今日の目標</h2>
+  <input id="ff14Goal" class="goal-input" type="text" placeholder="今日やりたいことを1つ書く">
+</section>
 
-      <div class="quest-list">
-        <label class="quest-item">
-          <input type="checkbox" data-task="daily-beast-tribe">
-          <span>レベル上げの蛮族デイリー（70・80・90）</span>
-        </label>
-
-        <label class="quest-item">
-          <input type="checkbox" data-task="daily-frontline">
-          <span>フロントライン</span>
-        </label>
-
-        <label class="quest-item">
-          <input type="checkbox" data-task="daily-expert">
-          <span>エキルレ</span>
-        </label>
-
-        <label class="quest-item">
-          <input type="checkbox" data-task="daily-mob">
-          <span>モブハント</span>
-        </label>
-
-        <label class="quest-item">
-          <input type="checkbox" data-task="daily-map">
-          <span>地図掘り</span>
-        </label>
-      </div>
-    </section>
+<section class="ff-card">
+  <h2>📝 メモ</h2>
+  <textarea id="ff14Memo" class="memo-area" placeholder="攻略メモ、次にやること、忘れたくないことを書く"></textarea>
+</section>
 
     <section class="ff-card">
-      <div class="section-title-row">
-        <h2>📅 週課</h2>
-        <button class="reset-button" id="resetWeekly">リセット</button>
-      </div>
+  <div class="section-title-row">
+    <h2>🌞 日課</h2>
+    <button class="reset-button" id="resetDaily">リセット</button>
+  </div>
 
-      <div class="quest-list">
-        <label class="quest-item">
-          <input type="checkbox" data-task="weekly-wondrous-tails">
-          <span>空想帳交換</span>
-        </label>
+  <div class="progress-area">
+    <div class="progress-info">
+      <span id="dailyProgressText">0 / 8 完了</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="dailyProgressFill"></div>
+    </div>
+  </div>
 
-        <label class="quest-item">
-          <input type="checkbox" data-task="weekly-hw-mob">
-          <span>蒼天リスキーモブ（テレポ券）</span>
-        </label>
+  <div class="quest-list">
+    <label class="quest-item">
+      <input type="checkbox" data-task="daily-dummy">
+      <span>木人で回し練習</span>
+    </label>
 
-        <label class="quest-item">
-          <input type="checkbox" data-task="weekly-custom-deliveries">
-          <span>お得意様取引</span>
-        </label>
+    <label class="quest-item">
+      <input type="checkbox" data-task="daily-tribe">
+      <span>友好部族クエ（戦70・80・90）</span>
+    </label>
 
-        <label class="quest-item">
-          <input type="checkbox" data-task="weekly-leve">
-          <span>ギルドリーブ4種類</span>
-        </label>
+    <label class="quest-item">
+      <input type="checkbox" data-task="daily-mob-shb">
+      <span>漆黒・暁月モブハント(経験値)</span>
+    </label>
 
-        <label class="quest-item">
-          <input type="checkbox" data-task="weekly-carrot-rape">
-          <span>キャロットラペ16回</span>
-        </label>
+    <label class="quest-item">
+      <input type="checkbox" data-task="daily-expert">
+      <span>エキルレ</span>
+    </label>
 
-        <label class="quest-item">
-          <input type="checkbox" data-task="weekly-risky-mob">
-          <span>リスキーモブ【紅蓮】【漆黒】【暁月】</span>
-        </label>
+    <label class="quest-item">
+      <input type="checkbox" data-task="daily-frontline">
+      <span>FLルレ</span>
+    </label>
 
-        <label class="quest-item">
-          <input type="checkbox" data-task="weekly-windurst">
-          <span>ウィンダス</span>
-        </label>
-      </div>
-    </section>
+    <label class="quest-item">
+      <input type="checkbox" data-task="daily-map">
+      <span>地図掘り</span>
+    </label>
+
+    <label class="quest-item">
+      <input type="checkbox" data-task="daily-popcorn">
+      <span>ポップコーン作り</span>
+    </label>
+
+    <label class="quest-item">
+      <input type="checkbox" data-task="daily-repair-parts">
+      <span>修理用部材作り</span>
+    </label>
+  </div>
+</section>
+
+<section class="ff-card">
+  <div class="section-title-row">
+    <h2>📅 週課</h2>
+    <button class="reset-button" id="resetWeekly">リセット</button>
+  </div>
+
+  <div class="progress-area">
+    <div class="progress-info">
+      <span id="weeklyProgressText">0 / 10 完了</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="weeklyProgressFill"></div>
+    </div>
+  </div>
+
+  <div class="quest-list">
+    <label class="quest-item">
+      <input type="checkbox" data-task="weekly-wondrous-exchange">
+      <span>空想帳交換</span>
+    </label>
+
+    <label class="quest-item">
+      <input type="checkbox" data-task="weekly-wondrous-complete">
+      <span>空想帳完成</span>
+    </label>
+
+    <label class="quest-item">
+      <input type="checkbox" data-task="weekly-carrot-rape">
+      <span>キャロットラペ16回</span>
+    </label>
+
+    <label class="quest-item">
+      <input type="checkbox" data-task="weekly-leve">
+      <span>ギルドリーヴ4種類</span>
+    </label>
+
+    <label class="quest-item">
+      <input type="checkbox" data-task="weekly-custom-deliveries">
+      <span>お得意様取引2種</span>
+    </label>
+
+    <label class="quest-item">
+      <input type="checkbox" data-task="weekly-hw-mob">
+      <span>蒼天リスキーモブ【テレポ券】</span>
+    </label>
+
+    <label class="quest-item">
+      <input type="checkbox" data-task="weekly-sb-mob">
+      <span>紅蓮リスキーモブ【テレポ券】</span>
+    </label>
+
+    <label class="quest-item">
+      <input type="checkbox" data-task="weekly-fate">
+      <span>FATE20回</span>
+    </label>
+
+    <label class="quest-item">
+      <input type="checkbox" data-task="weekly-buddy">
+      <span>バディとレベ近敵100体</span>
+    </label>
+
+    <label class="quest-item">
+      <input type="checkbox" data-task="weekly-windurst">
+      <span>ウィンダス</span>
+    </label>
+  </div>
+</section>
+
+<section class="ff-card">
+  <h2>🔗 便利リンク</h2>
+
+  <div class="link-buttons">
+    <a href="https://jp.finalfantasyxiv.com/lodestone/" class="small-link-button">ロドスト</a>
+    <a href="https://jp.finalfantasyxiv.com/lodestone/news/" class="small-link-button">公式ニュース</a>
+    <a href="https://jp.finalfantasyxiv.com/jobguide/battle/" class="small-link-button">ジョブガイド</a>
+    <a href="https://jp.finalfantasyxiv.com/lodestone/playguide/db/" class="small-link-button">データベース</a>
+  </div>
+</section>
+    
   </main>
 
   <script src="app.js"></script>

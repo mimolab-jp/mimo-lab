@@ -324,6 +324,35 @@ fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${l
 // FF14チェックリスト
 const ff14Tasks = document.querySelectorAll("[data-task]");
 
+function updateFF14Progress() {
+  const dailyTasks = document.querySelectorAll("[data-task^='daily-']");
+  const weeklyTasks = document.querySelectorAll("[data-task^='weekly-']");
+
+  const dailyDone = Array.from(dailyTasks).filter((task) => task.checked).length;
+  const weeklyDone = Array.from(weeklyTasks).filter((task) => task.checked).length;
+
+  const dailyProgressText = document.getElementById("dailyProgressText");
+  const weeklyProgressText = document.getElementById("weeklyProgressText");
+  const dailyProgressFill = document.getElementById("dailyProgressFill");
+  const weeklyProgressFill = document.getElementById("weeklyProgressFill");
+
+  if (dailyProgressText) {
+    dailyProgressText.textContent = `${dailyDone} / ${dailyTasks.length} 完了`;
+  }
+
+  if (weeklyProgressText) {
+    weeklyProgressText.textContent = `${weeklyDone} / ${weeklyTasks.length} 完了`;
+  }
+
+  if (dailyProgressFill) {
+    dailyProgressFill.style.width = `${(dailyDone / dailyTasks.length) * 100}%`;
+  }
+
+  if (weeklyProgressFill) {
+    weeklyProgressFill.style.width = `${(weeklyDone / weeklyTasks.length) * 100}%`;
+  }
+}
+
 if (ff14Tasks.length > 0) {
   ff14Tasks.forEach((task) => {
     const savedValue = localStorage.getItem(task.dataset.task);
@@ -334,27 +363,58 @@ if (ff14Tasks.length > 0) {
 
     task.addEventListener("change", () => {
       localStorage.setItem(task.dataset.task, task.checked);
+      updateFF14Progress();
     });
   });
 
   const resetDailyButton = document.getElementById("resetDaily");
   const resetWeeklyButton = document.getElementById("resetWeekly");
 
-  resetDailyButton.addEventListener("click", () => {
-    ff14Tasks.forEach((task) => {
-      if (task.dataset.task.startsWith("daily-")) {
-        task.checked = false;
-        localStorage.setItem(task.dataset.task, false);
-      }
-    });
-  });
+  if (resetDailyButton) {
+    resetDailyButton.addEventListener("click", () => {
+      ff14Tasks.forEach((task) => {
+        if (task.dataset.task.startsWith("daily-")) {
+          task.checked = false;
+          localStorage.setItem(task.dataset.task, false);
+        }
+      });
 
-  resetWeeklyButton.addEventListener("click", () => {
-    ff14Tasks.forEach((task) => {
-      if (task.dataset.task.startsWith("weekly-")) {
-        task.checked = false;
-        localStorage.setItem(task.dataset.task, false);
-      }
+      updateFF14Progress();
     });
+  }
+
+  if (resetWeeklyButton) {
+    resetWeeklyButton.addEventListener("click", () => {
+      ff14Tasks.forEach((task) => {
+        if (task.dataset.task.startsWith("weekly-")) {
+          task.checked = false;
+          localStorage.setItem(task.dataset.task, false);
+        }
+      });
+
+      updateFF14Progress();
+    });
+  }
+
+  updateFF14Progress();
+}
+
+// FF14メモ 
+const ff14Memo = document.getElementById("ff14Memo");
+if (ff14Memo) {
+  ff14Memo.value = localStorage.getItem("ff14Memo") || "";
+  ff14Memo.addEventListener("input", () => {
+    localStorage.setItem("ff14Memo", ff14Memo.value);
+  });
+}
+
+// FF14 今日の目標
+const ff14Goal = document.getElementById("ff14Goal");
+
+if (ff14Goal) {
+  ff14Goal.value = localStorage.getItem("ff14Goal") || "";
+
+  ff14Goal.addEventListener("input", () => {
+    localStorage.setItem("ff14Goal", ff14Goal.value);
   });
 }
