@@ -418,3 +418,164 @@ if (ff14Goal) {
     localStorage.setItem("ff14Goal", ff14Goal.value);
   });
 }
+
+// ===== エオルゼア時間 =====
+
+const eorzeaTime = document.getElementById("eorzeaTime");
+
+if (eorzeaTime) {
+
+  function updateEorzeaTime() {
+
+    const earthTime = Date.now();
+
+    // 地球時間 → エオルゼア時間
+    const eorzeaTimeMs = earthTime * (1440 / 70);
+
+    const date = new Date(eorzeaTimeMs);
+
+    const hours = date.getUTCHours();
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+
+    let icon = "🌙";
+
+if (hours >= 5 && hours < 8) {
+    icon = "🌅";
+} else if (hours >= 8 && hours < 17) {
+    icon = "🌞";
+} else if (hours >= 17 && hours < 19) {
+    icon = "🌆";
+}
+
+eorzeaTime.textContent = `${icon} ET ${hours}:${minutes}`;
+
+  }
+
+  updateEorzeaTime();
+
+  setInterval(updateEorzeaTime, 30000);
+
+}
+
+// ===== FF14 タイマー =====
+
+const timerButtons = document.querySelectorAll("[data-minutes]");
+const timerDisplay = document.getElementById("timerDisplay");
+const stopTimerButton = document.getElementById("stopTimer");
+const targetTimeInput = document.getElementById("targetTime");
+const startTimeTimerButton = document.getElementById("startTimeTimer");
+
+let timerInterval = null;
+let timerEndTime = null;
+
+function playTimerSound() {
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+
+  oscillator.frequency.value = 880;
+  oscillator.type = "sine";
+
+  gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.8);
+
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.8);
+}
+
+function startTimer(milliseconds) {
+  clearInterval(timerInterval);
+
+  timerEndTime = Date.now() + milliseconds;
+
+  updateTimerDisplay();
+
+  timerInterval = setInterval(updateTimerDisplay, 1000);
+}
+
+function updateTimerDisplay() {
+  if (!timerDisplay || !timerEndTime) {
+    return;
+  }
+
+  const remaining = timerEndTime - Date.now();
+
+  if (remaining <= 0) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    timerEndTime = null;
+
+    timerDisplay.textContent = "🔔 タイマー終了！";
+    playTimerSound();
+    return;
+  }
+
+  const totalSeconds = Math.ceil(remaining / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  timerDisplay.textContent = `あと ${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+if (timerButtons.length > 0) {
+  timerButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const minutes = Number(button.dataset.minutes);
+      startTimer(minutes * 60 * 1000);
+    });
+  });
+}
+
+if (startTimeTimerButton) {
+  startTimeTimerButton.addEventListener("click", () => {
+    if (!targetTimeInput.value) {
+      timerDisplay.textContent = "時刻を選んでね";
+      return;
+    }
+
+    const now = new Date();
+    const [hours, minutes] = targetTimeInput.value.split(":").map(Number);
+
+    const target = new Date();
+    target.setHours(hours, minutes, 0, 0);
+
+    if (target <= now) {
+      target.setDate(target.getDate() + 1);
+    }
+
+    startTimer(target.getTime() - now.getTime());
+  });
+}
+
+if (stopTimerButton) {
+  stopTimerButton.addEventListener("click", () => {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    timerEndTime = null;
+
+    if (timerDisplay) {
+      timerDisplay.textContent = "タイマー停止中";
+    }
+  });
+}
+
+// ===== タイマー折りたたみ =====
+
+const timerToggle = document.getElementById("timerToggle");
+const timerContent = document.getElementById("timerContent");
+const timerToggleIcon = document.getElementById("timerToggleIcon");
+
+if (timerToggle && timerContent && timerToggleIcon) {
+  timerToggle.addEventListener("click", () => {
+    timerContent.classList.toggle("open");
+
+    if (timerContent.classList.contains("open")) {
+      timerToggleIcon.textContent = "▲";
+    } else {
+      timerToggleIcon.textContent = "▼";
+    }
+  });
+}
