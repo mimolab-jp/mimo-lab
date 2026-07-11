@@ -16,9 +16,9 @@
       <p class="page-lead">今日の冒険メモ。</p>
 
       <div class="eorzea-mini">
-      <span id="eorzeaTime">🌙 ET 01:54</span>
+        <span id="eorzeaTime">🌙 ET 01:54</span>
+        <a href="#timer" class="timer-jump" aria-label="タイマーへ">⏱</a>
       </div>
-
 
     </header>
 
@@ -161,31 +161,31 @@
     </section>
 
 
-<section class="ff-card timer-card">
-  <button class="timer-toggle" id="timerToggle">
-    <span>⏱ タイマー</span>
-    <span id="timerToggleIcon">▼</span>
-  </button>
+    <section class="ff-card timer-card" id="timer">
+      <button class="timer-toggle" id="timerToggle">
+        <span>⏱ タイマー</span>
+        <span id="timerToggleIcon">▼</span>
+      </button>
 
-  <div class="timer-content" id="timerContent">
-    <div class="timer-buttons">
-      <button class="timer-button" data-minutes="10">10分</button>
-      <button class="timer-button" data-minutes="20">20分</button>
-      <button class="timer-button" data-minutes="30">30分</button>
-    </div>
+      <div class="timer-content" id="timerContent">
+        <div class="timer-buttons">
+          <button class="timer-button" data-minutes="10">10分</button>
+          <button class="timer-button" data-minutes="20">20分</button>
+          <button class="timer-button" data-minutes="30">30分</button>
+        </div>
 
-    <div class="time-set-row">
-      <input type="time" id="targetTime" class="time-input">
-      <button id="startTimeTimer" class="timer-button">時刻指定</button>
-    </div>
+        <div class="time-set-row">
+          <input type="time" id="targetTime" class="time-input">
+          <button id="startTimeTimer" class="timer-button">時刻指定</button>
+        </div>
 
-    <div class="timer-display" id="timerDisplay">
-      ⏱ 待機中
-    </div>
+        <div class="timer-display" id="timerDisplay">
+          ⏱ 待機中
+        </div>
 
-    <button id="stopTimer" class="timer-stop-button">停止</button>
-  </div>
-</section>
+        <button id="stopTimer" class="timer-stop-button">停止</button>
+      </div>
+    </section>
 
 
     <section class="ff-card">

@@ -579,3 +579,13 @@ if (timerToggle && timerContent && timerToggleIcon) {
     }
   });
 }
+// ===== タイマーへジャンプしたら自動で開く =====
+
+const timerJump = document.querySelector(".timer-jump");
+
+if (timerJump && timerContent && timerToggleIcon) {
+  timerJump.addEventListener("click", () => {
+    timerContent.classList.add("open");
+    timerToggleIcon.textContent = "▲";
+  });
+}

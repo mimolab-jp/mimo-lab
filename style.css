@@ -527,3 +527,11 @@ body {
     font-family: Verdana, Tahoma, "Hiragino Maru Gothic ProN", "Hiragino Sans", sans-serif;
   }
 }
+.timer-jump {
+  margin-left: 12px;
+  text-decoration: none;
+  font-size: 16px;
+}
+html {
+  scroll-behavior: smooth;
+}
