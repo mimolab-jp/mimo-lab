@@ -2,21 +2,21 @@
    🌸 みもLAB カラーパレット
 ===================================== */
 
-:root{
+:root {
 
-  --bg:#fff7fa;
+  --bg: #fff7fa;
 
-  --card:#ffffff;
+  --card: #ffffff;
 
-  --text:#4d4543;
+  --text: #4d4543;
 
-  --subtext:#746b68;
+  --subtext: #746b68;
 
-  --accent:#b86b86;
+  --accent: #b86b86;
 
-  --border:#ead3dc;
+  --border: #ead3dc;
 
-  --shadow:rgba(180,110,135,.12);
+  --shadow: rgba(180, 110, 135, .12);
 
 }
 
@@ -29,7 +29,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background:var(--bg);
+  background: var(--bg);
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
   color: #3a3035;
 }
@@ -188,19 +188,43 @@ body {
 }
 
 /* 背景色サンプル */
-.bg-1 { background: #fff7fa; }
-.bg-2 { background: #fff9fb; }
-.bg-3 { background: #fffafc; }
+.bg-1 {
+  background: #fff7fa;
+}
+
+.bg-2 {
+  background: #fff9fb;
+}
+
+.bg-3 {
+  background: #fffafc;
+}
 
 /* 文字色サンプル */
-.text-1 { background: #4d4543; }
-.text-2 { background: #564c49; }
-.text-3 { background: #746b68; }
+.text-1 {
+  background: #4d4543;
+}
+
+.text-2 {
+  background: #564c49;
+}
+
+.text-3 {
+  background: #746b68;
+}
 
 /* 角丸サンプル */
-.radius-20 { border-radius: 20px; }
-.radius-24 { border-radius: 24px; }
-.radius-28 { border-radius: 28px; }
+.radius-20 {
+  border-radius: 20px;
+}
+
+.radius-24 {
+  border-radius: 24px;
+}
+
+.radius-28 {
+  border-radius: 28px;
+}
 
 /* ボタンサンプル */
 .sample-button {
@@ -230,6 +254,7 @@ body {
   color: var(--accent);
   border: 1px solid var(--accent);
 }
+
 /* ===== 通勤ルーティン ===== */
 
 .routine-card {
@@ -346,10 +371,11 @@ body {
   flex-shrink: 0;
 }
 
-.quest-item input:checked + span {
+.quest-item input:checked+span {
   color: var(--subtext);
   text-decoration: line-through;
 }
+
 .memo-area {
   width: 100%;
   min-height: 140px;
@@ -363,6 +389,7 @@ body {
   resize: vertical;
   font-family: inherit;
 }
+
 .memo-area:focus {
   outline: none;
   border-color: var(--accent);
@@ -383,6 +410,7 @@ body {
   outline: none;
   border-color: var(--accent);
 }
+
 .progress-area {
   margin-bottom: 16px;
 }
@@ -410,26 +438,27 @@ body {
   border-radius: 999px;
   transition: width 0.25s ease;
 }
+
 /* ===== エオルゼア時間 ===== */
 
 .eorzea-clock {
-    text-align: center;
-    padding: 8px 0;
+  text-align: center;
+  padding: 8px 0;
 }
 
 #eorzeaTime {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 1px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1px;
 }
 
 .eorzea-mini {
-    margin-top: 10px;
-    text-align: center;
-    font-size: 14px;
-    color: var(--subtext);
-    font-weight: 600;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--subtext);
+  font-weight: 600;
 }
 
 /* ===== FF14 タイマー ===== */
@@ -527,11 +556,163 @@ body {
     font-family: Verdana, Tahoma, "Hiragino Maru Gothic ProN", "Hiragino Sans", sans-serif;
   }
 }
+
 .timer-jump {
   margin-left: 12px;
   text-decoration: none;
   font-size: 16px;
 }
+
 html {
   scroll-behavior: smooth;
+}
+
+.ramen-card {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 24px;
+}
+
+.ramen-card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 18px;
+  display: block;
+}
+
+.ramen-card img {
+  height: 240px;
+}
+/* ===== ラーメン帳 ===== */
+
+.ramen-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ramen-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+.ramen-card h2 {
+  margin: 0 0 12px;
+  font-size: 22px;
+  color: var(--text);
+}
+
+.ramen-card p {
+  margin: 8px 0;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.ramen-card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 18px;
+  display: block;
+  margin-top: 14px;
+}
+
+.ramen-detail {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+@media (max-width: 600px) {
+  .ramen-card,
+  .ramen-detail {
+    padding: 18px;
+  }
+
+  .ramen-card img {
+    height: 240px;
+  }
+}
+/* ラーメン詳細カード */
+.detail-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+.ramen-photo {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 18px;
+  display: block;
+  margin-bottom: 18px;
+}
+/* ===== ラーメン帳 ===== */
+
+.ramen-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ramen-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 8px 24px var(--shadow);
+  cursor: pointer;
+}
+
+.ramen-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.ramen-card-header h2 {
+  margin: 0 0 6px;
+}
+
+.ramen-area {
+  margin: 0;
+}
+
+.ramen-info p {
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+/* 一覧・詳細の写真 */
+.ramen-photo {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 18px;
+  display: block;
+  margin-bottom: 18px;
+}
+
+/* 詳細画面 */
+.detail-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+@media (max-width: 600px) {
+  .ramen-card,
+  .detail-card {
+    padding: 18px;
+  }
+
+  .ramen-photo {
+    height: 240px;
+  }
 }
