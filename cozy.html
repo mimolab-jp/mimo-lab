@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozy Corner｜みもLAB</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+</head>
+
+<body>
+  <main class="app cozy-app">
+
+    <header class="app-header cozy-header">
+      <a href="index.html" class="back-link">‹ HOME</a>
+      <h1>🌸 Cozy Corner</h1>
+      <p class="cozy-subtitle">自分をよりよく保つ、お気に入りの場所。</p>
+    </header>
+
+    <!-- 合言葉画面 -->
+    <section id="cozyLock" class="cozy-lock">
+      <div class="cozy-lock-icon">🔒</div>
+
+      <h2>合言葉をどうぞ。</h2>
+
+      <p class="cozy-lock-message">
+        この先は、あなたのためだけの場所です。
+      </p>
+
+      <label for="cozyPassword" class="cozy-password-label">
+        合言葉
+      </label>
+
+      <input
+        type="password"
+        id="cozyPassword"
+        class="cozy-password-input"
+        autocomplete="current-password"
+      >
+
+      <button type="button" id="cozyEnterButton" class="cozy-enter-button">
+        🚪 入室
+      </button>
+
+      <p id="cozyPasswordError" class="cozy-password-error" aria-live="polite"></p>
+    </section>
+
+    <!-- 入室後 -->
+    <section id="cozyRoom" class="cozy-room" hidden>
+      <div class="cozy-welcome">
+        <p>🌸 おかえりなさい。</p>
+        <span>今日は、どの部屋へ行く？</span>
+      </div>
+
+      <nav class="cozy-room-grid">
+
+        <a href="library.html" class="cozy-room-card">
+          <span class="cozy-room-icon">📚</span>
+          <strong>書斎</strong>
+          <small>本・書き抜き・未来の自分への助け舟</small>
+        </a>
+
+        <a href="heartmap.html" class="cozy-room-card">
+          <span class="cozy-room-icon">🧭</span>
+          <strong>心の地図</strong>
+          <small>今日の心の位置と、その流れ</small>
+        </a>
+
+        <a href="treasure.html" class="cozy-room-card">
+          <span class="cozy-room-icon">💎</span>
+          <strong>宝箱</strong>
+          <small>褒められた言葉と嬉しかった記憶</small>
+        </a>
+
+        <a href="attachment-bank.html" class="cozy-room-card">
+          <span class="cozy-room-icon">📒</span>
+          <strong>愛着定期預金</strong>
+          <small>大切にされた事実を積み立てる通帳</small>
+        </a>
+
+        <a href="motto.html" class="cozy-room-card">
+          <span class="cozy-room-icon">🌱</span>
+          <strong>モットー</strong>
+          <small>忘れたくない考え方と心掛け</small>
+        </a>
+
+        <a href="dream.html" class="cozy-room-card">
+          <span class="cozy-room-icon">✨</span>
+          <strong>夢の部屋</strong>
+          <small>なりたい自分・願い・やりたいこと</small>
+        </a>
+
+        <a href="theater.html" class="cozy-room-card">
+          <span class="cozy-room-icon">🎥</span>
+          <strong>シアタールーム</strong>
+          <small>元気になる動画と聞き流し</small>
+        </a>
+
+        <a href="gratitude.html" class="cozy-room-card">
+          <span class="cozy-room-icon">💗</span>
+          <strong>今日ありがとう</strong>
+          <small>今日見つけた、小さなよかったこと</small>
+        </a>
+
+      </nav>
+
+      <button type="button" id="cozyLockButton" class="cozy-lock-button">
+        🔒 部屋を閉じる
+      </button>
+    </section>
+
+  </main>
+
+  <script src="cozy.js"></script>
+</body>
+
+</html>

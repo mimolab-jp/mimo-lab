@@ -716,3 +716,179 @@ html {
     height: 240px;
   }
 }
+/* ========================================
+   Cozy Corner
+======================================== */
+
+.cozy-app {
+  padding-bottom: 40px;
+}
+
+.cozy-header {
+  text-align: center;
+}
+
+.cozy-header h1 {
+  margin-bottom: 6px;
+}
+
+.cozy-subtitle {
+  margin: 0;
+  color: #806b70;
+  font-size: 14px;
+}
+
+.back-link {
+  display: block;
+  width: fit-content;
+  margin-bottom: 14px;
+  color: #9b737e;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.cozy-lock {
+  margin-top: 24px;
+  padding: 28px 22px;
+  background: #ffffff;
+  border: 1px solid #f2dce3;
+  border-radius: 22px;
+  box-shadow: 0 6px 18px rgba(126, 83, 96, 0.08);
+  text-align: center;
+}
+
+.cozy-lock-icon {
+  margin-bottom: 8px;
+  font-size: 34px;
+}
+
+.cozy-lock h2 {
+  margin: 0 0 10px;
+  color: #5f484f;
+  font-size: 20px;
+}
+
+.cozy-lock-message {
+  margin: 0 0 22px;
+  color: #8a747a;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.cozy-password-label {
+  display: block;
+  margin-bottom: 7px;
+  color: #725b62;
+  font-size: 13px;
+  text-align: left;
+}
+
+.cozy-password-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #e7cbd4;
+  border-radius: 13px;
+  background: #fffafb;
+  color: #503b42;
+  font: inherit;
+  font-size: 16px;
+}
+
+.cozy-password-input:focus {
+  border-color: #d89aaa;
+  outline: 3px solid rgba(216, 154, 170, 0.18);
+}
+
+.cozy-enter-button,
+.cozy-lock-button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 13px 16px;
+  border: 0;
+  border-radius: 13px;
+  background: #d995a8;
+  color: #ffffff;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.cozy-password-error {
+  min-height: 1.5em;
+  margin: 12px 0 0;
+  color: #b65e76;
+  font-size: 13px;
+}
+
+.cozy-welcome {
+  margin: 24px 0 18px;
+  text-align: center;
+}
+
+.cozy-welcome p {
+  margin: 0 0 4px;
+  color: #604950;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.cozy-welcome span {
+  color: #8b747a;
+  font-size: 14px;
+}
+
+.cozy-room-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.cozy-room-card {
+  display: flex;
+  min-height: 145px;
+  box-sizing: border-box;
+  padding: 18px 13px;
+  border: 1px solid #f0dce2;
+  border-radius: 19px;
+  background: #ffffff;
+  box-shadow: 0 5px 14px rgba(126, 83, 96, 0.07);
+  color: #59434a;
+  text-align: center;
+  text-decoration: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cozy-room-card:active {
+  transform: scale(0.98);
+}
+
+.cozy-room-icon {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 31px;
+}
+
+.cozy-room-card strong {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.cozy-room-card small {
+  color: #8d787e;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.cozy-lock-button {
+  margin-top: 22px;
+  background: #a58b93;
+}
+
+@media (min-width: 700px) {
+  .cozy-room-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
