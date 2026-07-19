@@ -298,8 +298,9 @@ const latitude = 38.255;
 const longitude = 140.339;
 
 // API取得
-fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo`)
-
+fetch(
+`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo`
+)
 .then(response => response.json())
 
 .then(data => {
@@ -307,11 +308,24 @@ fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${l
     document.getElementById("currentTemp").textContent =
         Math.round(data.current.temperature_2m);
 
+    document.getElementById("feelsLike").textContent =
+        Math.round(data.current.apparent_temperature);
+
+    document.getElementById("humidity").textContent =
+        data.current.relative_humidity_2m;
+
+    document.getElementById("rainChance").textContent =
+        data.daily.precipitation_probability_max[0];
+
     document.getElementById("maxTemp").textContent =
         Math.round(data.daily.temperature_2m_max[0]);
 
     document.getElementById("minTemp").textContent =
         Math.round(data.daily.temperature_2m_min[0]);
+
+    const code = data.current.weather_code;
+    document.getElementById("weatherIcon").textContent =
+        getWeatherIcon(code);
 
 })
 
@@ -588,4 +602,17 @@ if (timerJump && timerContent && timerToggleIcon) {
     timerContent.classList.add("open");
     timerToggleIcon.textContent = "▲";
   });
+}
+
+function getWeatherIcon(code) {
+
+    if (code === 0) return "☀️";
+    if (code <= 3) return "⛅";
+    if (code <= 48) return "🌫️";
+    if (code <= 67) return "🌧️";
+    if (code <= 77) return "❄️";
+    if (code <= 82) return "🌦️";
+    if (code <= 99) return "⛈️";
+
+    return "🌤️";
 }

@@ -15,16 +15,38 @@
       <h1>みもLAB</h1>
     </header>
 
-    <section class="weather-card">
-      <div class="weather-current">
-        🌤 <span id="currentTemp">--</span>℃
+    <div class="weather-card">
+
+      <div class="weather-main">
+        <div id="weatherIcon" class="weather-icon">🌤️</div>
+
+        <div class="current-temperature">
+          <span id="currentTemp">--</span><span class="degree">℃</span>
+        </div>
       </div>
 
-      <div class="weather-detail">
-        <span>⬆ <span id="maxTemp">--</span>℃</span>
-        <span>⬇ <span id="minTemp">--</span>℃</span>
+      <div class="high-low">
+        <span class="high-temp">
+          ↑ <span id="maxTemp">--</span>℃
+        </span>
+
+        <span class="low-temp">
+          ↓ <span id="minTemp">--</span>℃
+        </span>
       </div>
-    </section>
+
+      <div class="weather-location">
+        📍 山形市
+      </div>
+
+      <div class="weather-details">
+        <div>😊 体感 <span id="feelsLike">--</span>℃</div>
+        <div>💧 湿度 <span id="humidity">--</span>%</div>
+        <div>☔ 降水 <span id="rainChance">--</span>%</div>
+      </div>
+
+    </div>
+
 
 
     <div class="divider"></div>

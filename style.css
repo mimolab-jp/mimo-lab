@@ -892,3 +892,69 @@ html {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+/* =========================
+   天気カード Ver.2
+========================= */
+
+.weather-card {
+    padding: 22px 24px 20px;
+    text-align: center;
+}
+
+.weather-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.weather-icon {
+    font-size: 30px;
+    line-height: 1;
+}
+
+.current-temperature {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1;
+    color: #3f3034;
+}
+
+.current-temperature .degree {
+    font-size: 24px;
+    margin-left: 2px;
+}
+
+.high-low {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 12px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.high-temp {
+    color: #b95d69;
+}
+
+.low-temp {
+    color: #617aa3;
+}
+
+.weather-location {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #8e747d;
+}
+
+.weather-details {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #59464c;
+}
