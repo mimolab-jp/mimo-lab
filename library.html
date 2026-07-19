@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff7fa">
+  <title>書斎｜みもLAB</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="library-page">
+  <main class="library-container">
+    <header class="library-header">
+      <a href="cozy.html" class="back-link">‹ Cozy Corner</a>
+      <p class="library-icon">📚</p>
+      <h1>書斎</h1>
+      <p class="library-lead">
+        本を並べる部屋ではありません。<br>
+        未来のあなたを助ける知恵を<br>
+        しまっておく部屋です。
+      </p>
+    </header>
+
+    <section class="library-search-section">
+      <label class="library-search">
+        <span aria-hidden="true">🔍</span>
+        <input
+          type="search"
+          id="bookSearch"
+          placeholder="何を思い出したい？"
+          autocomplete="off"
+        >
+      </label>
+
+      <div class="library-filter">
+        <button type="button" class="filter-button is-active" data-filter="all">
+          すべて
+        </button>
+        <button type="button" class="filter-button" data-filter="physical">
+          📕 物理本
+        </button>
+        <button type="button" class="filter-button" data-filter="ebook">
+          📱 電子書籍
+        </button>
+      </div>
+    </section>
+
+    <section class="library-add-section">
+      <button type="button" id="openBookForm" class="add-book-button">
+        ＋ 新しい知恵をしまう
+      </button>
+
+      <form id="bookForm" class="book-form" hidden>
+        <input type="hidden" id="editingBookId">
+
+        <div class="form-heading">
+          <div>
+            <p class="form-kicker">BOOK NOTE</p>
+            <h2 id="bookFormTitle">新しい本を登録</h2>
+          </div>
+          <button type="button" id="closeBookForm" class="form-close" aria-label="閉じる">
+            ×
+          </button>
+        </div>
+
+        <label class="form-field">
+          <span>📘 本のタイトル</span>
+          <input
+            type="text"
+            id="bookTitle"
+            placeholder="本の名前"
+            required
+          >
+        </label>
+
+        <label class="form-field">
+          <span>💡 この本は何屋さん？</span>
+          <textarea
+            id="bookRole"
+            rows="2"
+            placeholder="例：優先順位を思い出したい時の本"
+            required
+          ></textarea>
+        </label>
+
+        <label class="form-field">
+          <span>✨ この本で得られること</span>
+          <textarea
+            id="bookBenefits"
+            rows="4"
+            placeholder="1行にひとつずつ書いてね&#10;やらないことを決める考え方&#10;大事なことへ集中する方法"
+          ></textarea>
+        </label>
+
+        <label class="form-field">
+          <span>📖 こんな時に読む</span>
+          <textarea
+            id="bookOccasion"
+            rows="3"
+            placeholder="例：仕事を抱え込みすぎた時"
+          ></textarea>
+        </label>
+
+        <label class="form-field">
+          <span>🏷 キーワード</span>
+          <input
+            type="text"
+            id="bookKeywords"
+            placeholder="仕事, HTML, 人間関係"
+          >
+          <small>読点「、」またはカンマで区切れます</small>
+        </label>
+
+        <fieldset class="form-field book-type-field">
+          <legend>📚 本の種類</legend>
+          <div class="book-type-options">
+            <label>
+              <input
+                type="radio"
+                name="bookType"
+                value="physical"
+                checked
+              >
+              <span>📕 物理本</span>
+            </label>
+
+            <label>
+              <input
+                type="radio"
+                name="bookType"
+                value="ebook"
+              >
+              <span>📱 電子書籍</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <label class="form-field">
+          <span>📍 どこにある？</span>
+          <input
+            type="text"
+            id="bookLocation"
+            placeholder="本棚右上 / Kindle / Apple Books"
+          >
+        </label>
+
+        <div class="form-actions">
+          <button type="button" id="cancelBookForm" class="secondary-button">
+            やめる
+          </button>
+          <button type="submit" class="save-book-button">
+            この知恵をしまう
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="library-books-section">
+      <div class="section-title-row">
+        <div>
+          <p class="section-kicker">MY BOOKS</p>
+          <h2>知恵の本棚</h2>
+        </div>
+        <span id="bookCount" class="book-count">0冊</span>
+      </div>
+
+      <div id="emptyLibrary" class="empty-library">
+        <p class="empty-library-icon">📖</p>
+        <p>まだ本は登録されていません。</p>
+        <small>未来の自分に思い出してほしい本から、ひとつ置いてみよう。</small>
+      </div>
+
+      <div id="noSearchResults" class="empty-library" hidden>
+        <p class="empty-library-icon">🔍</p>
+        <p>該当する本が見つかりませんでした。</p>
+        <small>別の言葉でも探してみてね。</small>
+      </div>
+
+      <div id="bookList" class="book-list"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

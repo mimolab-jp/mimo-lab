@@ -616,3 +616,404 @@ function getWeatherIcon(code) {
 
     return "🌤️";
 }
+/* ========================================
+   書斎
+======================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const bookForm = document.getElementById("bookForm");
+
+  // 書斎ページ以外では何もしない
+  if (!bookForm) {
+    return;
+  }
+
+  const STORAGE_KEY = "mimoLabLibraryBooks";
+
+  const openBookFormButton = document.getElementById("openBookForm");
+  const closeBookFormButton = document.getElementById("closeBookForm");
+  const cancelBookFormButton = document.getElementById("cancelBookForm");
+  const bookFormTitle = document.getElementById("bookFormTitle");
+  const editingBookId = document.getElementById("editingBookId");
+
+  const bookTitle = document.getElementById("bookTitle");
+  const bookRole = document.getElementById("bookRole");
+  const bookBenefits = document.getElementById("bookBenefits");
+  const bookOccasion = document.getElementById("bookOccasion");
+  const bookKeywords = document.getElementById("bookKeywords");
+  const bookLocation = document.getElementById("bookLocation");
+
+  const bookSearch = document.getElementById("bookSearch");
+  const filterButtons = document.querySelectorAll(".filter-button");
+  const bookList = document.getElementById("bookList");
+  const bookCount = document.getElementById("bookCount");
+  const emptyLibrary = document.getElementById("emptyLibrary");
+  const noSearchResults = document.getElementById("noSearchResults");
+
+  let books = loadBooks();
+  let activeFilter = "all";
+
+  function loadBooks() {
+    try {
+      const savedBooks = localStorage.getItem(STORAGE_KEY);
+      return savedBooks ? JSON.parse(savedBooks) : [];
+    } catch (error) {
+      console.error("書斎データの読み込みに失敗しました。", error);
+      return [];
+    }
+  }
+
+  function saveBooks() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
+    } catch (error) {
+      console.error("書斎データの保存に失敗しました。", error);
+      alert("本を保存できませんでした。ブラウザの保存容量を確認してください。");
+    }
+  }
+
+  function createBookId() {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+      return window.crypto.randomUUID();
+    }
+
+    return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  }
+
+  function normalizeKeywords(value) {
+    return value
+      .split(/[,、\n]/)
+      .map((keyword) => keyword.trim())
+      .filter(Boolean);
+  }
+
+  function normalizeBenefits(value) {
+    return value
+      .split("\n")
+      .map((benefit) => benefit.trim())
+      .filter(Boolean);
+  }
+
+  function escapeHtml(value = "") {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function getSelectedBookType() {
+    const selectedType = document.querySelector(
+      'input[name="bookType"]:checked'
+    );
+
+    return selectedType ? selectedType.value : "physical";
+  }
+
+  function resetBookForm() {
+    bookForm.reset();
+    editingBookId.value = "";
+    bookFormTitle.textContent = "新しい本を登録";
+
+    const physicalBookRadio = document.querySelector(
+      'input[name="bookType"][value="physical"]'
+    );
+
+    if (physicalBookRadio) {
+      physicalBookRadio.checked = true;
+    }
+  }
+
+  function openBookForm(book = null) {
+    bookForm.hidden = false;
+    openBookFormButton.hidden = true;
+
+    if (book) {
+      editingBookId.value = book.id;
+      bookFormTitle.textContent = "本の情報を編集";
+      bookTitle.value = book.title;
+      bookRole.value = book.role;
+      bookBenefits.value = book.benefits.join("\n");
+      bookOccasion.value = book.occasion;
+      bookKeywords.value = book.keywords.join(", ");
+      bookLocation.value = book.location;
+
+      const selectedType = document.querySelector(
+        `input[name="bookType"][value="${book.type}"]`
+      );
+
+      if (selectedType) {
+        selectedType.checked = true;
+      }
+    } else {
+      resetBookForm();
+    }
+
+    window.setTimeout(() => {
+      bookTitle.focus();
+      bookForm.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }, 50);
+  }
+
+  function closeBookForm() {
+    bookForm.hidden = true;
+    openBookFormButton.hidden = false;
+    resetBookForm();
+  }
+
+  function getSearchableText(book) {
+    return [
+      book.title,
+      book.role,
+      book.benefits.join(" "),
+      book.occasion,
+      book.keywords.join(" "),
+      book.location,
+      book.type === "physical" ? "物理本 紙の本" : "電子書籍 Kindle"
+    ]
+      .join(" ")
+      .toLowerCase();
+  }
+
+  function getFilteredBooks() {
+    const searchTerm = bookSearch.value.trim().toLowerCase();
+
+    return books.filter((book) => {
+      const matchesType =
+        activeFilter === "all" || book.type === activeFilter;
+
+      const matchesSearch =
+        !searchTerm || getSearchableText(book).includes(searchTerm);
+
+      return matchesType && matchesSearch;
+    });
+  }
+
+  function createBookCard(book) {
+    const benefitsHtml = book.benefits.length
+      ? `
+        <section class="book-card-section">
+          <h4>✨ この本で得られること</h4>
+          <ul class="book-benefit-list">
+            ${book.benefits
+              .map((benefit) => `<li>${escapeHtml(benefit)}</li>`)
+              .join("")}
+          </ul>
+        </section>
+      `
+      : "";
+
+    const occasionHtml = book.occasion
+      ? `
+        <section class="book-card-section">
+          <h4>📖 こんな時に読む</h4>
+          <p class="book-card-text">${escapeHtml(book.occasion)}</p>
+        </section>
+      `
+      : "";
+
+    const keywordsHtml = book.keywords.length
+      ? `
+        <section class="book-card-section">
+          <h4>🏷 キーワード</h4>
+          <div class="keyword-list">
+            ${book.keywords
+              .map(
+                (keyword) =>
+                  `<span class="keyword-tag">${escapeHtml(keyword)}</span>`
+              )
+              .join("")}
+          </div>
+        </section>
+      `
+      : "";
+
+    const locationHtml = book.location
+      ? `
+        <div class="book-location">
+          <span>📍</span>
+          <span>${escapeHtml(book.location)}</span>
+        </div>
+      `
+      : "";
+
+    const bookTypeLabel =
+      book.type === "ebook" ? "📱 電子書籍" : "📕 物理本";
+
+    return `
+      <article class="book-card" data-book-id="${escapeHtml(book.id)}">
+        <div class="book-card-top">
+          <div>
+            <p class="book-card-type">${bookTypeLabel}</p>
+            <h3>${escapeHtml(book.title)}</h3>
+          </div>
+
+          <div class="book-card-menu">
+            <button
+              type="button"
+              class="book-card-action"
+              data-action="edit"
+              aria-label="${escapeHtml(book.title)}を編集"
+            >
+              編集
+            </button>
+
+            <button
+              type="button"
+              class="book-card-action"
+              data-action="delete"
+              aria-label="${escapeHtml(book.title)}を削除"
+            >
+              削除
+            </button>
+          </div>
+        </div>
+
+        <p class="book-card-role">
+          「${escapeHtml(book.role)}」
+        </p>
+
+        ${benefitsHtml}
+        ${occasionHtml}
+        ${keywordsHtml}
+        ${locationHtml}
+      </article>
+    `;
+  }
+
+  function renderBooks() {
+    const filteredBooks = getFilteredBooks();
+    const hasBooks = books.length > 0;
+    const hasResults = filteredBooks.length > 0;
+    const isSearching =
+      bookSearch.value.trim() !== "" || activeFilter !== "all";
+
+    bookCount.textContent = `${books.length}冊`;
+    emptyLibrary.hidden = hasBooks;
+    noSearchResults.hidden = !hasBooks || hasResults || !isSearching;
+
+    bookList.innerHTML = filteredBooks
+      .map((book) => createBookCard(book))
+      .join("");
+  }
+
+  function editBook(bookId) {
+    const book = books.find((item) => item.id === bookId);
+
+    if (!book) {
+      return;
+    }
+
+    openBookForm(book);
+  }
+
+  function deleteBook(bookId) {
+    const book = books.find((item) => item.id === bookId);
+
+    if (!book) {
+      return;
+    }
+
+    const shouldDelete = window.confirm(
+      `「${book.title}」を本棚から取り出しますか？`
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    books = books.filter((item) => item.id !== bookId);
+    saveBooks();
+    renderBooks();
+  }
+
+  openBookFormButton.addEventListener("click", () => {
+    openBookForm();
+  });
+
+  closeBookFormButton.addEventListener("click", closeBookForm);
+  cancelBookFormButton.addEventListener("click", closeBookForm);
+
+  bookForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const title = bookTitle.value.trim();
+    const role = bookRole.value.trim();
+
+    if (!title || !role) {
+      alert("本のタイトルと『この本は何屋さん？』を入力してください。");
+      return;
+    }
+
+    const bookData = {
+      id: editingBookId.value || createBookId(),
+      title,
+      role,
+      benefits: normalizeBenefits(bookBenefits.value),
+      occasion: bookOccasion.value.trim(),
+      keywords: normalizeKeywords(bookKeywords.value),
+      type: getSelectedBookType(),
+      location: bookLocation.value.trim(),
+      updatedAt: new Date().toISOString()
+    };
+
+    const existingBookIndex = books.findIndex(
+      (book) => book.id === bookData.id
+    );
+
+    if (existingBookIndex >= 0) {
+      books[existingBookIndex] = bookData;
+    } else {
+      books.unshift(bookData);
+    }
+
+    saveBooks();
+    renderBooks();
+    closeBookForm();
+  });
+
+  bookSearch.addEventListener("input", renderBooks);
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      activeFilter = button.dataset.filter;
+
+      filterButtons.forEach((item) => {
+        item.classList.toggle("is-active", item === button);
+      });
+
+      renderBooks();
+    });
+  });
+
+  bookList.addEventListener("click", (event) => {
+    const actionButton = event.target.closest("[data-action]");
+
+    if (!actionButton) {
+      return;
+    }
+
+    const bookCard = actionButton.closest("[data-book-id]");
+
+    if (!bookCard) {
+      return;
+    }
+
+    const bookId = bookCard.dataset.bookId;
+    const action = actionButton.dataset.action;
+
+    if (action === "edit") {
+      editBook(bookId);
+    }
+
+    if (action === "delete") {
+      deleteBook(bookId);
+    }
+  });
+
+  renderBooks();
+});
