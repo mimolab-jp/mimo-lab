@@ -1017,3 +1017,73 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderBooks();
 });
+const exportBooks =
+document.getElementById("exportBooks");
+
+const importBooks =
+document.getElementById("importBooks");
+
+const importBooksButton =
+document.getElementById("importBooksButton");
+
+exportBooks.addEventListener("click",()=>{
+
+    const json =
+        JSON.stringify(books,null,2);
+
+    const blob =
+        new Blob([json],{
+            type:"application/json"
+        });
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const a =
+        document.createElement("a");
+
+    a.href=url;
+
+    a.download="mimoLAB-books.json";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+});
+importBooksButton.addEventListener("click",()=>{
+
+    importBooks.click();
+
+});
+importBooks.addEventListener("change",(e)=>{
+
+    const file=e.target.files[0];
+
+    if(!file)return;
+
+    const reader=new FileReader();
+
+    reader.onload=()=>{
+
+        try{
+
+            books=JSON.parse(reader.result);
+
+            saveBooks();
+
+            renderBooks();
+
+            alert("本棚を読み込みました📚");
+
+        }catch{
+
+            alert("JSONが読み込めませんでした");
+
+        }
+
+    };
+
+    reader.readAsText(file);
+
+});

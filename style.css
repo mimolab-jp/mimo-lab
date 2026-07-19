@@ -1542,4 +1542,29 @@ html {
   .save-book-button {
     transition: none;
   }
+}.library-tools {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+   margin: 28px 0 0;
+  opacity: .8;
+}
+
+.tool-button {
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid #eadde1;
+  border-radius: 12px;
+  color: #9a7b86;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tool-button:hover {
+  background: #fff7fa;
+}
+
+.tool-button:active {
+  transform: scale(0.98);
 }

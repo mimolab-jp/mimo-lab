@@ -155,6 +155,8 @@
     </section>
 
     <section class="library-books-section">
+
+
       <div class="section-title-row">
         <div>
           <p class="section-kicker">MY BOOKS</p>
@@ -177,6 +179,21 @@
 
       <div id="bookList" class="book-list"></div>
     </section>
+    <div class="library-tools">
+        
+  <button id="exportBooks" class="tool-button">
+    💾 バックアップ
+  </button>
+  <button id="importBooksButton" class="tool-button">
+    📂 復元
+  </button>
+  <input
+    type="file"
+    id="importBooks"
+    accept=".json"
+    hidden
+  >
+</div>
   </main>
 
   <script src="app.js"></script>
