@@ -5,7 +5,7 @@
    * GASをウェブアプリとして公開した後、
    * 下のURLだけ自分のものへ置き換えてください。
    */
-  const GAS_WEB_APP_URL = "ここにGASのウェブアプリURhttps://script.google.com/macros/s/AKfycbyadofcyXYDLF0SxQpUdpWxU8pwEi7BljcLe3V_dUuAqAPslxFYW6GThj1DMeO5Pt47/exec";
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyadofcyXYDLF0SxQpUdpWxU8pwEi7BljcLe3V_dUuAqAPslxFYW6GThj1DMeO5Pt47/exec";
 
   const state = {
     videos: [],
