@@ -1,0 +1,243 @@
+/* =====================================
+   みもLAB｜動画ライブラリ専用
+===================================== */
+
+.video-library-page {
+  padding-bottom: 64px;
+}
+
+.video-library-header {
+  margin: 18px 0 26px;
+}
+
+.video-library-eyebrow {
+  margin: 0 0 8px;
+  color: var(--accent, #b86b86);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.video-library-header h1 {
+  margin: 0;
+  color: var(--text, #4d4543);
+  font-size: 30px;
+  line-height: 1.35;
+}
+
+.video-library-lead {
+  margin: 10px 0 0;
+  color: var(--subtext, #746b68);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.video-library-search {
+  margin-bottom: 20px;
+}
+
+.video-library-search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--border, #ead3dc);
+  border-radius: 18px;
+  box-shadow: 0 6px 18px var(--shadow, rgba(180, 110, 135, .12));
+}
+
+.video-library-search-box input {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text, #4d4543);
+  font: inherit;
+  font-size: 16px;
+}
+
+.video-library-search-box input::placeholder {
+  color: #aa9da2;
+}
+
+.video-keyword-filters {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-bottom: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.video-keyword-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.video-filter-button {
+  flex: 0 0 auto;
+  padding: 9px 14px;
+  border: 1px solid var(--border, #ead3dc);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--subtext, #746b68);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.video-filter-button.is-active {
+  border-color: #d59aaf;
+  background: #f8e9ef;
+  color: #8f5269;
+}
+
+.video-library-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 2px 12px;
+  color: var(--subtext, #746b68);
+  font-size: 14px;
+}
+
+.video-reload-button {
+  border: 0;
+  background: transparent;
+  color: var(--accent, #b86b86);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.video-list {
+  display: grid;
+  gap: 16px;
+}
+
+.video-card {
+  padding: 20px;
+  background: #fff;
+  border: 1px solid var(--border, #ead3dc);
+  border-radius: 24px;
+  box-shadow: 0 8px 24px var(--shadow, rgba(180, 110, 135, .12));
+}
+
+.video-card-title {
+  margin: 0;
+  color: var(--text, #4d4543);
+  font-size: 20px;
+  line-height: 1.55;
+}
+
+.video-card-memo-label {
+  margin: 16px 0 5px;
+  color: var(--accent, #b86b86);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.video-card-memo {
+  margin: 0;
+  color: var(--text, #4d4543);
+  font-size: 17px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.video-card-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 17px;
+}
+
+.video-keyword {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 11px;
+  background: #f8e9ef;
+  border-radius: 999px;
+  color: #8f5269;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.video-watch-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 18px;
+  border-radius: 16px;
+  background: var(--accent, #b86b86);
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.video-watch-link:active {
+  transform: scale(.98);
+}
+
+.video-empty,
+.video-error {
+  padding: 34px 20px;
+  background: rgba(255, 255, 255, .72);
+  border: 1px solid var(--border, #ead3dc);
+  border-radius: 24px;
+  color: var(--subtext, #746b68);
+  text-align: center;
+}
+
+.video-empty-icon {
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+
+.video-empty p,
+.video-error p {
+  margin: 5px 0;
+}
+
+.video-error-detail {
+  font-size: 13px;
+}
+
+.video-loading-card {
+  height: 190px;
+  border-radius: 24px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.65) 25%,
+      rgba(248,233,239,.9) 50%,
+      rgba(255,255,255,.65) 75%
+    );
+  background-size: 200% 100%;
+  animation: videoLoading 1.3s infinite;
+}
+
+@keyframes videoLoading {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (min-width: 760px) {
+  .video-library-page {
+    max-width: 760px;
+  }
+
+  .video-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}

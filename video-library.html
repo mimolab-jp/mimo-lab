@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff7fa">
+  <title>ライブラリ｜みもLAB</title>
+
+  <!-- 既存のみもLAB共通CSS -->
+  <link rel="stylesheet" href="style.css">
+  <!-- このページ専用CSS -->
+  <link rel="stylesheet" href="css/video-library.css">
+
+  <script src="js/video-library.js" defer></script>
+</head>
+<body>
+  <main class="app video-library-page">
+    <a class="back-link" href="index.html">← HOME</a>
+
+    <header class="video-library-header">
+      <p class="video-library-eyebrow">LEARNING LIBRARY</p>
+      <h1>ライブラリ</h1>
+      <p class="video-library-lead">
+        忘れたくない学びを、必要な時にもう一度。
+      </p>
+    </header>
+
+    <section class="video-library-search" aria-label="動画を探す">
+      <label class="video-library-search-box">
+        <span aria-hidden="true">🔎</span>
+        <input
+          id="videoSearch"
+          type="search"
+          placeholder="タイトル・メモ・キーワードで探す"
+          autocomplete="off"
+        >
+      </label>
+
+      <div id="keywordFilters" class="video-keyword-filters" aria-label="キーワード絞り込み">
+        <button class="video-filter-button is-active" type="button" data-keyword="all">
+          すべて
+        </button>
+      </div>
+    </section>
+
+    <section class="video-library-summary" aria-live="polite">
+      <span id="videoCount">読み込み中…</span>
+      <button id="reloadVideos" class="video-reload-button" type="button">↻ 更新</button>
+    </section>
+
+    <section id="videoList" class="video-list" aria-live="polite"></section>
+
+    <section id="videoEmpty" class="video-empty" hidden>
+      <p class="video-empty-icon">📚</p>
+      <p>条件に合う動画がありません。</p>
+    </section>
+
+    <section id="videoError" class="video-error" hidden>
+      <p>動画を読み込めませんでした。</p>
+      <p class="video-error-detail">GASのURLや公開設定を確認してください。</p>
+    </section>
+  </main>
+</body>
+</html>
