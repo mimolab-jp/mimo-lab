@@ -63,13 +63,10 @@
   }
 
   function loadVideos() {
-    if (
-      !GAS_WEB_APP_URL ||
-      GAS_WEB_APP_URL.includes("https://script.google.com/macros/s/AKfycbyadofcyXYDLF0SxQpUdpWxU8pwEi7BljcLe3V_dUuAqAPslxFYW6GThj1DMeO5Pt47/exec")
-    ) {
-      showError();
-      return;
-    }
+  if (!GAS_WEB_APP_URL) {
+  showError();
+  return;
+}
 
     showLoading();
 
