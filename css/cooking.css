@@ -1,208 +1,727 @@
-/* ========================================
-   みもLAB ごはん
+/* =========================================================
+   みもLAB ごはんページ
    cooking.css
-======================================== */
+   ========================================================= */
+
 :root {
-  --cooking-bg: #fffdf8;
-  --cooking-card: #fff8f1;
-  --cooking-card-strong: #fff1e4;
-  --cooking-pink: #d98a9a;
-  --cooking-pink-dark: #b96477;
-  --cooking-orange: #e9a15d;
-  --cooking-brown: #5b433b;
-  --cooking-muted: #8d746b;
-  --cooking-border: #efd9cf;
-  --cooking-white: #ffffff;
+  --cooking-bg: #fffaf6;
+  --cooking-card: #fff8f3;
+  --cooking-card-strong: #fff2ea;
+  --cooking-text: #51382f;
+  --cooking-text-soft: #876b60;
+  --cooking-accent: #df8193;
+  --cooking-accent-dark: #c9687e;
+  --cooking-accent-soft: #f8dce3;
+  --cooking-border: #f1cfc4;
+  --cooking-shadow: 0 12px 28px rgba(120, 75, 64, 0.09);
+  --cooking-shadow-soft: 0 7px 18px rgba(120, 75, 64, 0.07);
 }
-/* ページ全体 */
+
+/* ---------- ページ全体 ---------- */
+
 body {
-  background: var(--cooking-bg);
-  color: var(--cooking-brown);
+  margin: 0;
+  background:
+    radial-gradient(circle at top right, rgba(255, 221, 229, 0.22), transparent 34%),
+    var(--cooking-bg);
+  color: var(--cooking-text);
 }
+
 .cooking-page {
-  width: min(100% - 32px, 760px);
+  width: min(100% - 32px, 980px);
   margin: 0 auto;
-  padding: 28px 0 56px;
+  padding: 28px 0 72px;
+  box-sizing: border-box;
 }
-/* ヒーロー部分 */
+
+.cooking-page button,
+.cooking-page a {
+  font: inherit;
+}
+
+.cooking-page button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- ヒーロー ---------- */
+
 .cooking-hero {
-  margin-bottom: 28px;
+  margin-bottom: 30px;
 }
+
 .cooking-eyebrow,
 .section-label {
-  margin: 0 0 8px;
-  color: var(--cooking-pink-dark);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  margin: 0 0 5px;
+  color: var(--cooking-accent-dark);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
 }
+
 .cooking-hero h1 {
   margin: 0;
-  font-size: clamp(2rem, 8vw, 2.7rem);
+  font-size: clamp(2rem, 5vw, 2.8rem);
   line-height: 1.2;
-  color: var(--cooking-brown);
+  color: var(--cooking-text);
 }
+
 .cooking-description {
-  margin: 12px 0 0;
-  color: var(--cooking-muted);
-  font-size: 1rem;
-  line-height: 1.8;
+  margin: 10px 0 0;
+  color: var(--cooking-text-soft);
+  font-size: 0.96rem;
+  line-height: 1.7;
 }
-/* セクション見出し */
+
+/* ---------- 共通セクション ---------- */
+
+.today-menu,
+.recipe-search,
+.recipe-list {
+  margin-top: 30px;
+}
+
 .section-heading {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 14px;
+  margin-bottom: 13px;
 }
+
 .section-heading h2 {
   margin: 0;
   font-size: 1.35rem;
-  line-height: 1.4;
-  color: var(--cooking-brown);
+  line-height: 1.35;
+  color: var(--cooking-text);
 }
-/* 今日のおすすめ */
-.today-menu {
-  margin-bottom: 34px;
-}
-.shuffle-button {
-  flex-shrink: 0;
-  border: 1px solid var(--cooking-border);
-  border-radius: 999px;
-  background: var(--cooking-white);
-  color: var(--cooking-brown);
-  padding: 9px 14px;
-  font: inherit;
-  font-size: 0.9rem;
+
+/* ---------- ボタン ---------- */
+
+.shuffle-button,
+.primary-button,
+.favorite-button,
+.filter-buttons button {
+  border: 0;
   cursor: pointer;
   transition:
     transform 0.15s ease,
-    background-color 0.15s ease;
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
-.shuffle-button:hover {
-  background: var(--cooking-card);
-}
-.shuffle-button:active {
+
+.shuffle-button:active,
+.primary-button:active,
+.favorite-button:active,
+.filter-buttons button:active {
   transform: scale(0.97);
 }
-/* メインのレシピカード */
+
+.shuffle-button {
+  flex-shrink: 0;
+  padding: 9px 15px;
+  border: 1px solid var(--cooking-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--cooking-text);
+  font-size: 0.86rem;
+  box-shadow: 0 4px 11px rgba(120, 75, 64, 0.04);
+}
+
+.shuffle-button:hover {
+  background: #fff;
+  box-shadow: var(--cooking-shadow-soft);
+}
+
+.primary-button {
+  min-height: 40px;
+  padding: 10px 17px;
+  border-radius: 12px;
+  background: var(--cooking-accent);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 6px 14px rgba(223, 129, 147, 0.18);
+}
+
+.primary-button:hover {
+  background: var(--cooking-accent-dark);
+}
+
+.favorite-button {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  border: 1px solid var(--cooking-border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--cooking-accent-dark);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.favorite-button:hover {
+  background: #fff;
+}
+
+.favorite-button.is-favorite {
+  background: var(--cooking-accent-soft);
+  border-color: #eaa7b5;
+  color: var(--cooking-accent-dark);
+}
+
+/* ---------- 今日のおすすめ ---------- */
+
 .featured-recipe {
   display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  gap: 18px;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 20px;
   align-items: center;
-  padding: 22px;
+  padding: 24px;
   border: 1px solid var(--cooking-border);
-  border-radius: 26px;
-  background: var(--cooking-card);
-  box-shadow: 0 10px 28px rgba(118, 79, 61, 0.08);
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.48), transparent),
+    var(--cooking-card);
+  box-shadow: var(--cooking-shadow);
+  box-sizing: border-box;
+  overflow: hidden;
 }
-.recipe-icon {
+
+.recipe-icon,
+.recipe-card-icon {
   display: grid;
   place-items: center;
-  width: 88px;
-  height: 88px;
-  border-radius: 24px;
+  overflow: hidden;
   background: var(--cooking-card-strong);
-  font-size: 2.8rem;
 }
-.recipe-content {
+
+.recipe-icon {
+  width: 82px;
+  height: 82px;
+  border-radius: 22px;
+  font-size: 2.6rem;
+}
+
+.recipe-icon img,
+.recipe-card-icon img,
+.recipe-modal-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.recipe-content,
+.recipe-card-content {
   min-width: 0;
 }
+
+.recipe-content h3,
+.recipe-card-content h3 {
+  margin: 8px 0 6px;
+  color: var(--cooking-text);
+  line-height: 1.35;
+}
+
+.recipe-content h3 {
+  font-size: 1.45rem;
+}
+
+.recipe-summary {
+  margin: 0;
+  color: var(--cooking-text-soft);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
 .recipe-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
-  margin-bottom: 10px;
+  gap: 6px;
 }
+
 .recipe-tags span {
   display: inline-flex;
   align-items: center;
-  min-height: 30px;
-  padding: 5px 10px;
+  min-height: 28px;
+  padding: 4px 9px;
+  box-sizing: border-box;
   border-radius: 999px;
-  background: var(--cooking-white);
-  color: var(--cooking-muted);
-  font-size: 0.8rem;
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.8);
+  color: #695049;
+  font-size: 0.75rem;
+  line-height: 1.2;
 }
-.recipe-content h3 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: var(--cooking-brown);
+
+.recipe-card-meta,
+.recipe-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
 }
-.recipe-summary {
-  margin: 8px 0 16px;
-  color: var(--cooking-muted);
-  line-height: 1.7;
+
+.recipe-card-meta span,
+.recipe-detail-meta span {
+  color: var(--cooking-text-soft);
+  font-size: 0.78rem;
 }
+
 .recipe-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
+  margin-top: 14px;
 }
-.primary-button,
-.favorite-button {
-  border: 0;
-  font: inherit;
-  cursor: pointer;
+
+/* ---------- 絞り込み ---------- */
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-buttons button {
+  padding: 8px 12px;
+  border: 1px solid var(--cooking-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+  color: var(--cooking-text);
+  font-size: 0.82rem;
+}
+
+.filter-buttons button:hover {
+  background: #fff;
+}
+
+.filter-buttons button.is-active {
+  border-color: var(--cooking-accent);
+  background: var(--cooking-accent);
+  color: #fff;
+  box-shadow: 0 5px 12px rgba(223, 129, 147, 0.18);
+}
+
+/* ---------- レシピ一覧 ---------- */
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.recipe-card {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--cooking-border);
+  border-radius: 20px;
+  background: rgba(255, 250, 246, 0.93);
+  box-shadow: var(--cooking-shadow-soft);
+  box-sizing: border-box;
   transition:
-    transform 0.15s ease,
-    opacity 0.15s ease;
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    background-color 0.16s ease;
 }
-.primary-button {
-  min-height: 44px;
-  padding: 10px 18px;
-  border-radius: 14px;
-  background: var(--cooking-pink);
-  color: var(--cooking-white);
-  font-weight: 700;
+
+.recipe-card:hover {
+  transform: translateY(-2px);
+  background: #fff;
+  box-shadow: var(--cooking-shadow);
 }
-.favorite-button {
+
+.recipe-card-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  font-size: 1.8rem;
+}
+
+.recipe-card-content h3 {
+  font-size: 1.06rem;
+}
+
+.recipe-card .recipe-summary {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.recipe-card .recipe-actions {
+  margin-top: 13px;
+}
+
+.recipe-card .primary-button {
+  min-height: 38px;
+  padding: 9px 14px;
+  font-size: 0.88rem;
+}
+
+.recipe-card .favorite-button {
+  width: 39px;
+  min-width: 39px;
+  height: 39px;
+}
+
+/* ---------- 読み込み・空表示 ---------- */
+
+.empty-message {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 30px 20px;
+  border: 1px dashed var(--cooking-border);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--cooking-text-soft);
+  text-align: center;
+  line-height: 1.7;
+}
+
+.error-message .primary-button {
+  margin-top: 12px;
+}
+
+/* =========================================================
+   レシピ詳細モーダル
+   ========================================================= */
+
+body.modal-open {
+  overflow: hidden;
+}
+
+.recipe-modal[hidden] {
+  display: none;
+}
+
+.recipe-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  padding: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.18s ease,
+    visibility 0.18s ease;
+}
+
+.recipe-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.recipe-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(64, 44, 39, 0.46);
+  backdrop-filter: blur(4px);
+}
+
+.recipe-modal-panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 620px);
+  max-height: min(86vh, 760px);
+  overflow-y: auto;
+  padding: 28px;
   border: 1px solid var(--cooking-border);
+  border-radius: 26px;
+  background: var(--cooking-bg);
+  box-shadow: 0 24px 65px rgba(55, 34, 29, 0.24);
+  box-sizing: border-box;
+  transform: translateY(16px) scale(0.98);
+  transition: transform 0.18s ease;
+  overscroll-behavior: contain;
+}
+
+.recipe-modal.is-open .recipe-modal-panel {
+  transform: translateY(0) scale(1);
+}
+
+.recipe-modal-close {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: -10px -8px 2px auto;
+  border: 1px solid var(--cooking-border);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--cooking-text);
+  font-size: 1.55rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(70, 44, 36, 0.08);
+}
+
+.recipe-modal-icon {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border-radius: 21px;
+  background: var(--cooking-card-strong);
+  font-size: 2.5rem;
+}
+
+.recipe-modal-panel h2 {
+  margin: 10px 0 8px;
+  color: var(--cooking-text);
+  font-size: clamp(1.55rem, 5vw, 2rem);
+  line-height: 1.35;
+}
+
+.recipe-modal-summary {
+  margin: 0;
+  color: var(--cooking-text-soft);
+  line-height: 1.75;
+}
+
+.recipe-detail-meta {
+  margin-top: 15px;
+  padding: 12px 14px;
   border-radius: 14px;
-  background: var(--cooking-white);
-  color: var(--cooking-pink-dark);
-  font-size: 1.35rem;
+  background: var(--cooking-card-strong);
 }
-.primary-button:hover,
-.favorite-button:hover {
-  opacity: 0.88;
+
+.recipe-detail-section {
+  margin-top: 24px;
 }
-.primary-button:active,
-.favorite-button:active {
-  transform: scale(0.97);
+
+.recipe-detail-section h3 {
+  margin: 0 0 10px;
+  color: var(--cooking-text);
+  font-size: 1.05rem;
 }
-/* 下部は次回デザインするので、ひとまず余白だけ */
-.recipe-search,
-.recipe-list {
-  margin-top: 34px;
+
+.ingredient-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-/* スマホ */
-@media (max-width: 560px) {
+
+.ingredient-list li {
+  position: relative;
+  padding: 10px 12px 10px 32px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--cooking-text);
+  line-height: 1.55;
+}
+
+.ingredient-list li::before {
+  content: "・";
+  position: absolute;
+  top: 10px;
+  left: 13px;
+  color: var(--cooking-accent-dark);
+  font-weight: 800;
+}
+
+.step-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.step-list li {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--cooking-text);
+  line-height: 1.65;
+}
+
+.step-number {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  border-radius: 50%;
+  background: var(--cooking-accent);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.recipe-source-link {
+  margin: 24px 0 0;
+}
+
+.recipe-source-link a {
+  display: inline-flex;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--cooking-accent-soft);
+  color: var(--cooking-accent-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.recipe-source-link a:hover {
+  background: #f3cbd5;
+}
+
+/* ---------- スクロールバー ---------- */
+
+.recipe-modal-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.recipe-modal-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.recipe-modal-panel::-webkit-scrollbar-thumb {
+  border: 2px solid var(--cooking-bg);
+  border-radius: 999px;
+  background: #dfb6ae;
+}
+
+/* =========================================================
+   タブレット・スマホ
+   ========================================================= */
+
+@media (max-width: 760px) {
   .cooking-page {
-    width: min(100% - 24px, 760px);
-    padding-top: 22px;
+    width: min(100% - 24px, 680px);
+    padding-top: 20px;
   }
+
+  .recipe-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .featured-recipe {
+    grid-template-columns: 68px minmax(0, 1fr);
+    gap: 15px;
+    padding: 19px;
+    border-radius: 21px;
+  }
+
+  .recipe-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 18px;
+    font-size: 2.1rem;
+  }
+
+  .recipe-content h3 {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .cooking-page {
+    width: min(100% - 20px, 480px);
+    padding-bottom: 56px;
+  }
+
   .section-heading {
-    align-items: flex-start;
+    align-items: center;
   }
+
+  .section-heading h2 {
+    font-size: 1.2rem;
+  }
+
+  .shuffle-button {
+    padding: 8px 11px;
+    font-size: 0.78rem;
+  }
+
   .featured-recipe {
     grid-template-columns: 1fr;
-    padding: 18px;
   }
+
   .recipe-icon {
-    width: 72px;
-    height: 72px;
-    border-radius: 20px;
-    font-size: 2.3rem;
+    width: 64px;
+    height: 64px;
   }
-  .recipe-content h3 {
-    font-size: 1.35rem;
+
+  .recipe-card {
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 12px;
+    padding: 15px;
   }
+
+  .recipe-card-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .recipe-tags {
+    gap: 5px;
+  }
+
+  .recipe-tags span {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+
+  .filter-buttons {
+    gap: 7px;
+  }
+
+  .filter-buttons button {
+    padding: 7px 10px;
+    font-size: 0.77rem;
+  }
+
+  .recipe-modal {
+    align-items: end;
+    padding: 10px 10px 0;
+  }
+
+  .recipe-modal-panel {
+    width: 100%;
+    max-height: 91vh;
+    padding: 22px 18px 30px;
+    border-radius: 24px 24px 0 0;
+    transform: translateY(40px);
+  }
+
+  .recipe-modal.is-open .recipe-modal-panel {
+    transform: translateY(0);
+  }
+
+  .recipe-modal-close {
+    margin-top: -8px;
+  }
+}
+.back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  color: var(--cooking-text-soft);
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: color .2s ease, transform .2s ease;
+}
+
+.back-home:hover {
+  color: var(--cooking-accent-dark);
+  transform: translateX(-2px);
 }
