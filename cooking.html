@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff7fa">
+  <title>ごはん｜みもLAB</title>
+
+  <!-- 既存のみもLAB共通CSS -->
+  <link rel="stylesheet" href="style.css">
+  <!-- このページ専用CSS -->
+  <link rel="stylesheet" href="css/cooking.css">
+
+  <script src="js/cooking.js" defer></script>
+</head>
+<body><main class="cooking-page">
+  <section class="cooking-hero">
+    <p class="cooking-eyebrow">MIMO LAB KITCHEN</p>
+    <h1>🍳 ごはん</h1>
+    <p class="cooking-description">
+      考えたくない日のための、みも家専用ごはん帳。
+    </p>
+  </section>
+  <section class="today-menu" aria-labelledby="today-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-label">TODAY'S MENU</p>
+        <h2 id="today-title">今日のおすすめ</h2>
+      </div>
+      <button type="button" class="shuffle-button" id="shuffle-button">
+        🎲 ほかの献立
+      </button>
+    </div>
+    <article class="featured-recipe">
+      <div class="recipe-icon" aria-hidden="true">🍗</div>
+      <div class="recipe-content">
+        <div class="recipe-tags">
+          <span>🤖 ホットクック</span>
+          <span>🛒 業スー</span>
+          <span>⚡ 作業5分</span>
+        </div>
+        <h3>照り焼きチキン</h3>
+        <p class="recipe-summary">
+          鶏もも肉と焼肉のたれを入れて、あとはおまかせ。
+        </p>
+        <div class="recipe-actions">
+          <button type="button" class="primary-button">
+            レシピを見る
+          </button>
+          <button type="button" class="favorite-button" aria-label="お気に入りに追加">
+            ♡
+          </button>
+        </div>
+      </div>
+    </article>
+  </section>
+  <section class="recipe-search" aria-labelledby="search-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-label">FIND A RECIPE</p>
+        <h2 id="search-title">どんなごはんにする？</h2>
+      </div>
+    </div>
+    <div class="filter-buttons" aria-label="レシピの絞り込み">
+      <button type="button" data-filter="meat">🥩 肉</button>
+      <button type="button" data-filter="noodle">🍜 麺</button>
+      <button type="button" data-filter="rice">🍛 カレー・丼</button>
+      <button type="button" data-filter="hotcook">🤖 ホットクック</button>
+      <button type="button" data-filter="quick">⚡ 10分以内</button>
+      <button type="button" data-filter="gyomu">🛒 業スー</button>
+    </div>
+  </section>
+  <section class="recipe-list" aria-labelledby="recipe-list-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-label">RECIPE BOOK</p>
+        <h2 id="recipe-list-title">登録したレシピ</h2>
+      </div>
+    </div>
+    <div id="recipe-container" class="recipe-grid">
+      <p class="empty-message">
+        ここにデータベースのレシピが並びます。
+      </p>
+    </div>
+  </section>
+</main>
+</body>
+</html>

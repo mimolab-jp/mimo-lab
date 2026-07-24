@@ -1,0 +1,208 @@
+/* ========================================
+   みもLAB ごはん
+   cooking.css
+======================================== */
+:root {
+  --cooking-bg: #fffdf8;
+  --cooking-card: #fff8f1;
+  --cooking-card-strong: #fff1e4;
+  --cooking-pink: #d98a9a;
+  --cooking-pink-dark: #b96477;
+  --cooking-orange: #e9a15d;
+  --cooking-brown: #5b433b;
+  --cooking-muted: #8d746b;
+  --cooking-border: #efd9cf;
+  --cooking-white: #ffffff;
+}
+/* ページ全体 */
+body {
+  background: var(--cooking-bg);
+  color: var(--cooking-brown);
+}
+.cooking-page {
+  width: min(100% - 32px, 760px);
+  margin: 0 auto;
+  padding: 28px 0 56px;
+}
+/* ヒーロー部分 */
+.cooking-hero {
+  margin-bottom: 28px;
+}
+.cooking-eyebrow,
+.section-label {
+  margin: 0 0 8px;
+  color: var(--cooking-pink-dark);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+.cooking-hero h1 {
+  margin: 0;
+  font-size: clamp(2rem, 8vw, 2.7rem);
+  line-height: 1.2;
+  color: var(--cooking-brown);
+}
+.cooking-description {
+  margin: 12px 0 0;
+  color: var(--cooking-muted);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+/* セクション見出し */
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.section-heading h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.4;
+  color: var(--cooking-brown);
+}
+/* 今日のおすすめ */
+.today-menu {
+  margin-bottom: 34px;
+}
+.shuffle-button {
+  flex-shrink: 0;
+  border: 1px solid var(--cooking-border);
+  border-radius: 999px;
+  background: var(--cooking-white);
+  color: var(--cooking-brown);
+  padding: 9px 14px;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease;
+}
+.shuffle-button:hover {
+  background: var(--cooking-card);
+}
+.shuffle-button:active {
+  transform: scale(0.97);
+}
+/* メインのレシピカード */
+.featured-recipe {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  padding: 22px;
+  border: 1px solid var(--cooking-border);
+  border-radius: 26px;
+  background: var(--cooking-card);
+  box-shadow: 0 10px 28px rgba(118, 79, 61, 0.08);
+}
+.recipe-icon {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 24px;
+  background: var(--cooking-card-strong);
+  font-size: 2.8rem;
+}
+.recipe-content {
+  min-width: 0;
+}
+.recipe-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 10px;
+}
+.recipe-tags span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--cooking-white);
+  color: var(--cooking-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.recipe-content h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--cooking-brown);
+}
+.recipe-summary {
+  margin: 8px 0 16px;
+  color: var(--cooking-muted);
+  line-height: 1.7;
+}
+.recipe-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.primary-button,
+.favorite-button {
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+.primary-button {
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 14px;
+  background: var(--cooking-pink);
+  color: var(--cooking-white);
+  font-weight: 700;
+}
+.favorite-button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--cooking-border);
+  border-radius: 14px;
+  background: var(--cooking-white);
+  color: var(--cooking-pink-dark);
+  font-size: 1.35rem;
+}
+.primary-button:hover,
+.favorite-button:hover {
+  opacity: 0.88;
+}
+.primary-button:active,
+.favorite-button:active {
+  transform: scale(0.97);
+}
+/* 下部は次回デザインするので、ひとまず余白だけ */
+.recipe-search,
+.recipe-list {
+  margin-top: 34px;
+}
+/* スマホ */
+@media (max-width: 560px) {
+  .cooking-page {
+    width: min(100% - 24px, 760px);
+    padding-top: 22px;
+  }
+  .section-heading {
+    align-items: flex-start;
+  }
+  .featured-recipe {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+  .recipe-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    font-size: 2.3rem;
+  }
+  .recipe-content h3 {
+    font-size: 1.35rem;
+  }
+}
