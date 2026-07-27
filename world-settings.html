@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#fff7fa">
+  <title>世界設定｜みもLAB</title>
+
+  <!-- みもLAB共通CSS -->
+  <link rel="stylesheet" href="style.css">
+  <!-- このページ専用CSS -->
+  <link rel="stylesheet" href="css/world-settings.css">
+</head>
+
+<body class="world-settings-page">
+  <div class="world-boot" id="worldBoot" aria-hidden="true">
+    <div class="world-boot__panel" role="status" aria-live="polite">
+      <div class="world-boot__mark">⚙️</div>
+      <p class="world-boot__name">Mimo OS</p>
+      <p class="world-boot__version">Version 2.0.0</p>
+      <div class="world-boot__bar"><span></span></div>
+      <ul class="world-boot__log" aria-label="設定の読み込み状況">
+        <li>✓ Memory</li>
+        <li>✓ Reality Engine</li>
+        <li>✓ Interpretation Module</li>
+      </ul>
+      <p class="world-boot__complete">Configuration Loaded.</p>
+    </div>
+  </div>
+
+  <main class="world-settings">
+    <a class="world-settings__back" href="cozy.html">← Cozy Corner</a>
+
+    <header class="world-hero">
+      <div class="world-hero__top">
+        <div>
+          <p class="world-hero__eyebrow">MIMO OS CONFIGURATION CENTER</p>
+          <h1>⚙️ 世界設定</h1>
+        </div>
+        <div class="world-os-badge" aria-label="Mimo OS バージョン2">
+          <span>Mimo OS</span>
+          <strong>2.0</strong>
+        </div>
+      </div>
+      <p class="world-hero__lead">
+        この画面では、現実の見え方を変更できます。<br>
+        古い設定は削除せず、これまで自分を守ってくれた履歴として保存します。
+      </p>
+      <div class="world-system-status">
+        <span class="world-system-status__light" aria-hidden="true"></span>
+        <span>NEW CONFIGURATION ACTIVE</span>
+      </div>
+    </header>
+
+    <section class="world-section" aria-labelledby="settingsHeading">
+      <div class="world-section__heading">
+        <div>
+          <p class="world-section__eyebrow">INSTALLED SETTINGS</p>
+          <h2 id="settingsHeading">適用中の世界ルール</h2>
+        </div>
+        <span class="world-section__count">7 settings</span>
+      </div>
+
+      <div class="world-settings-list">
+        <!-- 人生 -->
+        <article class="world-setting-card">
+          <div class="world-setting-card__head">
+            <div class="world-setting-card__icon" aria-hidden="true">🌏</div>
+            <div class="world-setting-card__title">
+              <p>WORLD RULE 01</p>
+              <h3>人生とは</h3>
+            </div>
+            <span class="world-version">v2.0</span>
+          </div>
+          <div class="world-current">
+            <div class="world-current__label">
+              <span class="world-current__dot"></span>
+              現在適用中
+            </div>
+            <p class="world-current__text">
+              思ったことが自然と現実になる、<strong>Happyイージーモード。</strong>
+            </p>
+          </div>
+          <details class="world-history">
+            <summary>
+              <span>変更履歴</span>
+              <span class="world-history__toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="world-history__body">
+              <div class="world-history__meta">
+                <span>Version 1.0</span>
+                <span class="world-legacy-badge">UNINSTALLED</span>
+              </div>
+              <p>茨の道を選び、精神鍛錬を積むことで、魂を浄化しなければならない。</p>
+              <div class="world-release-note">
+                <span>UPDATE NOTE</span>
+                <ul>
+                  <li>苦行モードを削除</li>
+                  <li>Happyイージーモードを導入</li>
+                  <li>「我慢すると報われる」を無効化</li>
+                </ul>
+              </div>
+            </div>
+          </details>
+        </article>
+
+        <!-- 人間関係 -->
+        <article class="world-setting-card">
+          <div class="world-setting-card__head">
+            <div class="world-setting-card__icon" aria-hidden="true">🤝</div>
+            <div class="world-setting-card__title">
+              <p>WORLD RULE 02</p>
+              <h3>人間関係とは</h3>
+            </div>
+            <span class="world-version">v2.0</span>
+          </div>
+          <div class="world-current">
+            <div class="world-current__label">
+              <span class="world-current__dot"></span>
+              現在適用中
+            </div>
+            <p class="world-current__text">
+              安心して素の自分でいられる場所。無理に好かれようとしなくても、<strong>合う人とは自然につながる。</strong>
+            </p>
+          </div>
+          <details class="world-history">
+            <summary>
+              <span>変更履歴</span>
+              <span class="world-history__toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="world-history__body">
+              <div class="world-history__meta">
+                <span>Version 1.0</span>
+                <span class="world-legacy-badge">UNINSTALLED</span>
+              </div>
+              <p>嫌われないように自分を殺して、相手に合わせるもの。</p>
+              <div class="world-release-note">
+                <span>UPDATE NOTE</span>
+                <ul>
+                  <li>過剰適応モードを停止</li>
+                  <li>安心接続を標準設定に変更</li>
+                </ul>
+              </div>
+            </div>
+          </details>
+        </article>
+
+        <!-- 自分 -->
+        <article class="world-setting-card">
+          <div class="world-setting-card__head">
+            <div class="world-setting-card__icon" aria-hidden="true">🌷</div>
+            <div class="world-setting-card__title">
+              <p>WORLD RULE 03</p>
+              <h3>自分とは</h3>
+            </div>
+            <span class="world-version">v2.0</span>
+          </div>
+          <div class="world-current">
+            <div class="world-current__label">
+              <span class="world-current__dot"></span>
+              現在適用中
+            </div>
+            <p class="world-current__text">
+              <strong>そのままで価値がある存在。</strong>努力は価値を証明するためではなく、面白いから、叶えたいからするもの。
+            </p>
+          </div>
+          <details class="world-history">
+            <summary>
+              <span>変更履歴</span>
+              <span class="world-history__toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="world-history__body">
+              <div class="world-history__meta">
+                <span>Version 1.0</span>
+                <span class="world-legacy-badge">UNINSTALLED</span>
+              </div>
+              <p>役に立たなければ、存在する価値がない。</p>
+              <div class="world-release-note">
+                <span>UPDATE NOTE</span>
+                <ul>
+                  <li>自己価値の条件判定を削除</li>
+                  <li>存在価値を常時ONに変更</li>
+                </ul>
+              </div>
+            </div>
+          </details>
+        </article>
+
+        <!-- 仕事 -->
+        <article class="world-setting-card">
+          <div class="world-setting-card__head">
+            <div class="world-setting-card__icon" aria-hidden="true">🖥️</div>
+            <div class="world-setting-card__title">
+              <p>WORLD RULE 04</p>
+              <h3>仕事とは</h3>
+            </div>
+            <span class="world-version">v2.0</span>
+          </div>
+          <div class="world-current">
+            <div class="world-current__label">
+              <span class="world-current__dot"></span>
+              現在適用中
+            </div>
+            <p class="world-current__text">
+              誰かの役に立ちながら、自分も楽しめる場所。苦手を責めるより、<strong>得意を伸ばして貢献すればいい。</strong>
+            </p>
+          </div>
+          <details class="world-history">
+            <summary>
+              <span>変更履歴</span>
+              <span class="world-history__toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="world-history__body">
+              <div class="world-history__meta">
+                <span>Version 1.0</span>
+                <span class="world-legacy-badge">UNINSTALLED</span>
+              </div>
+              <p>苦しくても耐えるもの。何でもできなければならない。</p>
+              <div class="world-release-note">
+                <span>UPDATE NOTE</span>
+                <ul>
+                  <li>万能要求を解除</li>
+                  <li>得意分野ブーストを有効化</li>
+                </ul>
+              </div>
+            </div>
+          </details>
+        </article>
+
+        <!-- お金 -->
+        <article class="world-setting-card">
+          <div class="world-setting-card__head">
+            <div class="world-setting-card__icon" aria-hidden="true">💰</div>
+            <div class="world-setting-card__title">
+              <p>WORLD RULE 05</p>
+              <h3>お金とは</h3>
+            </div>
+            <span class="world-version">v2.0</span>
+          </div>
+          <div class="world-current">
+            <div class="world-current__label">
+              <span class="world-current__dot"></span>
+              現在適用中
+            </div>
+            <p class="world-current__text">
+              好きな体験と安心を増やしてくれる味方。<strong>受け取り、楽しみ、気持ちよく循環させていい。</strong>
+            </p>
+          </div>
+          <details class="world-history">
+            <summary>
+              <span>変更履歴</span>
+              <span class="world-history__toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="world-history__body">
+              <div class="world-history__meta">
+                <span>Version 1.0</span>
+                <span class="world-legacy-badge">UNINSTALLED</span>
+              </div>
+              <p>減っていくもの。我慢して貯めなければならないもの。</p>
+              <div class="world-release-note">
+                <span>UPDATE NOTE</span>
+                <ul>
+                  <li>不足アラートの感度を調整</li>
+                  <li>体験還元モジュールを追加</li>
+                </ul>
+              </div>
+            </div>
+          </details>
+        </article>
+
+        <!-- 幸運 -->
+        <article class="world-setting-card">
+          <div class="world-setting-card__head">
+            <div class="world-setting-card__icon" aria-hidden="true">🍀</div>
+            <div class="world-setting-card__title">
+              <p>WORLD RULE 06</p>
+              <h3>幸運とは</h3>
+            </div>
+            <span class="world-version">v2.0</span>
+          </div>
+          <div class="world-current">
+            <div class="world-current__label">
+              <span class="world-current__dot"></span>
+              現在適用中
+            </div>
+            <p class="world-current__text">
+              いつでも身の回りに存在しているもの。<strong>気づいたぶんだけ、遠慮なく受け取っていい。</strong>
+            </p>
+          </div>
+          <details class="world-history">
+            <summary>
+              <span>変更履歴</span>
+              <span class="world-history__toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="world-history__body">
+              <div class="world-history__meta">
+                <span>Version 1.0</span>
+                <span class="world-legacy-badge">UNINSTALLED</span>
+              </div>
+              <p>特別な人にだけ、たまに訪れるもの。</p>
+              <div class="world-release-note">
+                <span>UPDATE NOTE</span>
+                <ul>
+                  <li>幸運検知センサーを常時ONに変更</li>
+                  <li>受け取り上限を撤廃</li>
+                </ul>
+              </div>
+            </div>
+          </details>
+        </article>
+
+        <!-- 趣味 -->
+        <article class="world-setting-card">
+          <div class="world-setting-card__head">
+            <div class="world-setting-card__icon" aria-hidden="true">🎮</div>
+            <div class="world-setting-card__title">
+              <p>WORLD RULE 07</p>
+              <h3>趣味とは</h3>
+            </div>
+            <span class="world-version">v2.0</span>
+          </div>
+          <div class="world-current">
+            <div class="world-current__label">
+              <span class="world-current__dot"></span>
+              現在適用中
+            </div>
+            <p class="world-current__text">
+              <strong>人生を豊かにするメインコンテンツ。</strong>遊ぶこと、作ること、夢中になることは、自分を育てる大切な時間。
+            </p>
+          </div>
+          <details class="world-history">
+            <summary>
+              <span>変更履歴</span>
+              <span class="world-history__toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="world-history__body">
+              <div class="world-history__meta">
+                <span>Version 1.0</span>
+                <span class="world-legacy-badge">UNINSTALLED</span>
+              </div>
+              <p>やるべきことを全部終えた人だけに許される、余った時間の使い道。</p>
+              <div class="world-release-note">
+                <span>UPDATE NOTE</span>
+                <ul>
+                  <li>罪悪感デバフを削除</li>
+                  <li>メインコンテンツへ昇格</li>
+                </ul>
+              </div>
+            </div>
+          </details>
+        </article>
+      </div>
+    </section>
+
+    <section class="world-restart" aria-labelledby="restartHeading">
+      <div class="world-restart__icon" aria-hidden="true">↻</div>
+      <div class="world-restart__copy">
+        <p class="world-section__eyebrow">APPLY CONFIGURATION</p>
+        <h2 id="restartHeading">新しい設定で再起動</h2>
+        <p>設定は、日常生活の中で少しずつ反映されます。</p>
+      </div>
+      <button class="world-restart__button" id="restartMimoOs" type="button">
+        Mimo OSを再起動
+      </button>
+    </section>
+
+    <footer class="world-footer">
+      <div>
+        <span>SYSTEM</span>
+        <strong>Mimo OS 2.0.0</strong>
+      </div>
+      <div>
+        <span>LAST UPDATE</span>
+        <strong>2026.07.27</strong>
+      </div>
+      <div>
+        <span>STATUS</span>
+        <strong class="world-footer__stable">● STABLE</strong>
+      </div>
+    </footer>
+  </main>
+
+  <div class="world-toast" id="worldToast" role="status" aria-live="polite">
+    ✓ 新しい世界設定を読み込みました
+  </div>
+
+  <script src="js/world-settings.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,709 @@
+/* =========================================================
+   世界設定 / Mimo OS Configuration Center
+   このページの指定は .world-settings-page 内に限定しています
+   ========================================================= */
+
+.world-settings-page {
+  --world-bg: #fff7fa;
+  --world-paper: rgba(255, 255, 255, 0.92);
+  --world-paper-solid: #ffffff;
+  --world-text: #4d4543;
+  --world-muted: #8d7b80;
+  --world-accent: #bd708b;
+  --world-accent-deep: #96546d;
+  --world-accent-soft: #f7dfe8;
+  --world-line: #edd2dc;
+  --world-green: #6f9d83;
+  --world-green-soft: #e8f3ec;
+  --world-shadow: 0 12px 36px rgba(112, 72, 87, 0.09);
+  margin: 0;
+  min-height: 100vh;
+  color: var(--world-text);
+  background:
+    radial-gradient(circle at 88% 2%, rgba(242, 206, 220, 0.38), transparent 26rem),
+    linear-gradient(180deg, #fff9fb 0%, var(--world-bg) 100%);
+  font-family:
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    "Meiryo",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.world-settings-page *,
+.world-settings-page *::before,
+.world-settings-page *::after {
+  box-sizing: border-box;
+}
+
+.world-settings {
+  width: min(100% - 32px, 760px);
+  margin: 0 auto;
+  padding:
+    max(24px, env(safe-area-inset-top))
+    0
+    calc(64px + env(safe-area-inset-bottom));
+}
+
+.world-settings__back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-bottom: 14px;
+  color: var(--world-accent-deep);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.world-settings__back:active {
+  transform: scale(0.98);
+}
+
+/* ---------- ヘッダー ---------- */
+
+.world-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 28px;
+  border: 1px solid rgba(237, 210, 220, 0.9);
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(255, 247, 250, 0.94));
+  box-shadow: var(--world-shadow);
+}
+
+.world-hero::after {
+  position: absolute;
+  top: -56px;
+  right: -48px;
+  width: 170px;
+  height: 170px;
+  border: 26px solid rgba(189, 112, 139, 0.055);
+  border-radius: 50%;
+  content: "";
+}
+
+.world-hero__top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.world-hero__eyebrow,
+.world-section__eyebrow {
+  margin: 0 0 7px;
+  color: var(--world-accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+}
+
+.world-hero h1 {
+  margin: 0;
+  color: #433a3c;
+  font-family: Georgia, "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: clamp(28px, 6vw, 36px);
+  line-height: 1.3;
+}
+
+.world-os-badge {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  min-width: 68px;
+  padding: 10px 11px;
+  border: 1px solid var(--world-line);
+  border-radius: 16px;
+  color: var(--world-accent-deep);
+  background: #fff;
+  line-height: 1;
+  box-shadow: 0 5px 14px rgba(112, 72, 87, 0.08);
+}
+
+.world-os-badge span {
+  margin-bottom: 6px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.world-os-badge strong {
+  font-family: Georgia, serif;
+  font-size: 23px;
+}
+
+.world-hero__lead {
+  position: relative;
+  z-index: 1;
+  margin: 20px 0;
+  color: #78686c;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.world-system-status {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: #5c806b;
+  background: var(--world-green-soft);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.world-system-status__light,
+.world-current__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--world-green);
+  box-shadow: 0 0 0 4px rgba(111, 157, 131, 0.12);
+}
+
+/* ---------- 設定一覧 ---------- */
+
+.world-section {
+  margin-top: 38px;
+}
+
+.world-section__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 4px 16px;
+}
+
+.world-section__heading h2,
+.world-restart h2 {
+  margin: 0;
+  color: #493f41;
+  font-family: Georgia, "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 21px;
+}
+
+.world-section__count {
+  padding-bottom: 2px;
+  color: var(--world-muted);
+  font-family: Georgia, serif;
+  font-size: 12px;
+}
+
+.world-settings-list {
+  display: grid;
+  gap: 16px;
+}
+
+.world-setting-card {
+  overflow: hidden;
+  border: 1px solid var(--world-line);
+  border-radius: 24px;
+  background: var(--world-paper);
+  box-shadow: 0 8px 26px rgba(112, 72, 87, 0.07);
+}
+
+.world-setting-card__head {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 21px 22px 14px;
+}
+
+.world-setting-card__icon {
+  display: grid;
+  flex: 0 0 44px;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #f0dce4;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #fff, #fff3f7);
+  font-size: 22px;
+}
+
+.world-setting-card__title {
+  min-width: 0;
+}
+
+.world-setting-card__title p {
+  margin: 0 0 3px;
+  color: var(--world-accent);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.world-setting-card__title h3 {
+  margin: 0;
+  color: #463d3f;
+  font-size: 19px;
+  line-height: 1.4;
+}
+
+.world-version {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 6px 9px;
+  border: 1px solid var(--world-line);
+  border-radius: 999px;
+  color: var(--world-accent-deep);
+  background: #fff9fb;
+  font-family: Georgia, serif;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.world-current {
+  margin: 0 18px 18px;
+  padding: 17px 18px;
+  border: 1px solid #dfece3;
+  border-radius: 17px;
+  background: linear-gradient(135deg, #f4faf6, #fff);
+}
+
+.world-current__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #5f846e;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.world-current__text {
+  margin: 0;
+  color: #51474a;
+  font-family: Georgia, "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.world-current__text strong {
+  color: var(--world-accent-deep);
+  font-weight: 700;
+}
+
+/* ---------- 変更履歴 ---------- */
+
+.world-history {
+  border-top: 1px solid #f0dee5;
+}
+
+.world-history summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  padding: 0 22px;
+  color: #806e73;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.world-history summary::-webkit-details-marker {
+  display: none;
+}
+
+.world-history summary:active {
+  background: #fff8fa;
+}
+
+.world-history__toggle {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #faedf2;
+}
+
+.world-history__toggle::before,
+.world-history__toggle::after {
+  position: absolute;
+  top: 8px;
+  left: 5px;
+  width: 8px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: var(--world-accent);
+  content: "";
+  transition: transform 180ms ease;
+}
+
+.world-history__toggle::after {
+  transform: rotate(90deg);
+}
+
+.world-history[open] .world-history__toggle::after {
+  transform: rotate(0);
+}
+
+.world-history__body {
+  margin: 0 18px 18px;
+  padding: 16px 18px;
+  border: 1px dashed #decbd2;
+  border-radius: 16px;
+  color: #827278;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      #fcfafb 0,
+      #fcfafb 29px,
+      rgba(222, 203, 210, 0.28) 30px
+    );
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.world-history__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  color: #65585c;
+  font-family: Georgia, serif;
+  font-weight: 700;
+}
+
+.world-legacy-badge {
+  padding: 4px 7px;
+  border-radius: 999px;
+  color: #927e85;
+  background: #eee8ea;
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+
+.world-history__body > p {
+  margin: 0;
+}
+
+.world-release-note {
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid #e9dce1;
+}
+
+.world-release-note > span {
+  color: var(--world-accent);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.world-release-note ul {
+  margin: 6px 0 0;
+  padding-left: 1.25em;
+}
+
+/* ---------- 再起動 ---------- */
+
+.world-restart {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  margin-top: 34px;
+  padding: 24px;
+  border: 1px solid var(--world-line);
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(247, 223, 232, 0.8), rgba(255, 255, 255, 0.96));
+  box-shadow: var(--world-shadow);
+}
+
+.world-restart__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  color: var(--world-accent-deep);
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 28px;
+}
+
+.world-restart__copy p:last-child {
+  margin: 9px 0 0;
+  color: #7f6d72;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.world-restart__button {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 50px;
+  border: 0;
+  border-radius: 16px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--world-accent), #aa5f7a);
+  box-shadow: 0 8px 20px rgba(166, 91, 118, 0.2);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+.world-restart__button:hover {
+  filter: brightness(1.035);
+}
+
+.world-restart__button:active {
+  transform: scale(0.98);
+}
+
+.world-footer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  overflow: hidden;
+  margin-top: 18px;
+  border: 1px solid var(--world-line);
+  border-radius: 17px;
+  background: var(--world-line);
+}
+
+.world-footer div {
+  display: grid;
+  gap: 5px;
+  padding: 13px 10px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.world-footer span {
+  color: var(--world-muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.world-footer strong {
+  color: #66585d;
+  font-family: Georgia, serif;
+  font-size: 10px;
+}
+
+.world-footer .world-footer__stable {
+  color: var(--world-green);
+  font-family: inherit;
+}
+
+/* ---------- 起動画面 ---------- */
+
+.world-boot {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: grid;
+  visibility: hidden;
+  place-items: center;
+  padding: 24px;
+  opacity: 0;
+  background: rgba(255, 247, 250, 0.96);
+  backdrop-filter: blur(14px);
+  transition: opacity 220ms ease, visibility 220ms ease;
+}
+
+.world-boot.is-visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.world-boot__panel {
+  width: min(100%, 310px);
+  text-align: center;
+}
+
+.world-boot__mark {
+  margin-bottom: 12px;
+  font-size: 42px;
+  animation: world-boot-spin 1.4s ease-in-out infinite;
+}
+
+.world-boot__name {
+  margin: 0;
+  color: #493f41;
+  font-family: Georgia, serif;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.world-boot__version {
+  margin: 5px 0 20px;
+  color: var(--world-accent);
+  font-family: Georgia, serif;
+  font-size: 12px;
+}
+
+.world-boot__bar {
+  overflow: hidden;
+  width: 100%;
+  height: 6px;
+  border-radius: 99px;
+  background: #f0dce4;
+}
+
+.world-boot__bar span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #d693aa, var(--world-accent-deep));
+  transform: translateX(-100%);
+}
+
+.world-boot.is-visible .world-boot__bar span {
+  animation: world-boot-progress 1.65s ease forwards;
+}
+
+.world-boot__log {
+  display: grid;
+  gap: 5px;
+  margin: 17px 0 0;
+  padding: 0;
+  color: #8a777d;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  text-align: left;
+  list-style: none;
+}
+
+.world-boot__log li {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.world-boot.is-visible .world-boot__log li {
+  animation: world-log-in 180ms ease forwards;
+}
+
+.world-boot.is-visible .world-boot__log li:nth-child(1) { animation-delay: 420ms; }
+.world-boot.is-visible .world-boot__log li:nth-child(2) { animation-delay: 700ms; }
+.world-boot.is-visible .world-boot__log li:nth-child(3) { animation-delay: 980ms; }
+
+.world-boot__complete {
+  margin: 18px 0 0;
+  color: var(--world-green);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0;
+}
+
+.world-boot.is-visible .world-boot__complete {
+  animation: world-log-in 180ms 1.25s ease forwards;
+}
+
+.world-toast {
+  position: fixed;
+  z-index: 10000;
+  left: 50%;
+  bottom: calc(22px + env(safe-area-inset-bottom));
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 12px 17px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(82, 111, 93, 0.94);
+  box-shadow: 0 8px 24px rgba(71, 63, 66, 0.18);
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 12px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.world-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@keyframes world-boot-spin {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(12deg); }
+}
+
+@keyframes world-boot-progress {
+  to { transform: translateX(0); }
+}
+
+@keyframes world-log-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 520px) {
+  .world-settings {
+    width: min(100% - 24px, 760px);
+    padding-top: max(14px, env(safe-area-inset-top));
+  }
+
+  .world-settings__back {
+    margin-bottom: 7px;
+  }
+
+  .world-hero {
+    padding: 22px 20px;
+    border-radius: 23px;
+  }
+
+  .world-hero__lead {
+    font-size: 13px;
+  }
+
+  .world-setting-card {
+    border-radius: 21px;
+  }
+
+  .world-setting-card__head {
+    padding: 18px 17px 13px;
+  }
+
+  .world-current {
+    margin: 0 13px 13px;
+    padding: 15px;
+  }
+
+  .world-current__text {
+    font-size: 15px;
+    line-height: 1.85;
+  }
+
+  .world-history summary {
+    padding: 0 18px;
+  }
+
+  .world-history__body {
+    margin: 0 13px 13px;
+    padding: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world-settings-page *,
+  .world-settings-page *::before,
+  .world-settings-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
