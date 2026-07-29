@@ -79,17 +79,194 @@
     </section>
     <section class="recipe-list" aria-labelledby="recipe-list-title">
       <div class="section-heading">
-        <div>
-          <p class="section-label">RECIPE BOOK</p>
-          <h2 id="recipe-list-title">登録したレシピ</h2>
-        </div>
-      </div>
+  <div>
+    <p class="section-label">RECIPE BOOK</p>
+    <h2 id="recipe-list-title">登録したレシピ</h2>
+  </div>
+
+  <button
+    type="button"
+    class="add-recipe-button"
+    id="add-recipe-button"
+  >
+    ＋ レシピを追加
+  </button>
+</div>
       <div id="recipe-container" class="recipe-grid">
         <p class="empty-message">
           ここにデータベースのレシピが並びます。
         </p>
       </div>
     </section>
+    <div class="recipe-add-modal" id="recipe-add-modal" hidden>
+  <div
+    class="recipe-add-modal-backdrop"
+    data-close-add-modal="true"
+  ></div>
+
+  <section
+    class="recipe-add-modal-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="recipe-add-modal-title"
+  >
+    <div class="recipe-add-modal-header">
+      <div>
+        <p class="section-label">ADD RECIPE</p>
+        <h2 id="recipe-add-modal-title">レシピを追加</h2>
+      </div>
+
+      <button
+        type="button"
+        class="recipe-add-modal-close"
+        data-close-add-modal="true"
+        aria-label="閉じる"
+      >
+        ×
+      </button>
+    </div>
+
+    <form id="recipe-add-form" class="recipe-add-form">
+      <label class="form-field">
+        <span>料理名</span>
+        <input
+          type="text"
+          name="title"
+          required
+          placeholder="鶏ももとズッキーニのチーズ焼き"
+        >
+      </label>
+
+      <label class="form-field">
+        <span>カテゴリ</span>
+        <select name="category">
+          <option value="肉">🥩 肉</option>
+          <option value="麺">🍜 麺</option>
+          <option value="カレー・丼">🍛 カレー・丼</option>
+          <option value="副菜">🥦 副菜</option>
+          <option value="汁物">🥣 汁物</option>
+          <option value="その他">🍳 その他</option>
+        </select>
+      </label>
+
+      <label class="form-field">
+        <span>ひとこと説明</span>
+        <input
+          type="text"
+          name="summary"
+          placeholder="切って焼くだけ。チーズでだいたい勝てる。"
+        >
+      </label>
+
+      <label class="form-field">
+        <span>材料</span>
+        <textarea
+          name="ingredients"
+          rows="6"
+          required
+          placeholder="鶏もも肉 1枚&#10;ズッキーニ 1本&#10;シュレッドチーズ 適量"
+        ></textarea>
+      </label>
+
+      <label class="form-field">
+        <span>作り方</span>
+        <textarea
+          name="steps"
+          rows="7"
+          required
+          placeholder="鶏もも肉を切る&#10;ズッキーニと一緒に焼く&#10;チーズをのせて蒸し焼きにする"
+        ></textarea>
+      </label>
+
+      <div class="form-row">
+        <label class="form-field">
+          <span>作業時間</span>
+          <input
+            type="number"
+            name="workTime"
+            min="0"
+            inputmode="numeric"
+            placeholder="10"
+          >
+        </label>
+
+        <label class="form-field">
+          <span>おまかせ時間</span>
+          <input
+            type="number"
+            name="leaveTime"
+            min="0"
+            inputmode="numeric"
+            placeholder="5"
+          >
+        </label>
+      </div>
+
+      <label class="form-field">
+        <span>調理器具</span>
+        <input
+          type="text"
+          name="tool"
+          placeholder="フライパン、ホットクックなど"
+        >
+      </label>
+
+      <label class="form-field">
+        <span>タグ</span>
+        <input
+          type="text"
+          name="tags"
+          placeholder="10分以内, 野菜, ごちそう"
+        >
+      </label>
+
+      <label class="form-field">
+        <span>参考ページURL</span>
+        <input
+          type="url"
+          name="sourceUrl"
+          placeholder="https://..."
+        >
+      </label>
+
+      <div class="recipe-add-checks">
+        <label>
+          <input type="checkbox" name="gyomu">
+          業スー食材
+        </label>
+
+        <label>
+          <input type="checkbox" name="backPainOk">
+          腰が痛い日OK
+        </label>
+      </div>
+
+      <p
+        id="recipe-add-message"
+        class="recipe-add-message"
+        aria-live="polite"
+      ></p>
+
+      <div class="recipe-add-actions">
+        <button
+          type="button"
+          class="secondary-button"
+          data-close-add-modal="true"
+        >
+          キャンセル
+        </button>
+
+        <button
+          type="submit"
+          class="primary-button"
+          id="recipe-add-submit"
+        >
+          レシピを登録
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
   </main>
 </body>
 

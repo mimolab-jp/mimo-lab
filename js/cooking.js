@@ -7,9 +7,11 @@
 
 /* ---------- 設定 ---------- */
 
-const COOKING_API_URL =
-  'https://script.google.com/macros/s/AKfycbyadofcyXYDLF0SxQpUdpWxU8pwEi7BljcLe3V_dUuAqAPslxFYW6GThj1DMeO5Pt47/exec?type=cooking';
+const COOKING_API_BASE_URL =
+  'https://script.google.com/macros/s/AKfycbyadofcyXYDLF0SxQpUdpWxU8pwEi7BljcLe3V_dUuAqAPslxFYW6GThj1DMeO5Pt47/exec';
 
+const COOKING_API_URL =
+  `${COOKING_API_BASE_URL}?type=cooking`;
 const FAVORITE_STORAGE_KEY = 'mimoLabCookingFavorites';
 
 
@@ -28,6 +30,20 @@ const recipeContainer = document.getElementById('recipe-container');
 const shuffleButton = document.getElementById('shuffle-button');
 const featuredRecipe = document.querySelector('.featured-recipe');
 const filterButtons = document.querySelectorAll('.filter-buttons button');
+const addRecipeButton =
+  document.getElementById('add-recipe-button');
+
+const recipeAddModal =
+  document.getElementById('recipe-add-modal');
+
+const recipeAddForm =
+  document.getElementById('recipe-add-form');
+
+const recipeAddMessage =
+  document.getElementById('recipe-add-message');
+
+const recipeAddSubmit =
+  document.getElementById('recipe-add-submit');
 
 
 /* =========================================================
@@ -264,6 +280,26 @@ function setupEvents() {
   recipeContainer.addEventListener('click', handleRecipeContainerClick);
 
   featuredRecipe.addEventListener('click', handleFeaturedRecipeClick);
+addRecipeButton?.addEventListener('click', openRecipeAddModal);
+
+recipeAddModal?.addEventListener('click', event => {
+  if (event.target.closest('[data-close-add-modal]')) {
+    closeRecipeAddModal();
+  }
+});
+
+recipeAddForm?.addEventListener('submit', handleRecipeAddSubmit);
+
+document.addEventListener('keydown', event => {
+  if (
+    event.key === 'Escape' &&
+    recipeAddModal &&
+    !recipeAddModal.hidden
+  ) {
+    closeRecipeAddModal();
+  }
+});
+
 }
 
 
@@ -697,6 +733,203 @@ function refreshRecipeDisplay() {
     renderFeaturedRecipe(featuredRecipeData);
   }
 }
+
+/* =========================================================
+   レシピ追加モーダル
+   ========================================================= */
+
+function openRecipeAddModal() {
+  if (!recipeAddModal) {
+    return;
+  }
+
+  recipeAddMessage.textContent = '';
+  recipeAddModal.hidden = false;
+  document.body.classList.add('modal-open');
+
+  requestAnimationFrame(() => {
+    recipeAddModal.classList.add('is-open');
+  });
+
+  recipeAddForm
+    ?.querySelector('[name="title"]')
+    ?.focus();
+}
+
+
+function closeRecipeAddModal() {
+  if (!recipeAddModal) {
+    return;
+  }
+
+  recipeAddModal.classList.remove('is-open');
+  document.body.classList.remove('modal-open');
+
+  window.setTimeout(() => {
+    recipeAddModal.hidden = true;
+  }, 180);
+}
+
+
+async function handleRecipeAddSubmit(event) {
+  event.preventDefault();
+
+  if (!recipeAddForm) {
+    return;
+  }
+
+  const formData = new FormData(recipeAddForm);
+
+  const newRecipe = {
+    type: 'addCooking',
+
+    title: String(
+      formData.get('title') || ''
+    ).trim(),
+
+    category: String(
+      formData.get('category') || ''
+    ).trim(),
+
+    summary: String(
+      formData.get('summary') || ''
+    ).trim(),
+
+    ingredients: String(
+      formData.get('ingredients') || ''
+    ).trim(),
+
+    steps: String(
+      formData.get('steps') || ''
+    ).trim(),
+
+    workTime: Number(
+      formData.get('workTime') || 0
+    ),
+
+    leaveTime: Number(
+      formData.get('leaveTime') || 0
+    ),
+
+    tool: String(
+      formData.get('tool') || ''
+    ).trim(),
+
+    tags: String(
+      formData.get('tags') || ''
+    ).trim(),
+
+    sourceUrl: String(
+      formData.get('sourceUrl') || ''
+    ).trim(),
+
+    gyomu: formData.get('gyomu') === 'on',
+
+    backPainOk:
+      formData.get('backPainOk') === 'on',
+
+    visible: true
+  };
+
+  if (
+    !newRecipe.title ||
+    !newRecipe.ingredients ||
+    !newRecipe.steps
+  ) {
+    recipeAddMessage.textContent =
+      '料理名・材料・作り方を入力してください。';
+
+    return;
+  }
+
+  setRecipeAddSubmitting(true);
+
+  try {
+    const result = await postRecipe(newRecipe);
+
+    if (!result.ok) {
+      throw new Error(
+        result.message ||
+        'レシピを登録できませんでした。'
+      );
+    }
+
+    recipeAddMessage.textContent =
+      '🍳 レシピを登録しました！';
+
+    recipeAddForm.reset();
+
+    await reloadRecipes();
+
+    window.setTimeout(() => {
+      closeRecipeAddModal();
+    }, 600);
+  } catch (error) {
+    console.error(
+      'レシピの登録に失敗しました。',
+      error
+    );
+
+    recipeAddMessage.textContent =
+      '登録に失敗しました。GASの設定を確認してください。';
+  } finally {
+    setRecipeAddSubmitting(false);
+  }
+}
+
+
+async function postRecipe(recipe) {
+  const response = await fetch(COOKING_API_BASE_URL, {
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'text/plain;charset=utf-8'
+    },
+
+    body: JSON.stringify(recipe)
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `HTTPエラー：${response.status}`
+    );
+  }
+
+  return response.json();
+}
+
+async function reloadRecipes() {
+  recipes = await fetchRecipes();
+
+  filteredRecipes = activeFilter
+    ? recipes.filter(recipe =>
+        recipeMatchesFilter(recipe, activeFilter)
+      )
+    : [...recipes];
+
+  renderRecipeCards(filteredRecipes);
+
+  if (recipes.length > 0) {
+    showRandomFeaturedRecipe();
+  } else {
+    showFeaturedEmpty();
+  }
+}
+
+
+function setRecipeAddSubmitting(isSubmitting) {
+  if (!recipeAddSubmit) {
+    return;
+  }
+
+  recipeAddSubmit.disabled = isSubmitting;
+
+  recipeAddSubmit.textContent = isSubmitting
+    ? '登録しています…'
+    : 'レシピを登録';
+}
+
+
 
 
 /* =========================================================
