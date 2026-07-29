@@ -349,6 +349,7 @@ body {
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 .recipe-card .recipe-actions {
@@ -384,202 +385,6 @@ body {
 .error-message .primary-button {
   margin-top: 12px;
 }
-/* =========================================================
-   レシピ追加モーダル
-   ========================================================= */
-
-function openRecipeAddModal() {
-  if (!recipeAddModal) {
-    return;
-  }
-
-  recipeAddMessage.textContent = '';
-  recipeAddModal.hidden = false;
-  document.body.classList.add('modal-open');
-
-  requestAnimationFrame(() => {
-    recipeAddModal.classList.add('is-open');
-  });
-
-  recipeAddForm
-    ?.querySelector('[name="title"]')
-    ?.focus();
-}
-
-
-function closeRecipeAddModal() {
-  if (!recipeAddModal) {
-    return;
-  }
-
-  recipeAddModal.classList.remove('is-open');
-  document.body.classList.remove('modal-open');
-
-  window.setTimeout(() => {
-    recipeAddModal.hidden = true;
-  }, 180);
-}
-
-
-async function handleRecipeAddSubmit(event) {
-  event.preventDefault();
-
-  if (!recipeAddForm) {
-    return;
-  }
-
-  const formData = new FormData(recipeAddForm);
-
-  const newRecipe = {
-    type: 'addCooking',
-
-    title: String(
-      formData.get('title') || ''
-    ).trim(),
-
-    category: String(
-      formData.get('category') || ''
-    ).trim(),
-
-    summary: String(
-      formData.get('summary') || ''
-    ).trim(),
-
-    ingredients: String(
-      formData.get('ingredients') || ''
-    ).trim(),
-
-    steps: String(
-      formData.get('steps') || ''
-    ).trim(),
-
-    workTime: Number(
-      formData.get('workTime') || 0
-    ),
-
-    leaveTime: Number(
-      formData.get('leaveTime') || 0
-    ),
-
-    tool: String(
-      formData.get('tool') || ''
-    ).trim(),
-
-    tags: String(
-      formData.get('tags') || ''
-    ).trim(),
-
-    sourceUrl: String(
-      formData.get('sourceUrl') || ''
-    ).trim(),
-
-    gyomu: formData.get('gyomu') === 'on',
-
-    backPainOk:
-      formData.get('backPainOk') === 'on',
-
-    visible: true
-  };
-
-  if (
-    !newRecipe.title ||
-    !newRecipe.ingredients ||
-    !newRecipe.steps
-  ) {
-    recipeAddMessage.textContent =
-      '料理名・材料・作り方を入力してください。';
-
-    return;
-  }
-
-  setRecipeAddSubmitting(true);
-
-  try {
-    const result = await postRecipe(newRecipe);
-
-    if (!result.ok) {
-      throw new Error(
-        result.message ||
-        'レシピを登録できませんでした。'
-      );
-    }
-
-    recipeAddMessage.textContent =
-      '🍳 レシピを登録しました！';
-
-    recipeAddForm.reset();
-
-    await reloadRecipes();
-
-    window.setTimeout(() => {
-      closeRecipeAddModal();
-    }, 600);
-  } catch (error) {
-    console.error(
-      'レシピの登録に失敗しました。',
-      error
-    );
-
-    recipeAddMessage.textContent =
-      '登録に失敗しました。GASの設定を確認してください。';
-  } finally {
-    setRecipeAddSubmitting(false);
-  }
-}
-
-
-async function postRecipe(recipe) {
-  const response = await fetch(COOKING_API_URL, {
-    method: 'POST',
-
-    headers: {
-      'Content-Type': 'text/plain;charset=utf-8'
-    },
-
-    body: JSON.stringify(recipe)
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `HTTPエラー：${response.status}`
-    );
-  }
-
-  return response.json();
-}
-
-
-async function reloadRecipes() {
-  recipes = await fetchRecipes();
-
-  filteredRecipes = activeFilter
-    ? recipes.filter(recipe =>
-        recipeMatchesFilter(recipe, activeFilter)
-      )
-    : [...recipes];
-
-  renderRecipeCards(filteredRecipes);
-
-  if (recipes.length > 0) {
-    showRandomFeaturedRecipe();
-  } else {
-    showFeaturedEmpty();
-  }
-}
-
-
-function setRecipeAddSubmitting(isSubmitting) {
-  if (!recipeAddSubmit) {
-    return;
-  }
-
-  recipeAddSubmit.disabled = isSubmitting;
-
-  recipeAddSubmit.textContent = isSubmitting
-    ? '登録しています…'
-    : 'レシピを登録';
-}
-
 
 /* =========================================================
    レシピ詳細モーダル
@@ -920,4 +725,257 @@ body.modal-open {
 .back-home:hover {
   color: var(--cooking-accent-dark);
   transform: translateX(-2px);
+}
+/* =========================================================
+   レシピ追加ボタン
+   ========================================================= */
+
+.add-recipe-button {
+  min-height: 42px;
+  padding: 10px 18px;
+  border: 1px solid #e9aabc;
+  border-radius: 999px;
+  background: #fff;
+  color: #c85e7d;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.add-recipe-button:hover {
+  background: #fff1f5;
+}
+
+.add-recipe-button:active {
+  transform: scale(0.98);
+}
+
+
+/* =========================================================
+   レシピ追加モーダル
+   ========================================================= */
+
+.recipe-add-modal[hidden] {
+  display: none;
+}
+
+.recipe-add-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.18s ease,
+    visibility 0.18s ease;
+}
+
+.recipe-add-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.recipe-add-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(64, 43, 50, 0.48);
+  backdrop-filter: blur(3px);
+}
+
+.recipe-add-modal-panel {
+  position: relative;
+  z-index: 1;
+  width: min(720px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding: 28px;
+  border: 1px solid #f0c8d2;
+  border-radius: 24px;
+  background: #fffafc;
+  box-shadow: 0 18px 50px rgba(88, 51, 63, 0.22);
+}
+
+.recipe-add-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.recipe-add-modal-header h2 {
+  margin: 3px 0 0;
+}
+
+.recipe-add-modal-close {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #efc5d0;
+  border-radius: 50%;
+  background: #fff;
+  color: #9d5369;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.recipe-add-modal-close:hover {
+  background: #fff0f4;
+}
+
+
+/* =========================================================
+   レシピ追加フォーム
+   ========================================================= */
+
+.recipe-add-form {
+  display: grid;
+  gap: 18px;
+}
+
+.form-field {
+  display: grid;
+  gap: 7px;
+  color: #533943;
+  font-weight: 700;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #edced7;
+  border-radius: 14px;
+  background: #fff;
+  color: #49353c;
+  font: inherit;
+}
+
+.form-field input,
+.form-field select {
+  min-height: 46px;
+  padding: 10px 13px;
+}
+
+.form-field textarea {
+  min-height: 130px;
+  padding: 12px 13px;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: 3px solid rgba(221, 133, 158, 0.2);
+  border-color: #dc819c;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.recipe-add-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  padding: 15px;
+  border: 1px solid #f0d5dc;
+  border-radius: 14px;
+  background: #fff6f8;
+}
+
+.recipe-add-checks label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #65434e;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.recipe-add-checks input {
+  width: 18px;
+  height: 18px;
+  accent-color: #d96e8e;
+}
+
+.recipe-add-message {
+  min-height: 1.5em;
+  margin: 0;
+  color: #b34e6c;
+  font-weight: 700;
+}
+
+.recipe-add-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.secondary-button {
+  min-height: 42px;
+  padding: 10px 18px;
+  border: 1px solid #ddcbd0;
+  border-radius: 999px;
+  background: #fff;
+  color: #72545e;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.secondary-button:hover {
+  background: #f8f2f4;
+}
+
+.recipe-add-actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+
+/* =========================================================
+   スマホ表示
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .recipe-add-modal {
+    place-items: end center;
+    padding: 0;
+  }
+
+  .recipe-add-modal-panel {
+    width: 100%;
+    max-height: 92vh;
+    padding: 22px 18px 28px;
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 24px 24px 0 0;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .recipe-add-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .recipe-add-actions button {
+    width: 100%;
+  }
 }
