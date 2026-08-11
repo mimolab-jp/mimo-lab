@@ -1,0 +1,188 @@
+/* ========================================
+   行きつけ帖
+======================================== */
+
+.shops-page {
+  padding-bottom: 60px;
+}
+
+/* ---------- ヘッダー ---------- */
+
+.shops-header {
+  margin-top: 24px;
+  margin-bottom: 28px;
+}
+
+.shops-eyebrow {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #b48a98;
+}
+
+.shops-header h1 {
+  margin: 0;
+  font-size: 32px;
+  color: #4d3d43;
+}
+
+.shops-lead {
+  margin: 8px 0 0;
+  font-size: 16px;
+  color: #8c737c;
+}
+
+/* ---------- 件数・更新 ---------- */
+
+.shops-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #9a7c86;
+}
+
+.shops-reload-button {
+  border: 0;
+  background: transparent;
+  color: #a77c8b;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* ---------- お店一覧 ---------- */
+
+.shops-list {
+  display: grid;
+  gap: 12px;
+}
+
+.shop-card {
+  padding: 20px;
+  border: 1px solid #f0dfe5;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(110, 75, 88, 0.06);
+}
+
+.shop-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 13px;
+}
+
+.shop-name {
+  margin: 0;
+  font-size: 21px;
+  color: #4d3d43;
+}
+
+.shop-genre {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: #a37d8b;
+}
+
+/* ---------- 営業情報 ---------- */
+
+.shop-info {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 9px 8px;
+  margin: 0;
+}
+
+.shop-info dt {
+  font-size: 14px;
+  font-weight: 700;
+  color: #b08a97;
+}
+
+.shop-info dd {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #57494e;
+  white-space: pre-line;
+}
+
+.shop-closed {
+  font-weight: 700;
+  color: #a45f72;
+}
+
+/* ---------- メモ ---------- */
+
+.shop-memo {
+  margin: 13px 0 0;
+  padding-top: 11px;
+  border-top: 1px dashed #eedde3;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #806b72;
+}
+
+/* ---------- SNS ---------- */
+
+.shop-sns-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 12px;
+  padding: 6px 10px;
+  border: 1px solid #efd4dd;
+  border-radius: 999px;
+  background: #fff7fa;
+  color: #a86f83;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.shop-sns-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- 空・エラー ---------- */
+
+.shops-empty,
+.shops-error {
+  padding: 28px 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #9a7c86;
+}
+
+.shops-error {
+  color: #a45f72;
+}
+
+/* ---------- スマホ ---------- */
+
+@media (max-width: 560px) {
+  .shops-header {
+    margin-top: 18px;
+    margin-bottom: 22px;
+  }
+
+  .shops-header h1 {
+    font-size: 25px;
+  }
+
+  .shop-card {
+    padding: 14px 15px;
+  }
+
+  .shop-name {
+    font-size: 19px;
+  }
+
+  .shop-info {
+    grid-template-columns: 64px 1fr;
+    gap: 6px 8px;
+  }
+}

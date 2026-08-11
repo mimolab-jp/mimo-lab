@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff7fa">
+  <title>行きつけ帖｜みもLAB</title>
+
+  <!-- みもLAB共通CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- 行きつけ帖専用CSS -->
+  <link rel="stylesheet" href="css/shops.css">
+
+  <script src="js/shops.js" defer></script>
+</head>
+
+<body>
+  <main class="app shops-page">
+
+    <a class="back-link" href="index.html">← HOME</a>
+
+    <header class="shops-header">
+      <p class="shops-eyebrow">MY FAVORITE SHOPS</p>
+      <h1>🍝 行きつけ帖 🥖</h1>
+      <p class="shops-lead">
+        「今日やってる？」を、すぐ確認。
+      </p>
+    </header>
+
+    <section class="shops-summary">
+      <span id="shopCount">読み込み中…</span>
+      <button id="reloadShops" class="shops-reload-button" type="button">
+        ↻ 更新
+      </button>
+    </section>
+
+    <section id="shopList" class="shops-list" aria-live="polite"></section>
+
+    <section id="shopsEmpty" class="shops-empty" hidden>
+      <p>まだお店が登録されていません。</p>
+    </section>
+
+    <section id="shopsError" class="shops-error" hidden>
+      <p>お店のデータを読み込めませんでした。</p>
+    </section>
+
+  </main>
+</body>
+</html>
