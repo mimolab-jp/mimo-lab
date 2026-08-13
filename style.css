@@ -1568,3 +1568,156 @@ html {
 .tool-button:active {
   transform: scale(0.98);
 }
+/* ========================================
+   HOME v2
+======================================== */
+
+.home-section {
+  margin-top: 20px;
+}
+
+.home-section-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 4px 10px;
+}
+
+.home-section-label {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.home-section-sub {
+  color: var(--subtext);
+  font-size: 11px;
+}
+
+/* TODAY */
+
+.home-main-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.home-main-card {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 82px;
+  padding: 15px 14px;
+  background: var(--card);
+  border: 1px solid rgba(234, 211, 220, 0.65);
+  border-radius: 20px;
+  box-shadow: 0 6px 18px var(--shadow);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 0.12s ease, background-color 0.2s ease;
+}
+
+.home-card-icon {
+  flex-shrink: 0;
+  margin-right: 10px;
+  font-size: 25px;
+}
+
+.home-card-text {
+  min-width: 0;
+}
+
+.home-card-text strong {
+  display: block;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.home-card-text small {
+  display: block;
+  margin-top: 4px;
+  color: var(--subtext);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+/* MY LAB */
+
+.home-app-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.home-app-card {
+  display: flex;
+  min-height: 104px;
+  padding: 14px 12px;
+  background: var(--card);
+  border: 1px solid rgba(234, 211, 220, 0.65);
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(180, 110, 135, 0.08);
+  color: var(--text);
+  text-align: center;
+  text-decoration: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease, background-color 0.2s ease;
+}
+
+.home-app-icon {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 25px;
+}
+
+.home-app-card strong {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.home-app-card small {
+  margin-top: 4px;
+  color: var(--subtext);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+/* TOOLS */
+
+.home-tools {
+  margin-top: 18px;
+}
+
+.home-tool-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* 押した時 */
+
+.home-main-card:active,
+.home-app-card:active,
+.home-tool-link:active {
+  transform: scale(0.98);
+  background: #fff2f7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-main-card,
+  .home-app-card,
+  .home-tool-link {
+    transition: none;
+  }
+}
