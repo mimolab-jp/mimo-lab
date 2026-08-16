@@ -21,7 +21,6 @@ let recipes = [];
 let filteredRecipes = [];
 let activeFilter = null;
 let currentFeaturedRecipeId = null;
-let favoriteIds = loadFavoriteIds();
 
 
 /* ---------- HTML要素 ---------- */
@@ -179,6 +178,10 @@ function normalizeRecipe(rawRecipe, index) {
       recipe.instructions
     ),
 
+    favorite: normalizeBoolean(
+      recipe.favorite
+    ),
+
     husbandRating: normalizeNumber(
       recipe.husbandRating ??
       recipe.rating
@@ -280,25 +283,25 @@ function setupEvents() {
   recipeContainer.addEventListener('click', handleRecipeContainerClick);
 
   featuredRecipe.addEventListener('click', handleFeaturedRecipeClick);
-addRecipeButton?.addEventListener('click', openRecipeAddModal);
+  addRecipeButton?.addEventListener('click', openRecipeAddModal);
 
-recipeAddModal?.addEventListener('click', event => {
-  if (event.target.closest('[data-close-add-modal]')) {
-    closeRecipeAddModal();
-  }
-});
+  recipeAddModal?.addEventListener('click', event => {
+    if (event.target.closest('[data-close-add-modal]')) {
+      closeRecipeAddModal();
+    }
+  });
 
-recipeAddForm?.addEventListener('submit', handleRecipeAddSubmit);
+  recipeAddForm?.addEventListener('submit', handleRecipeAddSubmit);
 
-document.addEventListener('keydown', event => {
-  if (
-    event.key === 'Escape' &&
-    recipeAddModal &&
-    !recipeAddModal.hidden
-  ) {
-    closeRecipeAddModal();
-  }
-});
+  document.addEventListener('keydown', event => {
+    if (
+      event.key === 'Escape' &&
+      recipeAddModal &&
+      !recipeAddModal.hidden
+    ) {
+      closeRecipeAddModal();
+    }
+  });
 
 }
 
@@ -331,15 +334,15 @@ function createRecipeCard(recipe) {
   article.dataset.recipeId = recipe.id;
 
   const icon = getRecipeIcon(recipe);
-  const favorite = favoriteIds.includes(recipe.id);
+  const favorite = recipe.favorite;
 
   article.innerHTML = `
     <div class="recipe-card-icon" aria-hidden="true">
       ${recipe.image
-        ? `<img src="${escapeAttribute(recipe.image)}"
+      ? `<img src="${escapeAttribute(recipe.image)}"
                 alt=""
                 loading="lazy">`
-        : icon}
+      : icon}
     </div>
 
     <div class="recipe-card-content">
@@ -351,8 +354,8 @@ function createRecipeCard(recipe) {
 
       <p class="recipe-summary">
         ${escapeHtml(
-          recipe.summary || createFallbackSummary(recipe)
-        )}
+        recipe.summary || createFallbackSummary(recipe)
+      )}
       </p>
 
       <div class="recipe-card-meta">
@@ -373,8 +376,8 @@ function createRecipeCard(recipe) {
           class="favorite-button ${favorite ? 'is-favorite' : ''}"
           data-favorite-id="${escapeAttribute(recipe.id)}"
           aria-label="${favorite
-            ? 'お気に入りから外す'
-            : 'お気に入りに追加'}"
+      ? 'お気に入りから外す'
+      : 'お気に入りに追加'}"
           aria-pressed="${favorite}"
         >
           ${favorite ? '♥' : '♡'}
@@ -422,17 +425,17 @@ function showRandomFeaturedRecipe(avoidCurrent = false) {
 
 
 function renderFeaturedRecipe(recipe) {
-  const favorite = favoriteIds.includes(recipe.id);
+  const favorite = recipe.favorite;
 
   featuredRecipe.dataset.recipeId = recipe.id;
 
   featuredRecipe.innerHTML = `
     <div class="recipe-icon" aria-hidden="true">
       ${recipe.image
-        ? `<img src="${escapeAttribute(recipe.image)}"
+      ? `<img src="${escapeAttribute(recipe.image)}"
                 alt=""
                 loading="lazy">`
-        : getRecipeIcon(recipe)}
+      : getRecipeIcon(recipe)}
     </div>
 
     <div class="recipe-content">
@@ -444,8 +447,8 @@ function renderFeaturedRecipe(recipe) {
 
       <p class="recipe-summary">
         ${escapeHtml(
-          recipe.summary || createFallbackSummary(recipe)
-        )}
+        recipe.summary || createFallbackSummary(recipe)
+      )}
       </p>
 
       <div class="recipe-card-meta">
@@ -466,8 +469,8 @@ function renderFeaturedRecipe(recipe) {
           class="favorite-button ${favorite ? 'is-favorite' : ''}"
           data-favorite-id="${escapeAttribute(recipe.id)}"
           aria-label="${favorite
-            ? 'お気に入りから外す'
-            : 'お気に入りに追加'}"
+      ? 'お気に入りから外す'
+      : 'お気に入りに追加'}"
           aria-pressed="${favorite}"
         >
           ${favorite ? '♥' : '♡'}
@@ -521,8 +524,8 @@ function handleFilterButton(button) {
 
   filteredRecipes = activeFilter
     ? recipes.filter(recipe =>
-        recipeMatchesFilter(recipe, activeFilter)
-      )
+      recipeMatchesFilter(recipe, activeFilter)
+    )
     : [...recipes];
 
   renderRecipeCards(filteredRecipes);
@@ -560,10 +563,11 @@ function recipeMatchesFilter(recipe, filter) {
 
   switch (filter) {
     case 'favorite':
-  return favoriteIds.includes(recipe.id);
+      return recipe.favorite;
+
     case 'meat':
       return (
-                searchableText.includes('肉') ||
+        searchableText.includes('肉') ||
         searchableText.includes('鶏') ||
         searchableText.includes('豚') ||
         searchableText.includes('牛') ||
@@ -671,56 +675,47 @@ function handleFeaturedRecipeClick(event) {
    お気に入り
    ========================================================= */
 
-function loadFavoriteIds() {
-  try {
-    const saved = localStorage.getItem(
-      FAVORITE_STORAGE_KEY
-    );
-
-    const parsed = saved ? JSON.parse(saved) : [];
-
-    return Array.isArray(parsed)
-      ? parsed.map(String)
-      : [];
-  } catch (error) {
-    console.warn(
-      'お気に入りデータを読み込めませんでした。',
-      error
-    );
-
-    return [];
-  }
-}
-
-
-function saveFavoriteIds() {
-  try {
-    localStorage.setItem(
-      FAVORITE_STORAGE_KEY,
-      JSON.stringify(favoriteIds)
-    );
-  } catch (error) {
-    console.warn(
-      'お気に入りデータを保存できませんでした。',
-      error
-    );
-  }
-}
-
-
-function toggleFavorite(recipeId) {
+async function toggleFavorite(recipeId) {
   const id = String(recipeId);
 
-  if (favoriteIds.includes(id)) {
-    favoriteIds = favoriteIds.filter(
-      favoriteId => favoriteId !== id
-    );
-  } else {
-    favoriteIds.push(id);
+  const recipe = recipes.find(
+    item => item.id === id
+  );
+
+  if (!recipe) {
+    return;
   }
 
-  saveFavoriteIds();
-  refreshRecipeDisplay();
+  const newFavorite = !recipe.favorite;
+
+  try {
+    const response = await fetch(COOKING_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify({
+        type: 'updatefavorite',
+        id,
+        favorite: newFavorite
+      })
+    });
+
+    const data = await response.json();
+
+    if (!data.ok) {
+      throw new Error(
+        data.message || 'お気に入りを更新できませんでした。'
+      );
+    }
+
+    recipe.favorite = newFavorite;
+
+    refreshRecipeDisplay();
+
+  } catch (error) {
+    console.error('お気に入り更新失敗', error);
+  }
 }
 
 
@@ -905,8 +900,8 @@ async function reloadRecipes() {
 
   filteredRecipes = activeFilter
     ? recipes.filter(recipe =>
-        recipeMatchesFilter(recipe, activeFilter)
-      )
+      recipeMatchesFilter(recipe, activeFilter)
+    )
     : [...recipes];
 
   renderRecipeCards(filteredRecipes);
@@ -1042,25 +1037,25 @@ function createRecipeDetailHtml(recipe) {
   const ingredientsHtml =
     recipe.ingredients.length > 0
       ? recipe.ingredients
-          .map(
-            ingredient =>
-              `<li>${escapeHtml(ingredient)}</li>`
-          )
-          .join('')
+        .map(
+          ingredient =>
+            `<li>${escapeHtml(ingredient)}</li>`
+        )
+        .join('')
       : '<li>材料はまだ登録されていません。</li>';
 
   const stepsHtml =
     recipe.steps.length > 0
       ? recipe.steps
-          .map(
-            (step, index) => `
+        .map(
+          (step, index) => `
               <li>
                 <span class="step-number">${index + 1}</span>
                 <span>${escapeHtml(step)}</span>
               </li>
             `
-          )
-          .join('')
+        )
+        .join('')
       : `
           <li>
             <span class="step-number">1</span>
@@ -1071,10 +1066,10 @@ function createRecipeDetailHtml(recipe) {
   return `
     <div class="recipe-modal-icon" aria-hidden="true">
       ${recipe.image
-        ? `<img src="${escapeAttribute(recipe.image)}"
+      ? `<img src="${escapeAttribute(recipe.image)}"
                 alt=""
                 loading="lazy">`
-        : getRecipeIcon(recipe)}
+      : getRecipeIcon(recipe)}
     </div>
 
     <div class="recipe-tags">
@@ -1095,24 +1090,24 @@ function createRecipeDetailHtml(recipe) {
 
     <div class="recipe-detail-meta">
       ${recipe.category
-        ? `<span>🍽️ ${escapeHtml(recipe.category)}</span>`
-        : ''}
+      ? `<span>🍽️ ${escapeHtml(recipe.category)}</span>`
+      : ''}
 
       ${recipe.tool
-        ? `<span>🤖 ${escapeHtml(recipe.tool)}</span>`
-        : ''}
+      ? `<span>🤖 ${escapeHtml(recipe.tool)}</span>`
+      : ''}
 
       ${recipe.workTime
-        ? `<span>⚡ 作業 ${recipe.workTime}分</span>`
-        : ''}
+      ? `<span>⚡ 作業 ${recipe.workTime}分</span>`
+      : ''}
 
       ${recipe.leaveTime
-        ? `<span>⏳ おまかせ ${recipe.leaveTime}分</span>`
-        : ''}
+      ? `<span>⏳ おまかせ ${recipe.leaveTime}分</span>`
+      : ''}
 
       ${recipe.backPainOk
-        ? '<span>🪑 腰が痛い日OK</span>'
-        : ''}
+      ? '<span>🪑 腰が痛い日OK</span>'
+      : ''}
     </div>
 
     <section class="recipe-detail-section">

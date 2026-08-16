@@ -628,7 +628,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const STORAGE_KEY = "mimoLabLibraryBooks";
+  const LIBRARY_API_URL =
+  "https://script.google.com/macros/s/AKfycbyadofcyXYDLF0SxQpUdpWxU8pwEi7BljcLe3V_dUuAqAPslxFYW6GThj1DMeO5Pt47/exec?type=library";
 
   const openBookFormButton = document.getElementById("openBookForm");
   const closeBookFormButton = document.getElementById("closeBookForm");
@@ -650,27 +651,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const emptyLibrary = document.getElementById("emptyLibrary");
   const noSearchResults = document.getElementById("noSearchResults");
 
-  let books = loadBooks();
+  let books = [];
   let activeFilter = "all";
 
-  function loadBooks() {
-    try {
-      const savedBooks = localStorage.getItem(STORAGE_KEY);
-      return savedBooks ? JSON.parse(savedBooks) : [];
-    } catch (error) {
-      console.error("書斎データの読み込みに失敗しました。", error);
-      return [];
-    }
+  async function loadBooks() {
+  const response = await fetch(LIBRARY_API_URL, {
+    method: "GET",
+    cache: "no-store"
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTPエラー：${response.status}`);
   }
 
-  function saveBooks() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
-    } catch (error) {
-      console.error("書斎データの保存に失敗しました。", error);
-      alert("本を保存できませんでした。ブラウザの保存容量を確認してください。");
-    }
+  const data = await response.json();
+
+  if (!data.ok || !Array.isArray(data.books)) {
+    throw new Error("書斎データの形式が正しくありません。");
   }
+
+  return data.books;
+}
 
   function createBookId() {
     if (window.crypto && typeof window.crypto.randomUUID === "function") {
@@ -911,25 +912,49 @@ document.addEventListener("DOMContentLoaded", () => {
     openBookForm(book);
   }
 
-  function deleteBook(bookId) {
-    const book = books.find((item) => item.id === bookId);
+  async function deleteBook(bookId) {
+  const book = books.find((item) => item.id === bookId);
 
-    if (!book) {
-      return;
-    }
-
-    const shouldDelete = window.confirm(
-      `「${book.title}」を本棚から取り出しますか？`
-    );
-
-    if (!shouldDelete) {
-      return;
-    }
-
-    books = books.filter((item) => item.id !== bookId);
-    saveBooks();
-    renderBooks();
+  if (!book) {
+    return;
   }
+
+  const shouldDelete = window.confirm(
+    `「${book.title}」を本棚から取り出しますか？`
+  );
+
+  if (!shouldDelete) {
+    return;
+  }
+
+  try {
+    const response = await fetch(LIBRARY_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        type: "deletebook",
+        id: bookId
+      })
+    });
+
+    const data = await response.json();
+
+    if (!data.ok) {
+      throw new Error(
+        data.message || "本棚から取り出せませんでした。"
+      );
+    }
+
+    books = await loadBooks();
+    renderBooks();
+
+  } catch (error) {
+    console.error("本の削除に失敗しました。", error);
+    alert("本棚から取り出せませんでした。");
+  }
+}
 
   openBookFormButton.addEventListener("click", () => {
     openBookForm();
@@ -938,43 +963,55 @@ document.addEventListener("DOMContentLoaded", () => {
   closeBookFormButton.addEventListener("click", closeBookForm);
   cancelBookFormButton.addEventListener("click", closeBookForm);
 
-  bookForm.addEventListener("submit", (event) => {
-    event.preventDefault();
+  bookForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
 
-    const title = bookTitle.value.trim();
-    const role = bookRole.value.trim();
+  const title = bookTitle.value.trim();
+  const role = bookRole.value.trim();
 
-    if (!title || !role) {
-      alert("本のタイトルと『この本は何屋さん？』を入力してください。");
-      return;
+  if (!title || !role) {
+    alert("本のタイトルと『この本は何屋さん？』を入力してください。");
+    return;
+  }
+
+  const bookData = {
+    id: editingBookId.value || createBookId(),
+    title,
+    role,
+    benefits: normalizeBenefits(bookBenefits.value),
+    occasion: bookOccasion.value.trim(),
+    keywords: normalizeKeywords(bookKeywords.value),
+    type: getSelectedBookType(),
+    location: bookLocation.value.trim()
+  };
+
+  try {
+    const response = await fetch(LIBRARY_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        type: "savebook",
+        book: bookData
+      })
+    });
+
+    const data = await response.json();
+
+    if (!data.ok) {
+      throw new Error(data.message || "本を保存できませんでした。");
     }
 
-    const bookData = {
-      id: editingBookId.value || createBookId(),
-      title,
-      role,
-      benefits: normalizeBenefits(bookBenefits.value),
-      occasion: bookOccasion.value.trim(),
-      keywords: normalizeKeywords(bookKeywords.value),
-      type: getSelectedBookType(),
-      location: bookLocation.value.trim(),
-      updatedAt: new Date().toISOString()
-    };
-
-    const existingBookIndex = books.findIndex(
-      (book) => book.id === bookData.id
-    );
-
-    if (existingBookIndex >= 0) {
-      books[existingBookIndex] = bookData;
-    } else {
-      books.unshift(bookData);
-    }
-
-    saveBooks();
+    books = await loadBooks();
     renderBooks();
     closeBookForm();
-  });
+
+  } catch (error) {
+    console.error("本の保存に失敗しました。", error);
+    alert("本を保存できませんでした。");
+  }
+});
 
   bookSearch.addEventListener("input", renderBooks);
 
@@ -1015,75 +1052,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  renderBooks();
-});
-const exportBooks =
-document.getElementById("exportBooks");
-
-const importBooks =
-document.getElementById("importBooks");
-
-const importBooksButton =
-document.getElementById("importBooksButton");
-
-exportBooks.addEventListener("click",()=>{
-
-    const json =
-        JSON.stringify(books,null,2);
-
-    const blob =
-        new Blob([json],{
-            type:"application/json"
-        });
-
-    const url =
-        URL.createObjectURL(blob);
-
-    const a =
-        document.createElement("a");
-
-    a.href=url;
-
-    a.download="mimoLAB-books.json";
-
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-});
-importBooksButton.addEventListener("click",()=>{
-
-    importBooks.click();
-
-});
-importBooks.addEventListener("change",(e)=>{
-
-    const file=e.target.files[0];
-
-    if(!file)return;
-
-    const reader=new FileReader();
-
-    reader.onload=()=>{
-
-        try{
-
-            books=JSON.parse(reader.result);
-
-            saveBooks();
-
-            renderBooks();
-
-            alert("本棚を読み込みました📚");
-
-        }catch{
-
-            alert("JSONが読み込めませんでした");
-
-        }
-
-    };
-
-    reader.readAsText(file);
-
+  loadBooks()
+  .then((loadedBooks) => {
+    books = loadedBooks;
+    renderBooks();
+  })
+  .catch((error) => {
+    console.error("書斎データの読み込みに失敗しました。", error);
+  });
 });
