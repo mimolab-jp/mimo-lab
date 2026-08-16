@@ -138,12 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         row.innerHTML = `
           <time class="thanks-time">
-            ${escapeHtml(getTime(item.createdAt))}
-          </time>
-
-          <p class="thanks-text">
-            ${escapeHtml(item.text)}
-          </p>
+            ${escapeHtml(getTime(item.createdAt))}</time>
+          <p class="thanks-text">${escapeHtml(item.text)}</p>
         `;
 
         section.appendChild(row);

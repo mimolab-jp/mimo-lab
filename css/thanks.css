@@ -169,31 +169,41 @@
 }
 
 
-/* ---------- 一件 ---------- */
-
+/* ---------- 一件：コンパクト表示 ---------- */
 .thanks-item {
   display: grid;
-  grid-template-columns: 48px 1fr;
+  grid-template-columns: 52px minmax(0, 1fr);
   gap: 10px;
-  padding: 10px 2px;
+  align-items: start;
+  padding: 8px 2px;
   border-bottom: 1px solid #f0e3e8;
 }
 
 .thanks-time {
-  padding-top: 2px;
+  margin: 0;
+  padding: 0;
   color: #b0929d;
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.55;
   white-space: nowrap;
 }
 
 .thanks-text {
   margin: 0;
+  padding: 0;
   color: #5c5054;
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.55;
+  text-align: left;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
+.thanks-item .thanks-text {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
 
 /* ---------- 空 ---------- */
 
