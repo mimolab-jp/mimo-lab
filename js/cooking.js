@@ -559,9 +559,11 @@ function recipeMatchesFilter(recipe, filter) {
   ].join(' ');
 
   switch (filter) {
+    case 'favorite':
+  return favoriteIds.includes(recipe.id);
     case 'meat':
       return (
-        searchableText.includes('肉') ||
+                searchableText.includes('肉') ||
         searchableText.includes('鶏') ||
         searchableText.includes('豚') ||
         searchableText.includes('牛') ||
