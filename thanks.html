@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>感謝ノート | みもLAB</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/thanks.css">
+</head>
+
+<body>
+
+  <main class="app thanks-page">
+
+    <a href="cozy.html" class="back-link">← Cozy Corner</a>
+
+    <header class="thanks-header">
+      <p class="thanks-eyebrow">GRATITUDE NOTE</p>
+      <h1>💗 感謝ノート</h1>
+
+      <p class="thanks-lead">
+        今日の中から、日常の「ある」を書き出そう。<br>
+        「小さな幸せ」を見つけたら感謝しよう。<br>
+        🌟宇宙はとてつもなく素晴らしいことを起こしてくれる🌟
+      </p>
+    </header>
+
+
+    <!-- 書き込み -->
+    <section class="thanks-write-card">
+
+      <form id="thanksForm">
+
+        <label for="thanksInput">
+          今日、ありがたいと思ったことは？
+        </label>
+
+        <textarea
+          id="thanksInput"
+          rows="3"
+          placeholder="ほんの小さなことでも。"
+          required
+        ></textarea>
+
+        <button
+          type="submit"
+          id="thanksSubmit"
+          class="thanks-submit-button"
+        >
+          💗 感謝する
+        </button>
+
+      </form>
+
+    </section>
+
+
+    <!-- 履歴 -->
+    <section class="thanks-history">
+
+      <div class="thanks-history-heading">
+        <span>日常の「ある」に気づき感謝できたログ</span>
+        <span id="thanksCount">0</span>
+      </div>
+
+      <div id="thanksList"></div>
+
+      <div id="thanksEmpty" class="thanks-empty" hidden>
+        <div>💗</div>
+        <p>まだ何も書かれていません。</p>
+        <p>日常の「ある」を見つけて感謝できることを記そう。</p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="js/thanks.js"></script>
+
+</body>
+</html>

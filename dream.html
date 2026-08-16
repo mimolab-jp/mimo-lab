@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>夢の部屋 | みもLAB</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/dream.css">
+</head>
+
+<body>
+
+  <main class="app dream-page">
+
+    <a href="cozy.html" class="back-link">← Cozy Corner</a>
+
+    <header class="dream-header">
+      <p class="dream-eyebrow">DREAM ROOM</p>
+
+      <h1>🌙 夢の部屋</h1>
+
+      <p class="dream-lead">
+        まだ出会えていない現実を、<br>
+        先にここへ置いておく。
+      </p>
+    </header>
+
+
+    <!-- 状態切り替え -->
+    <section class="dream-status-tabs">
+
+      <button
+        type="button"
+        class="dream-tab is-active"
+        data-status="growing"
+      >
+        🌱 育てている夢
+        <span id="growingCount">0</span>
+      </button>
+
+      <button
+        type="button"
+        class="dream-tab"
+        data-status="realized"
+      >
+        ✨ 叶った夢
+        <span id="realizedCount">0</span>
+      </button>
+
+    </section>
+
+
+    <!-- 新規登録 -->
+    <button
+      type="button"
+      id="openDreamForm"
+      class="dream-add-button"
+    >
+      ＋ 新しい夢を描く
+    </button>
+
+
+    <!-- 夢一覧 -->
+    <section class="dream-list-section">
+
+      <div id="dreamList" class="dream-list"></div>
+
+      <div id="dreamEmpty" class="dream-empty" hidden>
+        <div class="dream-empty-icon">🌙</div>
+
+        <p class="dream-empty-title">
+          まだ夢は置かれていません。
+        </p>
+
+        <p>
+          思いついた未来を、ひとつ置いてみよう。
+        </p>
+      </div>
+
+    </section>
+
+
+    <!-- 夢を書くフォーム -->
+    <section
+      id="dreamFormPanel"
+      class="dream-form-panel"
+      hidden
+    >
+
+      <div class="dream-form-card">
+
+        <div class="dream-form-header">
+          <div>
+            <p class="dream-form-eyebrow">
+              NEW DREAM
+            </p>
+
+            <h2 id="dreamFormTitle">
+              新しい夢を描く
+            </h2>
+          </div>
+
+          <button
+            type="button"
+            id="closeDreamForm"
+            class="dream-close-button"
+            aria-label="閉じる"
+          >
+            ×
+          </button>
+        </div>
+
+
+        <form id="dreamForm">
+
+          <input
+            type="hidden"
+            id="editingDreamId"
+          >
+
+
+          <label class="dream-field">
+            <span>🌙 どんな未来？</span>
+
+            <input
+              type="text"
+              id="dreamTitle"
+              placeholder="叶ったら嬉しいこと"
+              required
+            >
+          </label>
+
+
+          <label class="dream-field">
+            <span>💗 なぜ、これを望んでる？</span>
+
+            <textarea
+              id="dreamWhy"
+              rows="3"
+              placeholder="その奥で、本当に欲しいものは何だろう？"
+            ></textarea>
+          </label>
+
+
+          <label class="dream-field">
+            <span>🏡 どんな場所にいる？</span>
+
+            <textarea
+              id="dreamPlace"
+              rows="3"
+              placeholder="景色、部屋、街、そこにいる人……"
+            ></textarea>
+          </label>
+
+
+          <label class="dream-field">
+            <span>😊 どんな気持ち？</span>
+
+            <textarea
+              id="dreamFeeling"
+              rows="3"
+              placeholder="安心、嬉しい、誇らしい、自由……"
+            ></textarea>
+          </label>
+
+
+          <label class="dream-field">
+            <span>🌿 何が見える？ どんな音や香り？</span>
+
+            <textarea
+              id="dreamSenses"
+              rows="4"
+              placeholder="空気、香り、味、音、肌ざわりまで想像してみる"
+            ></textarea>
+          </label>
+
+
+          <label class="dream-field">
+            <span>✨ 叶った私は何をしてる？</span>
+
+            <textarea
+              id="dreamDoing"
+              rows="4"
+              placeholder="その未来の自分は、どんな一日を過ごしてる？"
+            ></textarea>
+          </label>
+
+
+          <label class="dream-field">
+            <span>📝 その他、残しておきたいこと</span>
+
+            <textarea
+              id="dreamMemo"
+              rows="3"
+            ></textarea>
+          </label>
+
+
+          <div class="dream-form-actions">
+
+            <button
+              type="button"
+              id="cancelDreamForm"
+              class="dream-secondary-button"
+            >
+              やめる
+            </button>
+
+            <button
+              type="submit"
+              class="dream-primary-button"
+            >
+              🌙 この未来を置いておく
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </section>
+<!-- 夢を書くフォーム ここまで-->
+
+ <!-- ========================================
+     夢が叶った！ 第二章フォーム
+========================================= -->
+
+<section
+  id="realizedFormPanel"
+  class="dream-form-panel"
+  hidden
+>
+  <div class="dream-form-card dream-realized-form-card">
+
+    <div class="dream-form-header">
+      <div>
+        <p class="dream-form-eyebrow">
+          DREAM CAME TRUE
+        </p>
+
+        <h2>✨ この夢、叶った！</h2>
+      </div>
+
+      <button
+        type="button"
+        id="closeRealizedForm"
+        class="dream-close-button"
+        aria-label="閉じる"
+      >
+        ×
+      </button>
+    </div>
+
+
+    <!-- 昔の自分が書いた夢 -->
+    <div class="realized-dream-memory">
+
+      <p class="realized-memory-label">
+        🌙 あの頃、こんな未来を描いていました
+      </p>
+
+      <h3 id="realizedDreamTitle"></h3>
+
+      <div
+        id="realizedDreamPreview"
+        class="realized-dream-preview"
+      ></div>
+
+    </div>
+
+
+    <form id="realizedForm">
+
+      <input
+        type="hidden"
+        id="realizedDreamId"
+      >
+
+
+      <label class="dream-field">
+        <span>✨ 叶った日</span>
+
+        <input
+          type="date"
+          id="realizedDate"
+          required
+        >
+      </label>
+
+
+      <label class="dream-field">
+        <span>🌸 実際はどうだった？</span>
+
+        <textarea
+          id="realizedReality"
+          rows="4"
+          placeholder="想像していた通りだったこと、意外だったこと、実際に見えた景色……"
+        ></textarea>
+      </label>
+
+
+      <label class="dream-field">
+        <span>💗 今、何が嬉しい？</span>
+
+        <textarea
+          id="realizedFeeling"
+          rows="4"
+          placeholder="叶った今だから感じていることを、そのまま残しておこう"
+        ></textarea>
+      </label>
+
+
+      <label class="dream-field">
+        <span>💌 あの頃の私へ</span>
+
+        <textarea
+          id="messageToPast"
+          rows="4"
+          placeholder="これを願っていた頃の自分に、今なら何て言う？"
+        ></textarea>
+      </label>
+
+
+      <div class="dream-form-actions">
+
+        <button
+          type="button"
+          id="cancelRealizedForm"
+          class="dream-secondary-button"
+        >
+          まだ取っておく
+        </button>
+
+        <button
+          type="submit"
+          class="dream-realized-submit"
+        >
+          ✨ 叶った記憶を残す
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+</section>
+<!-- 第2フォームここまで -->
+
+ <a href="cozy.html" class="back-link">← Cozy Corner</a>
+
+  </main>
+ 
+   <script src="js/dream.js"></script>
+
+</body>
+</html>

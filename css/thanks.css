@@ -1,0 +1,226 @@
+/* ========================================
+   感謝ノート
+======================================== */
+
+.thanks-page {
+  padding-bottom: 72px;
+}
+
+
+/* ---------- ヘッダー ---------- */
+
+.thanks-header {
+  margin: 18px 0 24px;
+  text-align: center;
+}
+
+.thanks-eyebrow {
+  margin: 0 0 7px;
+  color: #b17d91;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.thanks-header h1 {
+  margin: 0;
+  color: #59474e;
+  font-size: 28px;
+  line-height: 1.4;
+}
+
+.thanks-lead {
+  margin: 10px 0 0;
+  color: #8b767e;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+
+/* ---------- 書き込み ---------- */
+
+.thanks-write-card {
+  padding: 18px;
+  border: 1px solid #ead7df;
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      145deg,
+      #fffdfd,
+      #fff7fa
+    );
+  box-shadow: 0 8px 24px rgba(157, 104, 126, 0.09);
+}
+
+.thanks-write-card label {
+  display: block;
+  margin-bottom: 9px;
+  color: #725d65;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.thanks-write-card textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #e6d5dc;
+  border-radius: 15px;
+  outline: none;
+  background: #fff;
+  color: #55484d;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.65;
+  resize: vertical;
+}
+
+.thanks-write-card textarea:focus {
+  border-color: #d2aebb;
+  box-shadow: 0 0 0 3px rgba(190, 140, 159, 0.12);
+}
+
+.thanks-write-card textarea::placeholder {
+  color: #baa9af;
+}
+
+.thanks-submit-button {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 11px;
+  border: 0;
+  border-radius: 15px;
+  background:
+    linear-gradient(
+      135deg,
+      #e7c4d1,
+      #dfc4d6
+    );
+  color: #684e59;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.thanks-submit-button:active {
+  transform: scale(.98);
+}
+
+.thanks-submit-button:disabled {
+  opacity: .6;
+  cursor: default;
+}
+
+
+/* ---------- 履歴 ---------- */
+
+.thanks-history {
+  margin-top: 30px;
+}
+
+.thanks-history-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 0 2px;
+  color: #8d737d;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#thanksCount {
+  min-width: 28px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #f5e7ec;
+  color: #9b7180;
+  text-align: center;
+}
+
+
+/* ---------- 日付グループ ---------- */
+
+.thanks-date-group {
+  margin-top: 24px;
+}
+
+.thanks-date-group:first-child {
+  margin-top: 0;
+}
+
+.thanks-date-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 9px;
+  color: #a16f82;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+.thanks-date-heading::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #ead7df;
+}
+
+
+/* ---------- 一件 ---------- */
+
+.thanks-item {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 10px;
+  padding: 10px 2px;
+  border-bottom: 1px solid #f0e3e8;
+}
+
+.thanks-time {
+  padding-top: 2px;
+  color: #b0929d;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.thanks-text {
+  margin: 0;
+  color: #5c5054;
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+
+/* ---------- 空 ---------- */
+
+.thanks-empty {
+  padding: 34px 20px;
+  border: 1px dashed #e1cfd6;
+  border-radius: 20px;
+  color: #947d85;
+  text-align: center;
+}
+
+.thanks-empty > div {
+  margin-bottom: 8px;
+  font-size: 28px;
+}
+
+.thanks-empty p {
+  margin: 4px 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+
+/* ---------- PC ---------- */
+
+@media (min-width: 760px) {
+  .thanks-page {
+    max-width: 680px;
+  }
+}
