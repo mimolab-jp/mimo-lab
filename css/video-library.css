@@ -241,3 +241,323 @@
     align-items: start;
   }
 }
+
+/* =====================================
+   みもLAB｜動画ライブラリ専用
+===================================== */
+
+.video-library-page {
+  padding-bottom: 64px;
+}
+
+.video-library-header {
+  margin: 16px 0 20px;
+}
+
+.video-library-eyebrow {
+  margin: 0 0 6px;
+  color: var(--accent, #b86b86);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.video-library-header h1 {
+  margin: 0;
+  color: var(--text, #4d4543);
+  font-size: 27px;
+  line-height: 1.3;
+}
+
+.video-library-lead {
+  margin: 8px 0 0;
+  color: var(--subtext, #746b68);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ===== 検索 ===== */
+
+.video-library-search {
+  margin-bottom: 16px;
+}
+
+.video-library-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 14px;
+  background: #fff;
+  border: 1px solid var(--border, #ead3dc);
+  border-radius: 16px;
+  box-shadow: 0 5px 15px var(--shadow, rgba(180, 110, 135, .10));
+}
+
+.video-library-search-box input {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text, #4d4543);
+  font: inherit;
+  font-size: 14px;
+}
+
+.video-library-search-box input::placeholder {
+  color: #aa9da2;
+}
+
+/* ===== キーワードフィルター ===== */
+
+.video-keyword-filters {
+  display: flex;
+  gap: 7px;
+  margin-top: 10px;
+  padding-bottom: 3px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.video-keyword-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.video-filter-button {
+  flex: 0 0 auto;
+  padding: 7px 11px;
+  border: 1px solid var(--border, #ead3dc);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--subtext, #746b68);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.video-filter-button.is-active {
+  border-color: #d59aaf;
+  background: #f8e9ef;
+  color: #8f5269;
+}
+
+/* ===== 件数 ===== */
+
+.video-library-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 2px 10px;
+  color: var(--subtext, #746b68);
+  font-size: 13px;
+}
+
+.video-reload-button {
+  border: 0;
+  background: transparent;
+  color: var(--accent, #b86b86);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ===== 一覧 ===== */
+
+.video-list {
+  display: grid;
+  gap: 10px;
+}
+
+.video-card {
+  padding: 15px 16px;
+  background: #fff;
+  border: 1px solid var(--border, #ead3dc);
+  border-radius: 19px;
+  box-shadow: 0 5px 16px var(--shadow, rgba(180, 110, 135, .09));
+}
+
+/* タイトル */
+
+.video-card-title {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--text, #4d4543);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* ===== キーワード ===== */
+
+.video-card-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.video-keyword {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 8px;
+  background: #f8e9ef;
+  border-radius: 999px;
+  color: #8f5269;
+  font-size: 11px;
+  line-height: 1;
+}
+
+/* ===== 開閉ボタン ===== */
+
+.video-open-button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 7px 10px;
+  border: 0;
+  border-top: 1px solid #f1e5e9;
+  background: transparent;
+  color: var(--accent, #b86b86);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: right;
+  cursor: pointer;
+}
+
+.video-open-button:active {
+  opacity: .65;
+}
+
+/* ===== 展開部分 ===== */
+
+.video-card-details {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #f1e5e9;
+}
+
+.video-card-details[hidden] {
+  display: none;
+}
+
+/* YouTubeサムネ */
+
+.video-thumbnail {
+  width: 100%;
+  margin-bottom: 13px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #f8e9ef;
+  aspect-ratio: 16 / 9;
+}
+
+.video-thumbnail img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===== メモ ===== */
+
+.video-card-memo-label {
+  margin: 0 0 4px;
+  color: var(--accent, #b86b86);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.video-card-memo {
+  margin: 0;
+  color: var(--text, #4d4543);
+  font-size: 13px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+/* ===== 動画リンク ===== */
+
+.video-watch-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  margin-top: 13px;
+  border-radius: 13px;
+  background: #d1a5b5;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.video-watch-link:active {
+  transform: scale(.98);
+}
+
+/* ===== 空・エラー ===== */
+
+.video-empty,
+.video-error {
+  padding: 28px 18px;
+  background: rgba(255, 255, 255, .72);
+  border: 1px solid var(--border, #ead3dc);
+  border-radius: 20px;
+  color: var(--subtext, #746b68);
+  text-align: center;
+}
+
+.video-empty-icon {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.video-empty p,
+.video-error p {
+  margin: 5px 0;
+}
+
+.video-error-detail {
+  font-size: 12px;
+}
+
+/* ===== 読み込み中 ===== */
+
+.video-loading-card {
+  height: 110px;
+  border-radius: 19px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.65) 25%,
+      rgba(248,233,239,.9) 50%,
+      rgba(255,255,255,.65) 75%
+    );
+  background-size: 200% 100%;
+  animation: videoLoading 1.3s infinite;
+}
+
+@keyframes videoLoading {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (min-width: 760px) {
+  .video-library-page {
+    max-width: 760px;
+  }
+
+  .video-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}

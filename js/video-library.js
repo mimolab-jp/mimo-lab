@@ -1,11 +1,8 @@
 (() => {
   "use strict";
 
-  /*
-   * GASをウェブアプリとして公開した後、
-   * 下のURLだけ自分のものへ置き換えてください。
-   */
-  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyadofcyXYDLF0SxQpUdpWxU8pwEi7BljcLe3V_dUuAqAPslxFYW6GThj1DMeO5Pt47/exec";
+  const GAS_WEB_APP_URL =
+    "https://script.google.com/macros/s/AKfycbyadofcyXYDLF0SxQpUdpWxU8pwEi7BljcLe3V_dUuAqAPslxFYW6GThj1DMeO5Pt47/exec";
 
   const state = {
     videos: [],
@@ -52,10 +49,67 @@
     }
   }
 
+  // YouTube URLから動画IDを取得
+  function getYouTubeId(value) {
+    try {
+      const url = new URL(value);
+
+      if (url.hostname === "youtu.be") {
+        return url.pathname.split("/").filter(Boolean)[0] || "";
+      }
+
+      if (
+        url.hostname === "www.youtube.com" ||
+        url.hostname === "youtube.com" ||
+        url.hostname === "m.youtube.com"
+      ) {
+        if (url.pathname === "/watch") {
+          return url.searchParams.get("v") || "";
+        }
+
+        const parts = url.pathname.split("/").filter(Boolean);
+
+        if (
+          parts[0] === "shorts" ||
+          parts[0] === "embed" ||
+          parts[0] === "live"
+        ) {
+          return parts[1] || "";
+        }
+      }
+
+      return "";
+    } catch {
+      return "";
+    }
+  }
+
+  function getThumbnailHtml(video) {
+    const videoId = getYouTubeId(video.url);
+
+    if (!videoId) {
+      return "";
+    }
+
+    const thumbnailUrl =
+      `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg`;
+
+    return `
+      <div class="video-thumbnail">
+        <img
+          src="${thumbnailUrl}"
+          alt=""
+          loading="lazy"
+        >
+      </div>
+    `;
+  }
+
   function showLoading() {
     elements.error.hidden = true;
     elements.empty.hidden = true;
     elements.count.textContent = "読み込み中…";
+
     elements.list.innerHTML = `
       <div class="video-loading-card"></div>
       <div class="video-loading-card"></div>
@@ -63,18 +117,21 @@
   }
 
   function loadVideos() {
-  if (!GAS_WEB_APP_URL) {
-  showError();
-  return;
-}
+    if (!GAS_WEB_APP_URL) {
+      showError();
+      return;
+    }
 
     showLoading();
 
     const callbackName =
-      `mimoVideoLibraryCallback_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+      `mimoVideoLibraryCallback_${Date.now()}_${Math.floor(
+        Math.random() * 10000
+      )}`;
 
     const script = document.createElement("script");
     const separator = GAS_WEB_APP_URL.includes("?") ? "&" : "?";
+
     const timeoutId = window.setTimeout(() => {
       cleanup();
       showError();
@@ -89,7 +146,11 @@
     window[callbackName] = payload => {
       cleanup();
 
-      if (!payload || payload.ok !== true || !Array.isArray(payload.videos)) {
+      if (
+        !payload ||
+        payload.ok !== true ||
+        !Array.isArray(payload.videos)
+      ) {
         showError();
         return;
       }
@@ -115,14 +176,17 @@
     };
 
     script.src =
-      `${GAS_WEB_APP_URL}${separator}callback=${encodeURIComponent(callbackName)}&t=${Date.now()}`;
+      `${GAS_WEB_APP_URL}${separator}` +
+      `callback=${encodeURIComponent(callbackName)}&t=${Date.now()}`;
 
     document.body.appendChild(script);
   }
 
   function createKeywordFilters() {
     const keywords = [
-      ...new Set(state.videos.flatMap(video => video.keywords))
+      ...new Set(
+        state.videos.flatMap(video => video.keywords)
+      )
     ].sort((a, b) => a.localeCompare(b, "ja"));
 
     elements.filters.innerHTML = `
@@ -130,13 +194,18 @@
         class="video-filter-button is-active"
         type="button"
         data-keyword="all"
-      >すべて</button>
+      >
+        すべて
+      </button>
+
       ${keywords.map(keyword => `
         <button
           class="video-filter-button"
           type="button"
           data-keyword="${escapeHtml(keyword)}"
-        >${escapeHtml(keyword)}</button>
+        >
+          ${escapeHtml(keyword)}
+        </button>
       `).join("")}
     `;
 
@@ -144,7 +213,8 @@
   }
 
   function getFilteredVideos() {
-    const search = state.searchText.toLocaleLowerCase("ja");
+    const search =
+      state.searchText.toLocaleLowerCase("ja");
 
     return state.videos.filter(video => {
       const keywordMatches =
@@ -155,9 +225,14 @@
         video.title,
         video.memo,
         ...video.keywords
-      ].join(" ").toLocaleLowerCase("ja");
+      ]
+        .join(" ")
+        .toLocaleLowerCase("ja");
 
-      return keywordMatches && (!search || haystack.includes(search));
+      return (
+        keywordMatches &&
+        (!search || haystack.includes(search))
+      );
     });
   }
 
@@ -168,29 +243,59 @@
     elements.empty.hidden = videos.length > 0;
     elements.count.textContent = `${videos.length}本`;
 
-    elements.list.innerHTML = videos.map(video => `
+    elements.list.innerHTML = videos.map((video, index) => `
       <article class="video-card">
-        <h2 class="video-card-title">${escapeHtml(video.title)}</h2>
 
-        ${video.memo ? `
-          <p class="video-card-memo-label">この動画を見る理由</p>
-          <p class="video-card-memo">${escapeHtml(video.memo)}</p>
-        ` : ""}
+        <h2 class="video-card-title">
+          ${escapeHtml(video.title)}
+        </h2>
 
         ${video.keywords.length ? `
           <div class="video-card-keywords">
             ${video.keywords.map(keyword => `
-              <span class="video-keyword">${escapeHtml(keyword)}</span>
+              <span class="video-keyword">
+                ${escapeHtml(keyword)}
+              </span>
             `).join("")}
           </div>
         ` : ""}
 
-        <a
-          class="video-watch-link"
-          href="${escapeHtml(video.url)}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >動画を見る ↗</a>
+        <button
+          class="video-open-button"
+          type="button"
+          data-video-toggle="${index}"
+          aria-expanded="false"
+        >
+          ＋ ひらく
+        </button>
+
+        <div
+          class="video-card-details"
+          data-video-details="${index}"
+          hidden
+        >
+          ${getThumbnailHtml(video)}
+
+          ${video.memo ? `
+            <p class="video-card-memo-label">
+              この動画を見る理由
+            </p>
+
+            <p class="video-card-memo">
+              ${escapeHtml(video.memo)}
+            </p>
+          ` : ""}
+
+          <a
+            class="video-watch-link"
+            href="${escapeHtml(video.url)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            動画を見る ↗
+          </a>
+        </div>
+
       </article>
     `).join("");
   }
@@ -208,19 +313,58 @@
   });
 
   elements.filters.addEventListener("click", event => {
-    const button = event.target.closest("[data-keyword]");
+    const button =
+      event.target.closest("[data-keyword]");
+
     if (!button) return;
 
     state.keyword = button.dataset.keyword;
 
     elements.filters
       .querySelectorAll("[data-keyword]")
-      .forEach(item => item.classList.toggle("is-active", item === button));
+      .forEach(item => {
+        item.classList.toggle(
+          "is-active",
+          item === button
+        );
+      });
 
     renderVideos();
   });
 
-  elements.reload.addEventListener("click", loadVideos);
+  // カードを開く・閉じる
+  elements.list.addEventListener("click", event => {
+    const button =
+      event.target.closest("[data-video-toggle]");
+
+    if (!button) return;
+
+    const index = button.dataset.videoToggle;
+
+    const details =
+      elements.list.querySelector(
+        `[data-video-details="${index}"]`
+      );
+
+    if (!details) return;
+
+    const isOpen = !details.hidden;
+
+    details.hidden = isOpen;
+
+    button.setAttribute(
+      "aria-expanded",
+      String(!isOpen)
+    );
+
+    button.textContent =
+      isOpen ? "＋ ひらく" : "− 閉じる";
+  });
+
+  elements.reload.addEventListener(
+    "click",
+    loadVideos
+  );
 
   loadVideos();
 })();
