@@ -15,6 +15,14 @@
       <p class="page-lead">よっしゃー！「絶対できる」の魔法を、朝かける。</p>
     </header>
 
+        <section class="routine-card">
+      <h2>☕ 朝のひとこと</h2>
+      <p>思いだすのです･･･！</p>
+
+      <div id="morningMessage" class="message-box"></div>
+    </section>
+
+
     <section class="routine-card">
       <h2>🗣 よき滑舌練習</h2>
       <p>優しくて温かみのあるきれいな癒しボイスになる。</p>
@@ -30,14 +38,17 @@
       <p>「ある」ことに感謝する✨自分を好きでいるとうまくいく。</p>
 
       <div class="link-buttons">
-        <a href="https://www.youtube.com/watch?v=oiPmd7BkCZk&list=LL&index=18" class="small-link-button">勝手に夢が叶い出す</a>
+        <a href="https://www.youtube.com/@sai_ryohei" class="small-link-button">崔の店長日誌。</a>
+        <a href="https://www.youtube.com/watch?v=oiPmd7BkCZk&list=LL&index=18" class="small-link-button">毎日脳に言うだけで勝手に夢が叶い出す【ひ】</a>
+          <a href="https://www.youtube.com/watch?v=sBOLIaYY1YY&list=LL&index=19" class="small-link-button">波動を知るとイージーモード【ひ】</a>
         <a href="https://youtu.be/9ijpJjTzzZk?si=yp5m0kufIOLxbVpG&t=430" class="small-link-button">
-できる、かも。で認識を変える</a>
-        <a href="https://www.youtube.com/watch?v=oiPmd7BkCZk&list=LL&index=18" class="small-link-button">勝手に夢が叶い出す</a>
-        <a href="https://www.youtube.com/watch?v=sBOLIaYY1YY&list=LL&index=19" class="small-link-button">波動を知れば引き寄せは簡単</a>
-        <a href="https://www.youtube.com/watch?v=837Z6FGOsv4&list=LL&index=20" class="small-link-button">絶対大丈夫の魔法</a>
-      　<a href="https://www.youtube.com/watch?v=IVgwxk8F9gA&list=LL&index=44" class="small-link-button">▶ こうなったら楽だな～🙆‍♀️が現実に</a>
-      </div>
+できる、かも。で認識を変える【ひ】</a>
+        <a href="https://www.youtube.com/watch?v=837Z6FGOsv4&list=LL&index=20" class="small-link-button">【Short】
+実は逆だった人生の法則5選【ひ】</a>
+      　<a href="https://www.youtube.com/watch?v=IVgwxk8F9gA&list=LL&index=44" class="small-link-button">▶ こうなったら楽だな～🙆‍♀️これだけだった。【Mika】</a>
+    　　<a href="https://www.youtube.com/watch?v=CoSa511fr8c" class="small-link-button">ありがとう2万5000回唱えると奇跡が起こる【櫻】</a>  
+    
+    </div>
     </section>
 
     <section class="routine-card">
@@ -52,14 +63,30 @@
       </div>
     </section>
 
-    <section class="routine-card">
-      <h2>☕ 朝のひとこと</h2>
-      <p>今日の合言葉。</p>
+ </main>
+ 
+  
+  <script>
+  const morningMessages = [
+    "「人生はイージーモード。」",
+    "「ありがとう愛してる。」",
+    "「わたし可愛い大好きハグハグアイラビュー。」",
+    "「願いが実現した世界を五感で味わってみる。」",
+    "「日常の小さな感謝を書き出す習慣。」",
+    "「今日はどんな楽しいことが起こるんだろう？」",
+    "「ありがとうを25000回で人生が変わる。」"
+  ];
 
-      <div class="message-box">
-        「すべてうまくいく！運気上昇中♪」
-      </div>
-    </section>
-  </main>
+  const morningMessage = document.getElementById("morningMessage");
+
+  if (morningMessage) {
+    const randomIndex = Math.floor(
+      Math.random() * morningMessages.length
+    );
+
+    morningMessage.textContent = morningMessages[randomIndex];
+  }
+</script>
+
 </body>
 </html>
