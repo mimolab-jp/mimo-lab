@@ -186,3 +186,28 @@
     gap: 6px 8px;
   }
 }
+.shop-genre-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 18px;
+}
+
+.shop-genre-filter {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border: 1px solid #ead3dc;
+  border-radius: 999px;
+  background: #fff;
+  color: #8a6f78;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.shop-genre-filter.is-active {
+  border-color: #d59aaf;
+  background: #f8e9ef;
+  color: #8f5269;
+}
