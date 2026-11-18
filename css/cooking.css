@@ -979,3 +979,170 @@ body.modal-open {
     width: 100%;
   }
 }
+
+/* =========================================================
+   みもレシピ 2.0 : 写真中心の一覧・複合検索・関連レシピ
+   既存の追加フォームやモーダルのスタイルを維持するため追記
+   ========================================================= */
+
+/* 写真を見比べやすいカード。既存のJSのマークアップでも動作 */
+.recipe-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.recipe-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 20px;
+}
+.recipe-card-icon {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  border-radius: 0;
+  font-size: 3.2rem;
+}
+.recipe-card-icon img,
+.recipe-icon img,
+.recipe-modal-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.recipe-card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 15px 16px 16px;
+}
+.recipe-card-content h3 {
+  margin-top: 6px;
+  font-size: 1.05rem;
+}
+.recipe-card .recipe-summary {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+.recipe-card .recipe-actions { margin-top: auto; padding-top: 12px; }
+.recipe-card .primary-button { flex: 1; }
+
+/* 今日のおすすめも写真を見せる */
+.featured-recipe { grid-template-columns: minmax(140px, 35%) minmax(0, 1fr); }
+.recipe-icon { width: 100%; height: auto; aspect-ratio: 4 / 3; }
+
+/* 料理区分・食材の2段階絞り込み */
+.recipe-filter-group { margin-top: 16px; }
+.recipe-filter-group:first-child { margin-top: 0; }
+.recipe-filter-label {
+  margin: 0 0 9px;
+  color: var(--cooking-text);
+  font-size: .9rem;
+  font-weight: 800;
+}
+.recipe-filter-help {
+  margin: 4px 0 10px;
+  color: var(--cooking-text-soft);
+  font-size: .78rem;
+}
+.recipe-search-input {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border: 1px solid var(--cooking-border);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--cooking-text);
+  font: inherit;
+}
+.recipe-search-input:focus-visible,
+.filter-buttons button:focus-visible,
+.recipe-related-button:focus-visible {
+  outline: 3px solid var(--cooking-accent-soft);
+  outline-offset: 2px;
+}
+.recipe-search-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+.recipe-result-count { color: var(--cooking-text-soft); font-size: .83rem; }
+.recipe-filter-clear {
+  border: 1px solid var(--cooking-border);
+  border-radius: 999px;
+  padding: 7px 13px;
+  background: #fff;
+  color: var(--cooking-text);
+  cursor: pointer;
+}
+
+/* 詳細モーダルの料理写真・関連レシピ */
+.recipe-modal-icon.recipe-modal-photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 18px;
+  margin-bottom: 16px;
+}
+.recipe-related-list { display: grid; gap: 9px; }
+.recipe-related-button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--cooking-border);
+  border-radius: 13px;
+  background: #fff;
+  color: var(--cooking-text);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.recipe-related-button:hover { background: var(--cooking-card-strong); }
+.recipe-related-thumb {
+  display: grid;
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--cooking-card-strong);
+}
+.recipe-related-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+@media (max-width: 760px) {
+  .recipe-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+}
+@media (max-width: 520px) {
+  .recipe-card-content { padding: 11px 10px 12px; }
+  .recipe-card-content h3 { font-size: .94rem; }
+  .recipe-card-icon { aspect-ratio: 4 / 3; font-size: 2.4rem; }
+  .recipe-card .recipe-summary { font-size: .78rem; line-height: 1.5; }
+  .recipe-card .recipe-tags span { font-size: .66rem; }
+  .recipe-card .recipe-actions { gap: 6px; }
+  .recipe-card .primary-button { min-height: 36px; padding: 8px 6px; font-size: .77rem; }
+  .recipe-card .favorite-button { width: 36px; min-width: 36px; height: 36px; }
+  .featured-recipe { grid-template-columns: 1fr; }
+  .recipe-icon { aspect-ratio: 16 / 9; }
+}
+
+/* ===== 2.0 JS とモーダル表示の互換調整 ===== */
+.recipe-modal:not([hidden]) { opacity: 1; visibility: visible; }
+.recipe-modal:not([hidden]) .recipe-modal-panel { transform: none; }
+.recipe-add-modal:not([hidden]) { opacity: 1; visibility: visible; }
+.recipe-modal .step-list { list-style: decimal; padding-left: 1.5em; counter-reset: none; }
+.recipe-modal .step-list li { display: list-item; }
+.related-recipes { display: grid; gap: 8px; }
+.related-recipe-button { padding: 12px; border: 1px solid var(--cooking-border); border-radius: 12px; background: #fff; color: var(--cooking-text); text-align: left; cursor: pointer; }
+.related-recipe-button:hover { background: var(--cooking-card-strong); }
+/* 登録はスプレッドシートから行う運用 */
+#add-recipe-button { display: none; }

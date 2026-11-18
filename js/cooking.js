@@ -1,34 +1,59 @@
+
 'use strict';
 
 /* =========================================================
    みもLAB ごはんページ
-   cooking.js
+   cooking.js 2.0
    ========================================================= */
-
-/* ---------- 設定 ---------- */
 
 const COOKING_API_BASE_URL =
   'https://script.google.com/macros/s/AKfycbyadofcyXYDLF0SxQpUdpWxU8pwEi7BljcLe3V_dUuAqAPslxFYW6GThj1DMeO5Pt47/exec';
 
 const COOKING_API_URL =
   `${COOKING_API_BASE_URL}?type=cooking`;
-const FAVORITE_STORAGE_KEY = 'mimoLabCookingFavorites';
 
-
-/* ---------- ページ内で使うデータ ---------- */
+/* ---------- レシピデータ ---------- */
 
 let recipes = [];
 let filteredRecipes = [];
-let activeFilter = null;
 let currentFeaturedRecipeId = null;
 
+/* ---------- 検索条件 ---------- */
+
+let selectedMealType = '';
+const selectedIngredients = new Set();
+const selectedExtras = new Set();
+let keyword = '';
 
 /* ---------- HTML要素 ---------- */
 
-const recipeContainer = document.getElementById('recipe-container');
-const shuffleButton = document.getElementById('shuffle-button');
-const featuredRecipe = document.querySelector('.featured-recipe');
-const filterButtons = document.querySelectorAll('.filter-buttons button');
+const recipeContainer =
+  document.getElementById('recipe-container');
+
+const shuffleButton =
+  document.getElementById('shuffle-button');
+
+const featuredRecipe =
+  document.querySelector('.featured-recipe');
+
+const filterButtons =
+  document.querySelectorAll('#extra-filters [data-filter]');
+
+const mealTypeButtons =
+  document.querySelectorAll('#meal-type-filters [data-meal-type]');
+
+const ingredientButtons =
+  document.querySelectorAll('#ingredient-filters [data-ingredient]');
+
+const keywordInput =
+  document.getElementById('recipe-keyword');
+
+const clearFiltersButton =
+  document.getElementById('recipe-filter-clear');
+
+const resultCount =
+  document.getElementById('recipe-result-count');
+
 const addRecipeButton =
   document.getElementById('add-recipe-button');
 
@@ -43,8 +68,7 @@ const recipeAddMessage =
 
 const recipeAddSubmit =
   document.getElementById('recipe-add-submit');
-
-
+  
 /* =========================================================
    初期処理
    ========================================================= */
@@ -53,7 +77,7 @@ document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
   if (!recipeContainer || !featuredRecipe) {
-    console.error('ごはんページに必要なHTML要素が見つかりません。');
+    console.error('必要なHTML要素が見つかりません。');
     return;
   }
 
@@ -63,28 +87,25 @@ async function init() {
 
   try {
     recipes = await fetchRecipes();
+    filteredRecipes = [...recipes];
 
     if (recipes.length === 0) {
-      showEmptyMessage('表示できるレシピがまだありません。');
+      showEmptyMessage('表示できるレシピがありません。');
       showFeaturedEmpty();
+      updateResultCount();
       return;
     }
 
-    filteredRecipes = [...recipes];
-
     renderRecipeCards(filteredRecipes);
+    updateResultCount();
     showRandomFeaturedRecipe();
+
   } catch (error) {
     console.error('レシピの読み込みに失敗しました。', error);
-
-    showErrorMessage(
-      'レシピを読み込めませんでした。通信状態やGASの公開設定を確認してください。'
-    );
-
+    showErrorMessage('レシピを読み込めませんでした。');
     showFeaturedError();
   }
 }
-
 
 /* =========================================================
    APIからレシピを取得
@@ -103,7 +124,7 @@ async function fetchRecipes() {
   const data = await response.json();
 
   if (!data.ok) {
-    throw new Error(data.message || 'APIからエラーが返されました。');
+    throw new Error(data.message || 'APIエラー');
   }
 
   if (!Array.isArray(data.recipes)) {
@@ -115,9 +136,8 @@ async function fetchRecipes() {
     .filter(recipe => recipe.title && recipe.visible);
 }
 
-
 /* =========================================================
-   APIデータを画面用の形に整える
+   レシピデータの整形
    ========================================================= */
 
 function normalizeRecipe(rawRecipe, index) {
@@ -125,91 +145,36 @@ function normalizeRecipe(rawRecipe, index) {
 
   return {
     id: String(recipe.id || index + 1),
-
     title: String(recipe.title || '').trim(),
-
-    image: String(
-      recipe.image ||
-      recipe.imageUrl ||
-      ''
-    ).trim(),
-
-    sourceUrl: String(
-      recipe.sourceUrl ||
-      recipe.url ||
-      ''
-    ).trim(),
-
+    image: String(recipe.image || recipe.imageUrl || '').trim(),
+    sourceUrl: String(recipe.sourceUrl || '').trim(),
     category: String(recipe.category || '').trim(),
-
+    mealType: String(recipe.mealType || '').trim(),
+    mainIngredients: normalizeList(recipe.mainIngredients),
+    relatedRecipeIds: normalizeList(recipe.relatedRecipeIds),
     ingredients: normalizeList(recipe.ingredients),
-
-    workTime: normalizeNumber(
-      recipe.workTime ??
-      recipe.prepTime ??
-      recipe.activeTime
-    ),
-
-    leaveTime: normalizeNumber(
-      recipe.leaveTime ??
-      recipe.cookingTime ??
-      recipe.waitTime
-    ),
-
-    tool: String(
-      recipe.tool ||
-      recipe.appliance ||
-      recipe.cookingTool ||
-      ''
-    ).trim(),
-
+    workTime: normalizeNumber(recipe.workTime),
+    leaveTime: normalizeNumber(recipe.leaveTime),
+    tool: String(recipe.tool || '').trim(),
     tags: normalizeList(recipe.tags),
-
-    summary: String(
-      recipe.summary ||
-      recipe.memo ||
-      recipe.description ||
-      recipe.comment ||
-      ''
-    ).trim(),
-
-    steps: normalizeList(
-      recipe.steps ||
-      recipe.instructions
-    ),
-
-    favorite: normalizeBoolean(
-      recipe.favorite
-    ),
-
-    husbandRating: normalizeNumber(
-      recipe.husbandRating ??
-      recipe.rating
-    ),
-
-    backPainOk: normalizeBoolean(
-      recipe.backPainOk ??
-      recipe.lowEffort ??
-      recipe.backOk
-    ),
-
-    gyomu: normalizeBoolean(
-      recipe.gyomu ??
-      recipe.gyomuSuper
-    ),
-
-    visible: normalizeVisible(
-      recipe.visible ??
-      recipe.display
-    )
+    summary: String(recipe.summary || '').trim(),
+    steps: normalizeList(recipe.steps),
+    favorite: normalizeBoolean(recipe.favorite),
+    husbandRating: normalizeNumber(recipe.husbandRating),
+    backPainOk: normalizeBoolean(recipe.backPainOk),
+    gyomu: normalizeBoolean(recipe.gyomu),
+    visible: normalizeVisible(recipe.visible)
   };
 }
 
+/* =========================================================
+   データ変換用の補助関数
+   ========================================================= */
 
 function normalizeList(value) {
   if (Array.isArray(value)) {
     return value
-      .map(item => String(item).trim())
+      .map(item => String(item ?? '').trim())
       .filter(Boolean);
   }
 
@@ -223,12 +188,10 @@ function normalizeList(value) {
     .filter(Boolean);
 }
 
-
 function normalizeNumber(value) {
   const number = Number(value);
   return Number.isFinite(number) ? number : 0;
 }
-
 
 function normalizeBoolean(value) {
   if (typeof value === 'boolean') {
@@ -240,17 +203,10 @@ function normalizeBoolean(value) {
     .toLowerCase();
 
   return [
-    'true',
-    '1',
-    'yes',
-    'y',
-    '○',
-    '〇',
-    'あり',
-    '可'
+    'true', '1', 'yes', 'y',
+    '○', '〇', 'あり', '可'
   ].includes(normalized);
 }
-
 
 function normalizeVisible(value) {
   if (
@@ -264,7 +220,6 @@ function normalizeVisible(value) {
   return normalizeBoolean(value);
 }
 
-
 /* =========================================================
    イベント設定
    ========================================================= */
@@ -274,16 +229,77 @@ function setupEvents() {
     showRandomFeaturedRecipe(true);
   });
 
-  filterButtons.forEach(button => {
+  mealTypeButtons.forEach(button => {
     button.addEventListener('click', () => {
-      handleFilterButton(button);
+      const value = button.dataset.mealType || '';
+
+      selectedMealType =
+        selectedMealType === value ? '' : value;
+
+      applyFilters();
     });
   });
 
-  recipeContainer.addEventListener('click', handleRecipeContainerClick);
+  ingredientButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const ingredient = button.dataset.ingredient || '';
 
-  featuredRecipe.addEventListener('click', handleFeaturedRecipeClick);
-  addRecipeButton?.addEventListener('click', openRecipeAddModal);
+      if (selectedIngredients.has(ingredient)) {
+        selectedIngredients.delete(ingredient);
+      } else {
+        selectedIngredients.add(ingredient);
+      }
+
+      applyFilters();
+    });
+  });
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const filter = button.dataset.filter || '';
+
+      if (selectedExtras.has(filter)) {
+        selectedExtras.delete(filter);
+      } else {
+        selectedExtras.add(filter);
+      }
+
+      applyFilters();
+    });
+  });
+
+  keywordInput?.addEventListener('input', () => {
+    keyword = keywordInput.value.trim();
+    applyFilters();
+  });
+
+  clearFiltersButton?.addEventListener('click', () => {
+    selectedMealType = '';
+    selectedIngredients.clear();
+    selectedExtras.clear();
+    keyword = '';
+
+    if (keywordInput) {
+      keywordInput.value = '';
+    }
+
+    applyFilters();
+  });
+
+  recipeContainer.addEventListener(
+    'click',
+    handleRecipeContainerClick
+  );
+
+  featuredRecipe.addEventListener(
+    'click',
+    handleFeaturedRecipeClick
+  );
+
+  addRecipeButton?.addEventListener(
+    'click',
+    openRecipeAddModal
+  );
 
   recipeAddModal?.addEventListener('click', event => {
     if (event.target.closest('[data-close-add-modal]')) {
@@ -291,7 +307,10 @@ function setupEvents() {
     }
   });
 
-  recipeAddForm?.addEventListener('submit', handleRecipeAddSubmit);
+  recipeAddForm?.addEventListener(
+    'submit',
+    handleRecipeAddSubmit
+  );
 
   document.addEventListener('keydown', event => {
     if (
@@ -302,944 +321,366 @@ function setupEvents() {
       closeRecipeAddModal();
     }
   });
-
 }
 
-
 /* =========================================================
-   レシピ一覧
+   レシピ検索・絞り込み
    ========================================================= */
 
-function renderRecipeCards(recipeList) {
-  recipeContainer.innerHTML = '';
+function applyFilters() {
+  filteredRecipes = recipes.filter(recipe => {
+    if (selectedMealType) {
+      const type = getRecipeMealType(recipe);
+      if (type !== selectedMealType) return false;
+    }
 
-  if (recipeList.length === 0) {
-    showEmptyMessage('この条件に合うレシピはありませんでした。');
-    return;
-  }
+    if (selectedIngredients.size > 0) {
+      const ingredients = getSearchableIngredients(recipe);
 
-  const fragment = document.createDocumentFragment();
+      const matches = [...selectedIngredients].every(
+        selected => ingredients.some(
+          ingredient => ingredientMatches(ingredient, selected)
+        )
+      );
 
-  recipeList.forEach(recipe => {
-    fragment.appendChild(createRecipeCard(recipe));
+      if (!matches) return false;
+    }
+
+    if (selectedExtras.size > 0) {
+      const matches = [...selectedExtras].every(
+        filter => recipeMatchesExtra(recipe, filter)
+      );
+
+      if (!matches) return false;
+    }
+
+    if (keyword) {
+      const searchText = normalizeSearchText([
+        recipe.title,
+        recipe.category,
+        recipe.mealType,
+        recipe.summary,
+        recipe.tool,
+        ...recipe.tags,
+        ...recipe.ingredients,
+        ...recipe.mainIngredients
+      ].join(' '));
+
+      const words = normalizeSearchText(keyword)
+        .split(/\s+/)
+        .filter(Boolean);
+
+      if (!words.every(word => searchText.includes(word))) {
+        return false;
+      }
+    }
+
+    return true;
   });
-
-  recipeContainer.appendChild(fragment);
-}
-
-
-function createRecipeCard(recipe) {
-  const article = document.createElement('article');
-  article.className = 'recipe-card';
-  article.dataset.recipeId = recipe.id;
-
-  const icon = getRecipeIcon(recipe);
-  const favorite = recipe.favorite;
-
-  article.innerHTML = `
-    <div class="recipe-card-icon" aria-hidden="true">
-      ${recipe.image
-      ? `<img src="${escapeAttribute(recipe.image)}"
-                alt=""
-                loading="lazy">`
-      : icon}
-    </div>
-
-    <div class="recipe-card-content">
-      <div class="recipe-tags">
-        ${createTagHtml(recipe, 3)}
-      </div>
-
-      <h3>${escapeHtml(recipe.title)}</h3>
-
-      <p class="recipe-summary">
-        ${escapeHtml(
-        recipe.summary || createFallbackSummary(recipe)
-      )}
-      </p>
-
-      <div class="recipe-card-meta">
-        ${createTimeHtml(recipe)}
-      </div>
-
-      <div class="recipe-actions">
-        <button
-          type="button"
-          class="primary-button recipe-detail-button"
-          data-recipe-id="${escapeAttribute(recipe.id)}"
-        >
-          レシピを見る
-        </button>
-
-        <button
-          type="button"
-          class="favorite-button ${favorite ? 'is-favorite' : ''}"
-          data-favorite-id="${escapeAttribute(recipe.id)}"
-          aria-label="${favorite
-      ? 'お気に入りから外す'
-      : 'お気に入りに追加'}"
-          aria-pressed="${favorite}"
-        >
-          ${favorite ? '♥' : '♡'}
-        </button>
-      </div>
-    </div>
-  `;
-
-  return article;
-}
-
-
-/* =========================================================
-   今日のおすすめ
-   ========================================================= */
-
-function showRandomFeaturedRecipe(avoidCurrent = false) {
-  const candidates =
-    filteredRecipes.length > 0
-      ? filteredRecipes
-      : recipes;
-
-  if (candidates.length === 0) {
-    showFeaturedEmpty();
-    return;
-  }
-
-  let candidateList = candidates;
-
-  if (avoidCurrent && candidates.length > 1) {
-    candidateList = candidates.filter(
-      recipe => recipe.id !== currentFeaturedRecipeId
-    );
-  }
-
-  const randomIndex = Math.floor(
-    Math.random() * candidateList.length
-  );
-
-  const recipe = candidateList[randomIndex];
-
-  currentFeaturedRecipeId = recipe.id;
-  renderFeaturedRecipe(recipe);
-}
-
-
-function renderFeaturedRecipe(recipe) {
-  const favorite = recipe.favorite;
-
-  featuredRecipe.dataset.recipeId = recipe.id;
-
-  featuredRecipe.innerHTML = `
-    <div class="recipe-icon" aria-hidden="true">
-      ${recipe.image
-      ? `<img src="${escapeAttribute(recipe.image)}"
-                alt=""
-                loading="lazy">`
-      : getRecipeIcon(recipe)}
-    </div>
-
-    <div class="recipe-content">
-      <div class="recipe-tags">
-        ${createTagHtml(recipe, 4)}
-      </div>
-
-      <h3>${escapeHtml(recipe.title)}</h3>
-
-      <p class="recipe-summary">
-        ${escapeHtml(
-        recipe.summary || createFallbackSummary(recipe)
-      )}
-      </p>
-
-      <div class="recipe-card-meta">
-        ${createTimeHtml(recipe)}
-      </div>
-
-      <div class="recipe-actions">
-        <button
-          type="button"
-          class="primary-button featured-detail-button"
-          data-recipe-id="${escapeAttribute(recipe.id)}"
-        >
-          レシピを見る
-        </button>
-
-        <button
-          type="button"
-          class="favorite-button ${favorite ? 'is-favorite' : ''}"
-          data-favorite-id="${escapeAttribute(recipe.id)}"
-          aria-label="${favorite
-      ? 'お気に入りから外す'
-      : 'お気に入りに追加'}"
-          aria-pressed="${favorite}"
-        >
-          ${favorite ? '♥' : '♡'}
-        </button>
-      </div>
-    </div>
-  `;
-}
-
-
-function showFeaturedEmpty() {
-  featuredRecipe.innerHTML = `
-    <div class="recipe-icon" aria-hidden="true">🍽️</div>
-    <div class="recipe-content">
-      <h3>レシピを登録しよう</h3>
-      <p class="recipe-summary">
-        スプレッドシートにレシピを追加すると、ここに表示されます。
-      </p>
-    </div>
-  `;
-}
-
-
-function showFeaturedError() {
-  featuredRecipe.innerHTML = `
-    <div class="recipe-icon" aria-hidden="true">🥲</div>
-    <div class="recipe-content">
-      <h3>読み込みに失敗しました</h3>
-      <p class="recipe-summary">
-        少し時間を置いて、ページを再読み込みしてください。
-      </p>
-    </div>
-  `;
-}
-
-
-/* =========================================================
-   絞り込み
-   ========================================================= */
-
-function handleFilterButton(button) {
-  const selectedFilter = button.dataset.filter;
-
-  if (activeFilter === selectedFilter) {
-    activeFilter = null;
-  } else {
-    activeFilter = selectedFilter;
-  }
-
-  updateFilterButtonAppearance();
-
-  filteredRecipes = activeFilter
-    ? recipes.filter(recipe =>
-      recipeMatchesFilter(recipe, activeFilter)
-    )
-    : [...recipes];
 
   renderRecipeCards(filteredRecipes);
+  updateResultCount();
+  updateFilterButtons();
+}
 
-  if (filteredRecipes.length > 0) {
-    showRandomFeaturedRecipe();
+function getRecipeMealType(recipe) {
+  if (recipe.mealType) return recipe.mealType;
+
+  const category = recipe.category;
+
+  if (category === '副菜') return '副菜';
+  if (category === '汁物') return '汁物';
+  if (category === '下ごしらえ') return '下ごしらえ';
+
+  if (['肉', '麺', 'カレー・丼', '魚'].includes(category)) {
+    return '主菜';
   }
+
+  return 'その他';
 }
 
-
-function updateFilterButtonAppearance() {
-  filterButtons.forEach(button => {
-    const isActive =
-      button.dataset.filter === activeFilter;
-
-    button.classList.toggle('is-active', isActive);
-    button.setAttribute('aria-pressed', String(isActive));
-  });
+function getSearchableIngredients(recipe) {
+  return [
+    ...recipe.mainIngredients,
+    ...recipe.ingredients
+  ].map(normalizeSearchText);
 }
 
+function ingredientMatches(text, selected) {
+  const target = normalizeSearchText(selected);
 
-function recipeMatchesFilter(recipe, filter) {
-  const category = recipe.category.toLowerCase();
-  const tool = recipe.tool.toLowerCase();
-  const tags = recipe.tags
-    .join(' ')
-    .toLowerCase();
+  const aliases = {
+    '鶏肉': ['鶏肉', '鶏むね', '鶏もも', 'ささみ', '鶏ひき肉'],
+    '豚肉': ['豚肉', '豚こま', '豚バラ', '豚ロース', '豚ひき肉'],
+    '牛肉': ['牛肉', '牛こま', '牛バラ', '牛ひき肉'],
+    'きゅうり': ['きゅうり', '胡瓜'],
+    'キャベツ': ['キャベツ'],
+    '大根': ['大根'],
+    'もやし': ['もやし'],
+    'なす': ['なす', 'ナス', '茄子'],
+    '玉ねぎ': ['玉ねぎ', '玉葱', 'たまねぎ'],
+    'にんじん': ['にんじん', '人参'],
+    '卵': ['卵', 'たまご', '玉子'],
+    '豆腐': ['豆腐'],
+    'じゃがいも': ['じゃがいも', 'ジャガイモ']
+  };
 
-  const searchableText = [
-    category,
-    tool,
-    tags,
-    recipe.title.toLowerCase()
-  ].join(' ');
+  const candidates = aliases[selected] || [selected];
 
+  return candidates.some(candidate =>
+    text.includes(normalizeSearchText(candidate))
+  );
+}
+
+function normalizeSearchText(value) {
+  return String(value || '')
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/\s+/g, '');
+}
+
+function recipeMatchesExtra(recipe, filter) {
   switch (filter) {
     case 'favorite':
       return recipe.favorite;
 
-    case 'meat':
-      return (
-        searchableText.includes('肉') ||
-        searchableText.includes('鶏') ||
-        searchableText.includes('豚') ||
-        searchableText.includes('牛') ||
-        searchableText.includes('ハンバーグ')
-      );
-
-    case 'noodle':
-      return (
-        searchableText.includes('麺') ||
-        searchableText.includes('うどん') ||
-        searchableText.includes('ラーメン') ||
-        searchableText.includes('パスタ')
-      );
-
-    case 'rice':
-      return (
-        searchableText.includes('丼') ||
-        searchableText.includes('カレー') ||
-        searchableText.includes('ご飯') ||
-        searchableText.includes('ドリア')
-      );
-
     case 'hotcook':
-      return (
-        searchableText.includes('ホットクック') ||
-        searchableText.includes('hotcook')
-      );
+      return normalizeSearchText(
+        [recipe.tool, ...recipe.tags].join(' ')
+      ).includes('ホットクック');
 
     case 'quick':
       return isQuickRecipe(recipe);
 
     case 'gyomu':
-      return (
-        recipe.gyomu ||
-        searchableText.includes('業スー') ||
-        searchableText.includes('業務スーパー')
-      );
+      return recipe.gyomu;
+
+    case 'backpain':
+      return recipe.backPainOk;
+
+    case 'meat':
+      return recipe.category === '肉';
+
+    case 'noodle':
+      return recipe.category === '麺';
+
+    case 'rice':
+      return recipe.category === 'カレー・丼';
 
     default:
       return true;
   }
 }
 
-
 function isQuickRecipe(recipe) {
-  const totalTime =
-    recipe.workTime + recipe.leaveTime;
+  if (recipe.workTime > 0 && recipe.workTime <= 10) {
+    return true;
+  }
 
-  return (
-    recipe.workTime <= 10 ||
-    totalTime <= 10 ||
-    recipe.tags.some(tag =>
-      tag.includes('10分以内') ||
-      tag.includes('5分')
-    )
+  const total = recipe.workTime + recipe.leaveTime;
+
+  if (total > 0 && total <= 10) {
+    return true;
+  }
+
+  return recipe.tags.some(tag =>
+    normalizeSearchText(tag).includes('10分以内')
   );
 }
 
+function updateFilterButtons() {
+  mealTypeButtons.forEach(button => {
+    const active =
+      button.dataset.mealType === selectedMealType &&
+      selectedMealType !== '';
 
-/* =========================================================
-   クリック処理
-   ========================================================= */
-
-function handleRecipeContainerClick(event) {
-  const detailButton = event.target.closest(
-    '.recipe-detail-button'
-  );
-
-  if (detailButton) {
-    openRecipeModal(detailButton.dataset.recipeId);
-    return;
-  }
-
-  const favoriteButton = event.target.closest(
-    '[data-favorite-id]'
-  );
-
-  if (favoriteButton) {
-    toggleFavorite(favoriteButton.dataset.favoriteId);
-  }
-}
-
-
-function handleFeaturedRecipeClick(event) {
-  const detailButton = event.target.closest(
-    '.featured-detail-button'
-  );
-
-  if (detailButton) {
-    openRecipeModal(detailButton.dataset.recipeId);
-    return;
-  }
-
-  const favoriteButton = event.target.closest(
-    '[data-favorite-id]'
-  );
-
-  if (favoriteButton) {
-    toggleFavorite(favoriteButton.dataset.favoriteId);
-  }
-}
-
-
-/* =========================================================
-   お気に入り
-   ========================================================= */
-
-async function toggleFavorite(recipeId) {
-  const id = String(recipeId);
-
-  const recipe = recipes.find(
-    item => item.id === id
-  );
-
-  if (!recipe) {
-    return;
-  }
-
-  const newFavorite = !recipe.favorite;
-
-  try {
-    const response = await fetch(COOKING_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain;charset=utf-8'
-      },
-      body: JSON.stringify({
-        type: 'updatefavorite',
-        id,
-        favorite: newFavorite
-      })
-    });
-
-    const data = await response.json();
-
-    if (!data.ok) {
-      throw new Error(
-        data.message || 'お気に入りを更新できませんでした。'
-      );
-    }
-
-    recipe.favorite = newFavorite;
-
-    refreshRecipeDisplay();
-
-  } catch (error) {
-    console.error('お気に入り更新失敗', error);
-  }
-}
-
-
-function refreshRecipeDisplay() {
-  renderRecipeCards(filteredRecipes);
-
-  const featuredRecipeData = recipes.find(
-    recipe => recipe.id === currentFeaturedRecipeId
-  );
-
-  if (featuredRecipeData) {
-    renderFeaturedRecipe(featuredRecipeData);
-  }
-}
-
-/* =========================================================
-   レシピ追加モーダル
-   ========================================================= */
-
-function openRecipeAddModal() {
-  if (!recipeAddModal) {
-    return;
-  }
-
-  recipeAddMessage.textContent = '';
-  recipeAddModal.hidden = false;
-  document.body.classList.add('modal-open');
-
-  requestAnimationFrame(() => {
-    recipeAddModal.classList.add('is-open');
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
   });
 
-  recipeAddForm
-    ?.querySelector('[name="title"]')
-    ?.focus();
-}
-
-
-function closeRecipeAddModal() {
-  if (!recipeAddModal) {
-    return;
-  }
-
-  recipeAddModal.classList.remove('is-open');
-  document.body.classList.remove('modal-open');
-
-  window.setTimeout(() => {
-    recipeAddModal.hidden = true;
-  }, 180);
-}
-
-
-async function handleRecipeAddSubmit(event) {
-  event.preventDefault();
-
-  if (!recipeAddForm) {
-    return;
-  }
-
-  const formData = new FormData(recipeAddForm);
-
-  const newRecipe = {
-    type: 'addCooking',
-
-    title: String(
-      formData.get('title') || ''
-    ).trim(),
-
-    category: String(
-      formData.get('category') || ''
-    ).trim(),
-
-    summary: String(
-      formData.get('summary') || ''
-    ).trim(),
-
-    ingredients: String(
-      formData.get('ingredients') || ''
-    ).trim(),
-
-    steps: String(
-      formData.get('steps') || ''
-    ).trim(),
-
-    workTime: Number(
-      formData.get('workTime') || 0
-    ),
-
-    leaveTime: Number(
-      formData.get('leaveTime') || 0
-    ),
-
-    tool: String(
-      formData.get('tool') || ''
-    ).trim(),
-
-    tags: String(
-      formData.get('tags') || ''
-    ).trim(),
-
-    sourceUrl: String(
-      formData.get('sourceUrl') || ''
-    ).trim(),
-
-    gyomu: formData.get('gyomu') === 'on',
-
-    backPainOk:
-      formData.get('backPainOk') === 'on',
-
-    visible: true
-  };
-
-  if (
-    !newRecipe.title ||
-    !newRecipe.ingredients ||
-    !newRecipe.steps
-  ) {
-    recipeAddMessage.textContent =
-      '料理名・材料・作り方を入力してください。';
-
-    return;
-  }
-
-  setRecipeAddSubmitting(true);
-
-  try {
-    const result = await postRecipe(newRecipe);
-
-    if (!result.ok) {
-      throw new Error(
-        result.message ||
-        'レシピを登録できませんでした。'
-      );
-    }
-
-    recipeAddMessage.textContent =
-      '🍳 レシピを登録しました！';
-
-    recipeAddForm.reset();
-
-    await reloadRecipes();
-
-    window.setTimeout(() => {
-      closeRecipeAddModal();
-    }, 600);
-  } catch (error) {
-    console.error(
-      'レシピの登録に失敗しました。',
-      error
+  ingredientButtons.forEach(button => {
+    const active = selectedIngredients.has(
+      button.dataset.ingredient
     );
 
-    recipeAddMessage.textContent =
-      '登録に失敗しました。GASの設定を確認してください。';
-  } finally {
-    setRecipeAddSubmitting(false);
-  }
-}
-
-
-async function postRecipe(recipe) {
-  const response = await fetch(COOKING_API_BASE_URL, {
-    method: 'POST',
-
-    headers: {
-      'Content-Type': 'text/plain;charset=utf-8'
-    },
-
-    body: JSON.stringify(recipe)
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
   });
 
-  if (!response.ok) {
-    throw new Error(
-      `HTTPエラー：${response.status}`
+  filterButtons.forEach(button => {
+    const active = selectedExtras.has(
+      button.dataset.filter
     );
-  }
 
-  return response.json();
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
 }
 
-async function reloadRecipes() {
-  recipes = await fetchRecipes();
+function updateResultCount() {
+  if (!resultCount) return;
 
-  filteredRecipes = activeFilter
-    ? recipes.filter(recipe =>
-      recipeMatchesFilter(recipe, activeFilter)
-    )
-    : [...recipes];
-
-  renderRecipeCards(filteredRecipes);
-
-  if (recipes.length > 0) {
-    showRandomFeaturedRecipe();
-  } else {
-    showFeaturedEmpty();
-  }
+  resultCount.textContent =
+    `${filteredRecipes.length}件のレシピ`;
 }
-
-
-function setRecipeAddSubmitting(isSubmitting) {
-  if (!recipeAddSubmit) {
-    return;
-  }
-
-  recipeAddSubmit.disabled = isSubmitting;
-
-  recipeAddSubmit.textContent = isSubmitting
-    ? '登録しています…'
-    : 'レシピを登録';
-}
-
-
-
 
 /* =========================================================
-   レシピ詳細モーダル
+   レシピ一覧カード
    ========================================================= */
 
-function createRecipeModal() {
-  if (document.getElementById('recipe-modal')) {
+function renderRecipeCards(recipeList) {
+  recipeContainer.innerHTML = '';
+
+  if (recipeList.length === 0) {
+    showEmptyMessage('条件に合うレシピがありません。');
     return;
   }
 
-  const modal = document.createElement('div');
+  const fragment = document.createDocumentFragment();
 
-  modal.id = 'recipe-modal';
-  modal.className = 'recipe-modal';
-  modal.hidden = true;
+  recipeList.forEach(recipe => {
+    const card = document.createElement('article');
+    card.className = 'recipe-card';
 
-  modal.innerHTML = `
-    <div class="recipe-modal-backdrop"
-         data-close-modal="true"></div>
+    card.innerHTML = `
+      <div class="recipe-card-icon">
+        ${getRecipeImageHtml(recipe)}
+      </div>
+      <div class="recipe-card-content">
+        <div class="recipe-tags">
+          ${getRecipeTagsHtml(recipe)}
+        </div>
+        <h3>${escapeHtml(recipe.title)}</h3>
+        <p class="recipe-summary">
+          ${escapeHtml(recipe.summary || 'レシピを見てみよう')}
+        </p>
+        <div class="recipe-card-meta">
+          ${getRecipeMetaHtml(recipe)}
+        </div>
+        <div class="recipe-actions">
+          <button type="button"
+            class="primary-button"
+            data-action="detail"
+            data-id="${escapeHtml(recipe.id)}">
+            レシピを見る
+          </button>
+          <button type="button"
+            class="favorite-button ${recipe.favorite ? 'is-favorite' : ''}"
+            data-action="favorite"
+            data-id="${escapeHtml(recipe.id)}"
+            aria-label="お気に入り">
+            ${recipe.favorite ? '♥' : '♡'}
+          </button>
+        </div>
+      </div>
+    `;
 
-    <section
-      class="recipe-modal-panel"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="recipe-modal-title"
-    >
-      <button
-        type="button"
-        class="recipe-modal-close"
-        data-close-modal="true"
-        aria-label="レシピを閉じる"
-      >
-        ×
-      </button>
-
-      <div id="recipe-modal-content"></div>
-    </section>
-  `;
-
-  document.body.appendChild(modal);
-
-  modal.addEventListener('click', event => {
-    if (event.target.closest('[data-close-modal]')) {
-      closeRecipeModal();
-    }
+    fragment.appendChild(card);
   });
 
-  document.addEventListener('keydown', event => {
+  recipeContainer.appendChild(fragment);
+}
+
+
+function convertGoogleDriveImageUrl(url) {
+  if (!url) return '';
+
+  const value = String(url).trim();
+
+  // Googleドライブ以外のURLは変更しない
+  try {
+    const parsed = new URL(value);
     if (
-      event.key === 'Escape' &&
-      !modal.hidden
+      parsed.hostname !== 'drive.google.com' &&
+      parsed.hostname !== 'www.drive.google.com'
     ) {
-      closeRecipeModal();
+      return value;
     }
-  });
+
+    // すでに画像表示用URLならそのまま
+    if (parsed.pathname === '/thumbnail') {
+      return value;
+    }
+
+    // 通常の共有リンクからファイルIDを取得
+    const match = parsed.pathname.match(
+      /^\/file\/d\/([^/]+)/
+    );
+
+    const fileId = match
+      ? match[1]
+      : parsed.searchParams.get('id');
+
+    if (!fileId) return value;
+
+    return `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w1000`;
+
+  } catch (error) {
+    return value;
+  }
 }
 
 
-function openRecipeModal(recipeId) {
-  const recipe = recipes.find(
-    item => item.id === String(recipeId)
-  );
+function getRecipeImageHtml(recipe) {
+  if (recipe.image) {
+    const imageUrl = convertGoogleDriveImageUrl(recipe.image);
 
-  const modal = document.getElementById('recipe-modal');
-  const modalContent = document.getElementById(
-    'recipe-modal-content'
-  );
-
-  if (!recipe || !modal || !modalContent) {
-    return;
+    return `<img src="${escapeHtml(imageUrl)}"
+      alt="${escapeHtml(recipe.title)}"
+      loading="lazy"
+      onerror="this.replaceWith(document.createTextNode('🍳'))">`;
   }
 
-  modalContent.innerHTML = createRecipeDetailHtml(recipe);
-
-  modal.hidden = false;
-  document.body.classList.add('modal-open');
-
-  requestAnimationFrame(() => {
-    modal.classList.add('is-open');
-  });
-
-  const closeButton = modal.querySelector(
-    '.recipe-modal-close'
-  );
-
-  closeButton?.focus();
+  return getRecipeEmoji(recipe);
 }
 
+function getRecipeEmoji(recipe) {
+  const category = recipe.category;
 
-function closeRecipeModal() {
-  const modal = document.getElementById('recipe-modal');
+  if (category === '肉') return '🥩';
+  if (category === '麺') return '🍜';
+  if (category === 'カレー・丼') return '🍛';
+  if (category === '副菜') return '🥦';
+  if (category === '汁物') return '🥣';
+  if (category === '魚') return '🐟';
 
-  if (!modal) {
-    return;
-  }
-
-  modal.classList.remove('is-open');
-  document.body.classList.remove('modal-open');
-
-  window.setTimeout(() => {
-    modal.hidden = true;
-  }, 180);
+  return '🍳';
 }
 
-
-function createRecipeDetailHtml(recipe) {
-  const ingredientsHtml =
-    recipe.ingredients.length > 0
-      ? recipe.ingredients
-        .map(
-          ingredient =>
-            `<li>${escapeHtml(ingredient)}</li>`
-        )
-        .join('')
-      : '<li>材料はまだ登録されていません。</li>';
-
-  const stepsHtml =
-    recipe.steps.length > 0
-      ? recipe.steps
-        .map(
-          (step, index) => `
-              <li>
-                <span class="step-number">${index + 1}</span>
-                <span>${escapeHtml(step)}</span>
-              </li>
-            `
-        )
-        .join('')
-      : `
-          <li>
-            <span class="step-number">1</span>
-            <span>手順はまだ登録されていません。</span>
-          </li>
-        `;
-
-  return `
-    <div class="recipe-modal-icon" aria-hidden="true">
-      ${recipe.image
-      ? `<img src="${escapeAttribute(recipe.image)}"
-                alt=""
-                loading="lazy">`
-      : getRecipeIcon(recipe)}
-    </div>
-
-    <div class="recipe-tags">
-      ${createTagHtml(recipe, 8)}
-    </div>
-
-    <h2 id="recipe-modal-title">
-      ${escapeHtml(recipe.title)}
-    </h2>
-
-    ${recipe.summary
-      ? `
-        <p class="recipe-modal-summary">
-          ${escapeHtml(recipe.summary)}
-        </p>
-      `
-      : ''}
-
-    <div class="recipe-detail-meta">
-      ${recipe.category
-      ? `<span>🍽️ ${escapeHtml(recipe.category)}</span>`
-      : ''}
-
-      ${recipe.tool
-      ? `<span>🤖 ${escapeHtml(recipe.tool)}</span>`
-      : ''}
-
-      ${recipe.workTime
-      ? `<span>⚡ 作業 ${recipe.workTime}分</span>`
-      : ''}
-
-      ${recipe.leaveTime
-      ? `<span>⏳ おまかせ ${recipe.leaveTime}分</span>`
-      : ''}
-
-      ${recipe.backPainOk
-      ? '<span>🪑 腰が痛い日OK</span>'
-      : ''}
-    </div>
-
-    <section class="recipe-detail-section">
-      <h3>🛒 材料</h3>
-      <ul class="ingredient-list">
-        ${ingredientsHtml}
-      </ul>
-    </section>
-
-    <section class="recipe-detail-section">
-      <h3>🍳 作り方</h3>
-      <ol class="step-list">
-        ${stepsHtml}
-      </ol>
-    </section>
-
-    ${recipe.sourceUrl
-      ? `
-        <p class="recipe-source-link">
-          <a
-            href="${escapeAttribute(recipe.sourceUrl)}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            元レシピ・参考ページを見る ↗
-          </a>
-        </p>
-      `
-      : ''}
-  `;
-}
-
-
-/* =========================================================
-   タグ・表示用部品
-   ========================================================= */
-
-function createTagHtml(recipe, maximum = 4) {
+function getRecipeTagsHtml(recipe) {
   const tags = [];
 
-  if (
-    recipe.tool.includes('ホットクック') ||
-    recipe.tags.some(tag =>
-      tag.includes('ホットクック')
-    )
-  ) {
-    tags.push('🤖 ホットクック');
+  const mealType = getRecipeMealType(recipe);
+
+  if (mealType !== 'その他') {
+    tags.push(mealType);
   }
 
-  if (
-    recipe.gyomu ||
-    recipe.tags.some(tag =>
-      tag.includes('業スー') ||
-      tag.includes('業務スーパー')
-    )
-  ) {
-    tags.push('🛒 業スー');
-  }
+  if (recipe.backPainOk) tags.push('🪑 腰痛の日OK');
+  if (recipe.gyomu) tags.push('🛒 業スー');
 
-  if (recipe.workTime > 0) {
-    tags.push(`⚡ 作業${recipe.workTime}分`);
-  }
-
-  if (recipe.backPainOk) {
-    tags.push('🪑 腰痛の日OK');
-  }
-
-  recipe.tags.forEach(tag => {
-    const decoratedTag = decorateTag(tag);
-
-    if (!tags.includes(decoratedTag)) {
-      tags.push(decoratedTag);
-    }
+  recipe.tags.slice(0, 2).forEach(tag => {
+    if (!tags.includes(tag)) tags.push(tag);
   });
 
-  return tags
-    .slice(0, maximum)
+  return tags.slice(0, 4)
     .map(tag => `<span>${escapeHtml(tag)}</span>`)
     .join('');
 }
 
-
-function decorateTag(tag) {
-  if (tag.includes('作り置き')) {
-    return `🍱 ${tag}`;
-  }
-
-  if (
-    tag.includes('10分以内') ||
-    tag.includes('5分')
-  ) {
-    return `⚡ ${tag}`;
-  }
-
-  if (
-    tag.includes('野菜') ||
-    tag.includes('副菜')
-  ) {
-    return `🥦 ${tag}`;
-  }
-
-  if (
-    tag.includes('夫さん') ||
-    tag.includes('ごちそう')
-  ) {
-    return `✨ ${tag}`;
-  }
-
-  if (
-    tag.includes('包丁なし') ||
-    tag.includes('腰痛')
-  ) {
-    return `🪑 ${tag}`;
-  }
-
-  return tag;
-}
-
-
-function createTimeHtml(recipe) {
+function getRecipeMetaHtml(recipe) {
   const items = [];
 
   if (recipe.workTime > 0) {
-    items.push(`⚡ 作業${recipe.workTime}分`);
+    items.push(`⏱ 作業${recipe.workTime}分`);
   }
 
   if (recipe.leaveTime > 0) {
-    items.push(`⏳ おまかせ${recipe.leaveTime}分`);
+    items.push(`☕ 放置${recipe.leaveTime}分`);
   }
 
-  if (items.length === 0) {
-    return '';
+  if (recipe.tool) {
+    items.push(`🍳 ${recipe.tool}`);
   }
 
   return items
@@ -1247,143 +688,590 @@ function createTimeHtml(recipe) {
     .join('');
 }
 
-
-function createFallbackSummary(recipe) {
-  if (recipe.ingredients.length > 0) {
-    const mainIngredients = recipe.ingredients
-      .slice(0, 3)
-      .join('・');
-
-    return `${mainIngredients}で作る、みも家のお助けメニュー。`;
-  }
-
-  return '考えたくない日に頼れる、みも家のお助けメニュー。';
-}
-
-
-function getRecipeIcon(recipe) {
-  const text = [
-    recipe.category,
-    recipe.title,
-    recipe.tags.join(' ')
-  ].join(' ');
-
-  if (
-    text.includes('麺') ||
-    text.includes('うどん') ||
-    text.includes('ラーメン') ||
-    text.includes('パスタ')
-  ) {
-    return '🍜';
-  }
-
-  if (
-    text.includes('カレー') ||
-    text.includes('丼') ||
-    text.includes('ドリア')
-  ) {
-    return '🍛';
-  }
-
-  if (
-    text.includes('汁物') ||
-    text.includes('スープ')
-  ) {
-    return '🥣';
-  }
-
-  if (
-    text.includes('副菜') ||
-    text.includes('野菜') ||
-    text.includes('キャベツ') ||
-    text.includes('ブロッコリー')
-  ) {
-    return '🥦';
-  }
-
-  if (
-    text.includes('魚') ||
-    text.includes('サバ')
-  ) {
-    return '🐟';
-  }
-
-  if (
-    text.includes('肉') ||
-    text.includes('鶏') ||
-    text.includes('豚') ||
-    text.includes('牛') ||
-    text.includes('ハンバーグ')
-  ) {
-    return '🍖';
-  }
-
-  return '🍳';
-}
-
-
-/* =========================================================
-   読み込み・エラー表示
-   ========================================================= */
-
-function showLoading() {
-  recipeContainer.innerHTML = `
-    <p class="empty-message loading-message">
-      🍳 レシピ帳を開いています…
-    </p>
-  `;
-
-  featuredRecipe.innerHTML = `
-    <div class="recipe-icon" aria-hidden="true">🍳</div>
-    <div class="recipe-content">
-      <h3>今日のごはんを考え中…</h3>
-      <p class="recipe-summary">
-        スプレッドシートからレシピを読み込んでいます。
-      </p>
-    </div>
-  `;
-}
-
-
 function showEmptyMessage(message) {
   recipeContainer.innerHTML = `
-    <p class="empty-message">
-      ${escapeHtml(message)}
-    </p>
+    <p class="empty-message">${escapeHtml(message)}</p>
   `;
 }
 
+function showLoading() {
+  showEmptyMessage('レシピを読み込んでいます…');
+}
 
 function showErrorMessage(message) {
   recipeContainer.innerHTML = `
     <div class="empty-message error-message">
-      <p>🥲 ${escapeHtml(message)}</p>
-      <button
-        type="button"
+      <p>${escapeHtml(message)}</p>
+      <button type="button"
         class="primary-button"
-        onclick="window.location.reload()"
-      >
-        もう一度読み込む
+        onclick="location.reload()">
+        再読み込み
       </button>
     </div>
   `;
 }
 
+function handleRecipeContainerClick(event) {
+  const button = event.target.closest('[data-action]');
+  if (!button) return;
+
+  const id = button.dataset.id;
+  const action = button.dataset.action;
+
+  if (action === 'detail') {
+    openRecipeDetail(id);
+  }
+
+  if (action === 'favorite') {
+    toggleFavorite(id, button);
+  }
+}
 
 /* =========================================================
-   安全なHTML出力
+   今日のおすすめ
+   ========================================================= */
+
+function showRandomFeaturedRecipe(avoidSame = false) {
+  if (recipes.length === 0) {
+    showFeaturedEmpty();
+    return;
+  }
+
+  let candidates = recipes;
+
+  if (avoidSame && recipes.length > 1) {
+    candidates = recipes.filter(
+      recipe => recipe.id !== currentFeaturedRecipeId
+    );
+  }
+
+  const index = Math.floor(
+    Math.random() * candidates.length
+  );
+
+  const recipe = candidates[index];
+  currentFeaturedRecipeId = recipe.id;
+
+  renderFeaturedRecipe(recipe);
+}
+
+function renderFeaturedRecipe(recipe) {
+  featuredRecipe.innerHTML = `
+    <div class="recipe-icon">
+      ${getRecipeImageHtml(recipe)}
+    </div>
+
+    <div class="recipe-content">
+      <div class="recipe-tags">
+        ${getRecipeTagsHtml(recipe)}
+      </div>
+
+      <h3>${escapeHtml(recipe.title)}</h3>
+
+      <p class="recipe-summary">
+        ${escapeHtml(recipe.summary || '今日のごはん候補！')}
+      </p>
+
+      <div class="recipe-card-meta">
+        ${getRecipeMetaHtml(recipe)}
+      </div>
+
+      <div class="recipe-actions">
+        <button type="button"
+          class="primary-button"
+          data-action="detail"
+          data-id="${escapeHtml(recipe.id)}">
+          レシピを見る
+        </button>
+
+        <button type="button"
+          class="favorite-button ${recipe.favorite ? 'is-favorite' : ''}"
+          data-action="favorite"
+          data-id="${escapeHtml(recipe.id)}"
+          aria-label="お気に入り">
+          ${recipe.favorite ? '♥' : '♡'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function showFeaturedEmpty() {
+  featuredRecipe.innerHTML = `
+    <p class="empty-message">
+      おすすめできるレシピがまだありません。
+    </p>
+  `;
+}
+
+function showFeaturedError() {
+  featuredRecipe.innerHTML = `
+    <p class="empty-message">
+      今日のおすすめを読み込めませんでした。
+    </p>
+  `;
+}
+
+function handleFeaturedRecipeClick(event) {
+  const button = event.target.closest('[data-action]');
+  if (!button) return;
+
+  const id = button.dataset.id;
+  const action = button.dataset.action;
+
+  if (action === 'detail') {
+    openRecipeDetail(id);
+  }
+
+  if (action === 'favorite') {
+    toggleFavorite(id, button);
+  }
+}
+
+/* =========================================================
+   レシピ詳細画面
+   ========================================================= */
+
+function openRecipeDetail(id) {
+  const recipe = recipes.find(
+    item => item.id === String(id)
+  );
+
+  if (!recipe) return;
+
+  const modal = document.createElement('div');
+  modal.className = 'recipe-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+
+  const ingredients = recipe.ingredients.length
+    ? recipe.ingredients.map(item =>
+        `<li>${escapeHtml(item)}</li>`
+      ).join('')
+    : '<li>材料は未登録です</li>';
+
+  const steps = recipe.steps.length
+    ? recipe.steps.map(item =>
+        `<li>${escapeHtml(item)}</li>`
+      ).join('')
+    : '<li>手順は未登録です</li>';
+
+  const related = getRelatedRecipes(recipe);
+
+  modal.innerHTML = `
+    <div class="recipe-modal-backdrop"
+      data-close-detail></div>
+
+    <div class="recipe-modal-panel">
+      <button type="button"
+        class="recipe-modal-close"
+        data-close-detail
+        aria-label="閉じる">×</button>
+
+      <div class="recipe-modal-icon">
+        ${getRecipeImageHtml(recipe)}
+      </div>
+
+      <h2>${escapeHtml(recipe.title)}</h2>
+      <p>${escapeHtml(recipe.summary)}</p>
+
+      <div class="recipe-card-meta">
+        ${getRecipeMetaHtml(recipe)}
+      </div>
+
+      <section class="recipe-detail-section">
+        <h3>材料</h3>
+        <ul class="ingredient-list">${ingredients}</ul>
+      </section>
+
+      <section class="recipe-detail-section">
+        <h3>作り方</h3>
+        <ol class="step-list">${steps}</ol>
+      </section>
+
+      ${renderRelatedRecipes(related)}
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  modal.addEventListener('click', event => {
+    if (event.target.closest('[data-close-detail]')) {
+      modal.remove();
+      return;
+    }
+
+    const button = event.target.closest('[data-related-id]');
+    if (button) {
+      const nextId = button.dataset.relatedId;
+      modal.remove();
+      openRecipeDetail(nextId);
+    }
+  });
+}
+
+/* =========================================================
+   関連レシピ
+   ========================================================= */
+
+function getRelatedRecipes(recipe) {
+  const ids = recipe.relatedRecipeIds.map(String);
+
+  return ids
+    .map(id => recipes.find(item => item.id === id))
+    .filter(item => item && item.id !== recipe.id);
+}
+
+function renderRelatedRecipes(related) {
+  if (related.length === 0) return '';
+
+  const buttons = related.map(recipe => `
+    <button type="button"
+      class="related-recipe-button"
+      data-related-id="${escapeHtml(recipe.id)}">
+      ${getRecipeEmoji(recipe)}
+      ${escapeHtml(recipe.title)}
+    </button>
+  `).join('');
+
+  return `
+    <section class="recipe-detail-section">
+      <h3>一緒に作るなら</h3>
+      <div class="related-recipes">
+        ${buttons}
+      </div>
+    </section>
+  `;
+}
+
+/* =========================================================
+   お気に入り更新
+   ========================================================= */
+
+let favoriteUpdating = false;
+
+async function toggleFavorite(id, button) {
+  if (favoriteUpdating) return;
+
+  const recipe = recipes.find(
+    item => item.id === String(id)
+  );
+
+  if (!recipe) return;
+
+  favoriteUpdating = true;
+
+  const previousValue = recipe.favorite;
+  const newValue = !previousValue;
+
+  // 先に画面へ反映
+  recipe.favorite = newValue;
+  refreshRecipeDisplays();
+
+  try {
+   
+const response = await fetch(
+  COOKING_API_BASE_URL,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain;charset=utf-8'
+    },
+    body: JSON.stringify({
+      type: 'updatefavorite',
+      id: recipe.id,
+      favorite: newValue
+    })
+  }
+);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (!result.ok) {
+      throw new Error(
+        result.message || 'お気に入り更新エラー'
+      );
+    }
+
+  } catch (error) {
+    // 保存できなかった場合は元に戻す
+    recipe.favorite = previousValue;
+    refreshRecipeDisplays();
+
+    console.error(
+      'お気に入り更新に失敗しました。',
+      error
+    );
+
+    alert(
+      'お気に入りを保存できませんでした。'
+    );
+
+  } finally {
+    favoriteUpdating = false;
+  }
+}
+
+/* =========================================================
+   レシピ表示の更新
+   ========================================================= */
+
+function refreshRecipeDisplays() {
+  // 検索条件を保ったまま再描画
+  applyFilters();
+
+  // 今日のおすすめも更新
+  if (currentFeaturedRecipeId) {
+    const featured = recipes.find(
+      recipe => recipe.id === currentFeaturedRecipeId
+    );
+
+    if (featured) {
+      renderFeaturedRecipe(featured);
+    }
+  }
+}
+
+/* =========================================================
+   レシピ追加画面
+   ========================================================= */
+
+function createRecipeModal() {
+  if (!recipeAddModal || !recipeAddForm) {
+    console.warn(
+      'レシピ追加フォームが見つかりません。'
+    );
+    return;
+  }
+
+  // 画面を開いた直後は非表示にする
+  recipeAddModal.hidden = true;
+
+  // 必須項目を設定
+  const titleInput = recipeAddForm.elements.namedItem('title');
+
+  if (titleInput) {
+    titleInput.required = true;
+  }
+
+  // 閉じるボタンに識別属性を付ける
+  recipeAddModal
+    .querySelectorAll('.recipe-modal-close')
+    .forEach(button => {
+      button.setAttribute('data-close-add-modal', '');
+    });
+
+  // 背景クリックでも閉じられるようにする
+  recipeAddModal
+    .querySelectorAll('.recipe-modal-backdrop')
+    .forEach(backdrop => {
+      backdrop.setAttribute('data-close-add-modal', '');
+    });
+}
+
+function openRecipeAddModal() {
+  if (!recipeAddModal) return;
+
+  recipeAddModal.hidden = false;
+
+  if (recipeAddMessage) {
+    recipeAddMessage.textContent = '';
+  }
+
+  document.body.style.overflow = 'hidden';
+
+  const titleInput =
+    recipeAddForm?.elements.namedItem('title');
+
+  titleInput?.focus();
+}
+
+function closeRecipeAddModal() {
+  if (!recipeAddModal) return;
+
+  recipeAddModal.hidden = true;
+  document.body.style.overflow = '';
+
+  if (recipeAddMessage) {
+    recipeAddMessage.textContent = '';
+  }
+}
+
+/* =========================================================
+   フォームの入力値取得
+   ========================================================= */
+
+function getFormText(form, name) {
+  const field = form.elements.namedItem(name);
+
+  if (!field) return '';
+
+  return String(field.value || '').trim();
+}
+
+function getFormChecked(form, name) {
+  const field = form.elements.namedItem(name);
+
+  return Boolean(field && field.checked);
+}
+
+function getFormList(form, name) {
+  return normalizeList(getFormText(form, name));
+}
+
+function getRecipeFormData(form) {
+  return {
+    title: getFormText(form, 'title'),
+    category: getFormText(form, 'category'),
+    mealType: getFormText(form, 'mealType'),
+    image: getFormText(form, 'image'),
+    summary: getFormText(form, 'summary'),
+    ingredients: getFormList(form, 'ingredients'),
+    mainIngredients: getFormList(form, 'mainIngredients'),
+    relatedRecipeIds: getFormList(form, 'relatedRecipeIds'),
+    steps: getFormList(form, 'steps'),
+    workTime: normalizeNumber(
+      getFormText(form, 'workTime')
+    ),
+    leaveTime: normalizeNumber(
+      getFormText(form, 'leaveTime')
+    ),
+    tool: getFormText(form, 'tool'),
+    tags: getFormList(form, 'tags'),
+    sourceUrl: getFormText(form, 'sourceUrl'),
+    gyomu: getFormChecked(form, 'gyomu'),
+    backPainOk: getFormChecked(form, 'backPainOk')
+  };
+}
+
+/* =========================================================
+   レシピ新規登録
+   ========================================================= */
+
+let recipeSubmitting = false;
+
+async function handleRecipeAddSubmit(event) {
+  event.preventDefault();
+
+  if (recipeSubmitting || !recipeAddForm) return;
+
+  const recipeData = getRecipeFormData(recipeAddForm);
+
+  if (!recipeData.title) {
+    setRecipeAddMessage('料理名を入力してください。', true);
+    return;
+  }
+
+  recipeSubmitting = true;
+
+  if (recipeAddSubmit) {
+    recipeAddSubmit.disabled = true;
+  }
+
+  setRecipeAddMessage('レシピを登録しています…');
+
+  try {
+    const params = new URLSearchParams();
+
+    params.append('type', 'addcooking');
+
+    Object.entries(recipeData).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        params.append(key, value.join('\n'));
+      } else {
+        params.append(key, String(value));
+      }
+    });
+
+    const response = await fetch(
+      COOKING_API_BASE_URL,
+      {
+        method: 'POST',
+        body: params
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (!result.ok) {
+      throw new Error(
+        result.message || 'レシピの登録に失敗しました。'
+      );
+    }
+
+    setRecipeAddMessage('登録できました！');
+
+    // GASから最新のレシピ一覧を取得
+    recipes = await fetchRecipes();
+
+    recipeAddForm.reset();
+    closeRecipeAddModal();
+
+    // 検索条件を維持して一覧を更新
+    applyFilters();
+
+    // 今日のおすすめも更新
+    if (recipes.length > 0) {
+      showRandomFeaturedRecipe();
+    } else {
+      showFeaturedEmpty();
+    }
+
+  } catch (error) {
+    console.error('レシピ登録エラー', error);
+
+    setRecipeAddMessage(
+      '登録または再読み込みに失敗しました。' +
+      '登録済みの可能性があるため、' +
+      '再送信前にシートを確認してください。',
+      true
+    );
+
+  } finally {
+    recipeSubmitting = false;
+
+    if (recipeAddSubmit) {
+      recipeAddSubmit.disabled = false;
+    }
+  }
+}
+
+/* =========================================================
+   登録メッセージ
+   ========================================================= */
+
+function setRecipeAddMessage(message, isError = false) {
+  if (!recipeAddMessage) return;
+
+  recipeAddMessage.textContent = message;
+
+  recipeAddMessage.classList.toggle(
+    'is-error',
+    isError
+  );
+}
+
+/* =========================================================
+   HTML文字列の安全な表示
    ========================================================= */
 
 function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
-
-function escapeAttribute(value) {
-  return escapeHtml(value);
+  return String(value ?? '').replace(
+    /[&<>"']/g,
+    character => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[character]
+  );
 }

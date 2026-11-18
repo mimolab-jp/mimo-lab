@@ -68,14 +68,59 @@
           <h2 id="search-title">どんなごはんにする？</h2>
         </div>
       </div>
-      <div class="filter-buttons" aria-label="レシピの絞り込み">
-        <button type="button" data-filter="favorite">♡ お気に入り</button>
-        <button type="button" data-filter="meat">🥩 肉</button>
-        <button type="button" data-filter="noodle">🍜 麺</button>
-        <button type="button" data-filter="rice">🍛 カレー・丼</button>
-        <button type="button" data-filter="hotcook">🤖 ホットクック</button>
-        <button type="button" data-filter="quick">⚡ 10分以内</button>
-        <button type="button" data-filter="gyomu">🛒 業スー</button>
+
+      <div class="recipe-filter-group">
+        <label class="recipe-filter-label" for="recipe-keyword">料理名・材料から探す</label>
+        <input id="recipe-keyword" class="recipe-search-input" type="search"
+          placeholder="例：鶏むね、きゅうり、ナムル" autocomplete="off">
+      </div>
+
+      <div class="recipe-filter-group">
+        <p class="recipe-filter-label">料理の種類</p>
+        <div class="filter-buttons" id="meal-type-filters" aria-label="料理区分の絞り込み">
+          <button type="button" data-meal-type="" class="is-active" aria-pressed="true">すべて</button>
+          <button type="button" data-meal-type="主菜" aria-pressed="false">🍖 主菜</button>
+          <button type="button" data-meal-type="副菜" aria-pressed="false">🥦 副菜</button>
+          <button type="button" data-meal-type="汁物" aria-pressed="false">🥣 汁物</button>
+          <button type="button" data-meal-type="下ごしらえ" aria-pressed="false">🔪 下ごしらえ</button>
+          <button type="button" data-meal-type="その他" aria-pressed="false">🍳 その他</button>
+        </div>
+      </div>
+
+      <div class="recipe-filter-group">
+        <p class="recipe-filter-label">食材から探す</p>
+        <p class="recipe-filter-help">複数選ぶと、すべての食材を使うレシピを探します。</p>
+        <div class="filter-buttons" id="ingredient-filters" aria-label="食材の絞り込み">
+          <button type="button" data-ingredient="鶏肉" aria-pressed="false">🐔 鶏肉</button>
+          <button type="button" data-ingredient="豚肉" aria-pressed="false">🐷 豚肉</button>
+          <button type="button" data-ingredient="牛肉" aria-pressed="false">🥩 牛肉</button>
+          <button type="button" data-ingredient="魚" aria-pressed="false">🐟 魚</button>
+          <button type="button" data-ingredient="卵" aria-pressed="false">🥚 卵</button>
+          <button type="button" data-ingredient="豆腐" aria-pressed="false">⬜ 豆腐</button>
+          <button type="button" data-ingredient="きゅうり" aria-pressed="false">🥒 きゅうり</button>
+          <button type="button" data-ingredient="もやし" aria-pressed="false">🌱 もやし</button>
+          <button type="button" data-ingredient="なす" aria-pressed="false">🍆 なす</button>
+          <button type="button" data-ingredient="キャベツ" aria-pressed="false">🥬 キャベツ</button>
+          <button type="button" data-ingredient="じゃがいも" aria-pressed="false">🥔 じゃがいも</button>
+        </div>
+      </div>
+
+      <div class="recipe-filter-group">
+        <p class="recipe-filter-label">こだわり条件</p>
+        <div class="filter-buttons" id="extra-filters" aria-label="こだわり条件の絞り込み">
+          <button type="button" data-filter="favorite" aria-pressed="false">♡ お気に入り</button>
+          <button type="button" data-filter="meat" aria-pressed="false">🥩 肉</button>
+          <button type="button" data-filter="noodle" aria-pressed="false">🍜 麺</button>
+          <button type="button" data-filter="rice" aria-pressed="false">🍛 カレー・丼</button>
+          <button type="button" data-filter="hotcook" aria-pressed="false">🤖 ホットクック</button>
+          <button type="button" data-filter="quick" aria-pressed="false">⚡ 10分以内</button>
+          <button type="button" data-filter="gyomu" aria-pressed="false">🛒 業スー</button>
+          <button type="button" data-filter="backpain" aria-pressed="false">🪑 腰痛の日OK</button>
+        </div>
+      </div>
+      <div class="recipe-search-tools">
+        <span class="recipe-result-count" id="recipe-result-count" aria-live="polite"></span>
+        <button type="button" class="recipe-filter-clear" id="recipe-filter-clear">条件をクリア</button>
       </div>
     </section>
     <section class="recipe-list" aria-labelledby="recipe-list-title">
@@ -148,6 +193,32 @@
           <option value="汁物">🥣 汁物</option>
           <option value="その他">🍳 その他</option>
         </select>
+      </label>
+
+      <label class="form-field">
+        <span>料理区分</span>
+        <select name="mealType">
+          <option value="主菜">🍖 主菜</option>
+          <option value="副菜">🥦 副菜</option>
+          <option value="汁物">🥣 汁物</option>
+          <option value="下ごしらえ">🔪 下ごしらえ</option>
+          <option value="その他">🍳 その他</option>
+        </select>
+      </label>
+
+      <label class="form-field">
+        <span>主な食材（カンマ区切り）</span>
+        <input type="text" name="mainIngredients" placeholder="鶏肉, きゅうり">
+      </label>
+
+      <label class="form-field">
+        <span>関連レシピID（カンマ区切り・任意）</span>
+        <input type="text" name="relatedRecipeIds" placeholder="recipe-..., recipe-...">
+      </label>
+
+      <label class="form-field">
+        <span>料理写真のURL（任意）</span>
+        <input type="text" name="image" placeholder="images/cooking/example.webp">
       </label>
 
       <label class="form-field">
